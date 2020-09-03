@@ -3,6 +3,23 @@ import {useRef} from 'react';
 import { Component, useState, useEffect } from 'react';
 import { useFonts } from '@use-expo/font';
 import { StyleSheet, Text, View, Image, ImageBackground, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+  listenOrientationChange as lor,
+  removeOrientationListener as rol
+} from 'react-native-responsive-screen';
+import { RadioButton } from 'react-native-paper';
+
+import AssetExample from './AssetExample';
+import { quizQuestions } from './quizData';
+import { colors } from './colors';
+import {
+  convertIndexToAnswer,
+  checkForTie,
+  calculateResultIndex,
+  convertIndexToColorName,
+} from './answerFunctions';
 
 
 export default function App() {

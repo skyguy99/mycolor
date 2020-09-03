@@ -14,8 +14,11 @@
     "@use-expo/font": "^2.0.0",
     "react-native-responsive-screen": "^1.4.1",
     "react-dom": "~16.11.0",
+    "react-native-paper": "^4.0.1",
+    "react-native-textinput-effects": "^0.6.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
-    "react-native-web": "~0.11.7"
+    "react-native-web": "~0.11.7",
+    "expo-progress": "0.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
