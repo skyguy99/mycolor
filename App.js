@@ -33,12 +33,16 @@ export default function App() {
 
   const [backgroundColor, setBackgroundColor] = React.useState(new Animated.Value(0));
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
 
   const SliderWidth = Dimensions.get('screen').width;
   const colorMenuItems = [
-    { label: 'Do a little dance' },
-    { label: 'Make a lil love' },
-    { label: 'Get down tonight' },
+    { label: '', color: '#fca500', darkerColor: 'black'},
+    { label: '', color: '#0081d1', darkerColor: 'black'},
+    { label: '', color: '#6fa229', darkerColor: 'black'},
+    { label: '', color: '#939598', darkerColor: 'black'},
+    { label: '', color: '#d12b51', darkerColor: 'black'},
+    { label: '', color: '#b15de6', darkerColor: 'black'},
   ];
 
   //Functions
@@ -57,12 +61,21 @@ export default function App() {
     setIsMenuOpen(isMenuOpen);
 
   const handleItemPress = (item, index) =>
-    console.log('pressed item', item);
+    console.log('pressed item', item.color);
+
+  const renderMenuIcon = (menuState) => {
+    const { menuButtonDown } = menuState;
+
+    return menuButtonDown
+      ? <Image/> //button up
+      : <Image/>; //button down
+  }
 
   const endBackgroundColorAnimation = () => {
     Animated.timing(backgroundColor, {
       toValue: 0,
       duration: 10000,
+      easing: Easing.easeOut,
       useNativeDriver: false
     }).start(() => {
       setBackgroundColor(new Animated.Value(0));
@@ -73,6 +86,7 @@ export default function App() {
     Animated.timing(backgroundColor, {
       toValue: 150,
       duration: 10000,
+      easing: Easing.easeOut,
       useNativeDriver: false
     }).start(() => {
       endBackgroundColorAnimation();
@@ -112,22 +126,22 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   headerText: {
-
+    fontFamily: 'CircularStd-Black',
+    color: 'black',
+    fontSize: hp('2.2%')
   },
   bodyText: {
-
+    fontFamily: 'CircularStd-Book',
+    color: 'black',
+    fontSize: hp('2.2%')
   },
-  colorChanging: {
-    backgroundColor: '#ecf0f1',
-  }
 });
 
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container, styles.centerContent]}>
-        {/* Third shadow variant */}
         <Animated.View style={[styles.box, styles.centerContent, styles.shadow3]}>
-          <Text style = {{fontFamily: 'CircularStd-Book', color: 'black'}}>Hello world</Text>
+          <Text style = {styles.headerText}>Hello world</Text>
         </Animated.View>
         <Animated.View style = {{width: 300, height: 300, backgroundColor: backgroundColor.interpolate({
             inputRange: [0, 30, 60, 90, 120, 150],
@@ -145,8 +159,13 @@ const styles = StyleSheet.create({
         <FloatingMenu
             items={colorMenuItems}
             isOpen={isMenuOpen}
+            position={"top-right"}
+            borderColor={'white'}
+            primaryColor={'white'}
+            borderWidth={0}
             onMenuToggle={handleMenuToggle}
             onItemPress={handleItemPress}
+            dimmerStyle={{opacity: 0}}
           />
       </View>
   );
