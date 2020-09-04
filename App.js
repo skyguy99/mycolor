@@ -37,12 +37,12 @@ export default function App() {
 
   const SliderWidth = Dimensions.get('screen').width;
   const colorMenuItems = [
-    { label: '', color: '#fca500', darkerColor: 'black'},
-    { label: '', color: '#0081d1', darkerColor: 'black'},
-    { label: '', color: '#6fa229', darkerColor: 'black'},
-    { label: '', color: '#939598', darkerColor: 'black'},
-    { label: '', color: '#d12b51', darkerColor: 'black'},
-    { label: '', color: '#b15de6', darkerColor: 'black'},
+    { label: '', color: '#fca500', darkerColor: '#AF7300'},
+    { label: '', color: '#0081d1', darkerColor: '#00578D'},
+    { label: '', color: '#6fa229', darkerColor: '#47651D'},
+    { label: '', color: '#939598', darkerColor: '#5C5D5F'},
+    { label: '', color: '#d12b51', darkerColor: '#901F39'},
+    { label: '', color: '#b15de6', darkerColor: '#901F39'},
   ];
 
   //Functions
