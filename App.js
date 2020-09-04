@@ -56,7 +56,7 @@ export default function App() {
       elevation,
       shadowColor: 'black',
       shadowOffset: { width: 0, height: 0.5 * elevation },
-      shadowOpacity: elevation == 5 ? 0.2 : 0.15,
+      shadowOpacity: 0.2,
       shadowRadius: 0.8 * elevation
     };
   }
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    marginTop: hp('6%')
+    marginTop: hp('6%'),
   },
   topBar: {
     marginTop: hp('7%')
@@ -163,25 +163,27 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: hp('2%'),
+    fontSize: hp('2.2%'),
     textAlign: 'center'
   },
   bodyText: {
     fontFamily: 'CircularStd-Book',
     color: 'black',
-    fontSize: hp('2%')
+    fontSize: hp('2.2%')
   },
   splash: {
         ...StyleSheet.absoluteFillObject,
         resizeMode: "cover",
         height: hp('100%'),
         width: wp('100%'),
-        zIndex: 4
+        zIndex: 4,
       },
   scrollView: {
       marginHorizontal: 20,
       paddingLeft: wp('10%'),
       paddingRight: wp('10%'),
+      zIndex: 10,
+      backgroundColor: 'blue'
     },
 });
 
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
-      <Animated.Image style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
+      <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
 
       <Animated.View style={styles.contentContainer}>
           <View style={styles.topBar}>
