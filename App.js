@@ -58,7 +58,9 @@ export default function App() {
   const [currentColor, setCurrentColor] = React.useState('#fca500');
 
   const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
+  const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
   const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('-200%')));
+  const [containerOffsetX, setContainerOffsetX] = React.useState(new Animated.Value(hp('0%')));
 
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('');
@@ -176,13 +178,28 @@ export default function App() {
 
   const toggleCredits = () => {
     console.log('credits');
+    setIsCreditsOpen(!isCreditsOpen);
 
-    Animated.timing(lottieProgress, {
-        toValue: 0,
-        duration: 400,
-        useNativeDriver: true
-      }).start();
-  }
+    Animated.parallel([
+        Animated.spring(creditsOffsetX, {
+          toValue: isCreditsOpen ? wp('100%') : 0,
+          bounciness: 2,
+          useNativeDriver: false,
+          speed: 1
+        }),
+        Animated.spring(containerOffsetX, {
+          toValue: isCreditsOpen ? wp('0%') : -wp('100%'),
+          bounciness: 2,
+          useNativeDriver: false,
+          speed: 1
+        }),
+        Animated.timing(lottieProgress, {
+            toValue: isCreditsOpen ? 0.5 : 0,
+            duration: 400,
+            useNativeDriver: true
+          })
+        ]).start();
+      }
 
   const openLink = (link) => {
     if(link == '')
@@ -288,8 +305,11 @@ const styles = StyleSheet.create({
     creditsBtn: {
       width: wp('20%'),
       height: wp('17%'),
-      marginTop: -hp('5.2%'),
-      marginLeft: wp('11%')
+      flex: 1,
+      justifyContent: 'flex-start',
+      transform: [{translateX: -wp('32%')}, {translateY: hp('8%')}],
+      position: 'absolute',
+      zIndex: 4
     },
     quizParagraph: {
         fontSize: 18,
@@ -320,6 +340,21 @@ const styles = StyleSheet.create({
         width: 200,
         alignSelf: 'center',
       },
+      creditsContainer: {
+        ...StyleSheet.absoluteFillObject,
+        resizeMode: "cover",
+        height: hp('100%'),
+        width: wp('100%'),
+        zIndex: 4,
+        backgroundColor: 'transparent'
+      },
+      creditsTxt: {
+        fontFamily: 'CircularStd-Book',
+        color: 'black',
+        fontSize: hp('2.2%'),
+        marginTop: hp('10%'),
+        padding: wp('14%')
+      }
 });
 
 // <Animated.View style = {{width: 300, height: 300, backgroundColor: backgroundColor.interpolate({
@@ -340,20 +375,22 @@ const styles = StyleSheet.create({
   return (
     <View style={[styles.container]}>
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
-
-      <Animated.View style={styles.contentContainer}>
+      <Animated.View pointerEvents={"none"} style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
+        <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is. </Text>
+        <Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('45%')}]}>© a.network.</Text>
+      </Animated.View>
+      <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
+          <LottieView
+                ref={LottieRef}
+                style={styles.shadow1}
+                source={require('./assets/hamburger.json')}
+                loop={false}
+                progress={lottieProgress}
+              />
+      </TouchableOpacity>
+      <Animated.View style={[styles.contentContainer, { transform: [{translateX: containerOffsetX }]} ]}>
           <View style={styles.topBar}>
             <Text style = {[styles.headerText, styles.shadow1]}>{currentKey}</Text>
-
-            <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
-                <LottieView
-                      ref={LottieRef}
-                      style={styles.cardInstagram}
-                      source={require('./assets/hamburger.json')}
-                      loop={false}
-                      progress={lottieProgress}
-                    />
-            </TouchableOpacity>
           </View>
 
             <FloatingMenu
