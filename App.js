@@ -54,6 +54,7 @@ export default function App() {
   const [backgroundColor, setBackgroundColor] = React.useState(new Animated.Value(0));
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isCreditsOpen, setIsCreditsOpen] = React.useState(false);
+  const [isQuizOpen, setIsQuizOpen] = React.useState(false);
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
 
@@ -61,6 +62,8 @@ export default function App() {
   const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
   const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('-200%')));
   const [containerOffsetX, setContainerOffsetX] = React.useState(new Animated.Value(hp('0%')));
+  const [quizOffsetX, setQuizOffsetX] = React.useState(new Animated.Value(-wp('100%')));
+  const [scrollOffsetX, setScrollOffsetX] = React.useState(new Animated.Value(0));
 
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('');
@@ -175,6 +178,26 @@ export default function App() {
     AsyncStorage.setItem('quizDate', date);
     setDateOfQuiz(date);
   };
+
+  const toggleQuiz = () => {
+
+    setIsQuizOpen(!isQuizOpen);
+
+    Animated.parallel([
+        Animated.spring(quizOffsetX, {
+          toValue: isQuizOpen ? -wp('100%') : wp('0%'),
+          bounciness: 2,
+          useNativeDriver: false,
+          speed: 1
+        }),
+        Animated.spring(scrollOffsetX, {
+          toValue: isQuizOpen ? wp('0%') : wp('100%'),
+          bounciness: 2,
+          useNativeDriver: false,
+          speed: 1
+        })
+        ]).start();
+  }
 
   const toggleCredits = () => {
     console.log('credits');
@@ -354,6 +377,11 @@ const styles = StyleSheet.create({
         fontSize: hp('2.2%'),
         marginTop: hp('10%'),
         padding: wp('14%')
+      },
+      quizContainer: {
+        flex: 1,
+        position: 'absolute',
+        ...StyleSheet.absoluteFillObject,
       }
 });
 
@@ -379,7 +407,7 @@ const styles = StyleSheet.create({
         <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is. </Text>
         <Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('45%')}]}>© a.network.</Text>
       </Animated.View>
-      <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
+      <TouchableOpacity style = {styles.creditsBtn} onPress={toggleQuiz}>
           <LottieView
                 ref={LottieRef}
                 style={styles.shadow1}
@@ -405,7 +433,10 @@ const styles = StyleSheet.create({
                 onItemPress={handleItemPress}
                 dimmerStyle={{opacity: 0}}
               />
-              <View style = {styles.scrollContainer}>
+              <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
+              </Animated.View>
+
+              <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
               <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
                   <ScrollView
                   showsVerticalScrollIndicator= {false}
@@ -425,7 +456,8 @@ const styles = StyleSheet.create({
                     <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                   </ScrollView>
                 </SafeAreaView>
-              </View>
+              </Animated.View>
+
         </Animated.View>
       </View>
   );
