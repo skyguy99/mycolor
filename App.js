@@ -1,9 +1,11 @@
 import React from 'react';
 import {useRef} from 'react';
 import { Component, useState, useEffect } from 'react';
+import AsyncStorage from "@react-native-community/async-storage"
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
 import Constants from 'expo-constants';
+import * as Linking from 'expo-linking';
 import { FloatingMenu } from 'react-native-floating-action-menu';
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
@@ -31,13 +33,30 @@ export default function App() {
         'CircularStd-Black' : require('./assets/CircularStd-Black.ttf'),
   });
 
+  //persistent vars
+  const [username, setUsername] = useState('');
+  const [dateOfQuiz, setDateOfQuiz] = useState('no date');
+  const [userColor, setUserColor] = useState('no color');
+
+  //quiz vars
+  const [progress, setProgress] = useState(new Animated.Value(0));
+  const [selectedAnswer, setSelectedAnswer] = React.useState('');
+  const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
+  const [showResult, setShowResult] = React.useState(false);
+  const [userAnswers, setUserAnswers] = React.useState({});
+  const [resultColor, setResultColor] = React.useState(''); //persistent
+  const [resultAttributes, setResultAttributes] = React.useState('');
+
   const [backgroundColor, setBackgroundColor] = React.useState(new Animated.Value(0));
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
 
   const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
-  const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('-100%')));
+  const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('-200%')));
+
+  const [bodyText, setBodyText] = React.useState('');
+  const [currentKey, setCurrentKey] = React.useState('');
 
   const SliderWidth = Dimensions.get('screen').width;
   const colorMenuItems = [
@@ -49,7 +68,45 @@ export default function App() {
     { label: '', color: '#b15de6', darkerColor: '#901F39'},
   ];
 
+  const bodyTexts = {
+    'myCOLOR': {body: 'mycolor body text', topBold: '', buttonLink: '', buttonTitle: 'Learn more'},
+
+    'yourCOLOR': {body: 'yourcolor body text', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor} as of ${dateOfQuiz}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
+
+    'Quiz': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
+
+    'Teams':{body: 'teams bod', topBold: '', buttonLink: '', buttonTitle: 'Learn more'},
+
+    'Connect': {body: '', topBold: '', buttonLink: 'instagram://user?username=mycolorpersonality', buttonTitle: ''},
+
+    'Credits': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
+
+
+    'Blue': {body: 'Dependability is a key feature that characterizes people, like you, whose personality color is blue. Blues tend to be rule-following, dependable, long-enduring, and tenacious. You make sacrifices in order to rise up the ranks in the world. You put in the extra hours in the office. You always fill out your taxes and pay your bills on time. You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all. You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', topBold: 'Dependable, Practical, Directive', buttonLink: '', buttonTitle: 'Share'},
+
+    'Blue/Crimson':{body: '', topBold: '', buttonLink: '', buttonTitle: 'Share'},
+
+    'Orange': {body: 'Optimism and friendliness characterize people, like you, whose personality color is Orange. You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else. You’re whimsical and value zaniness in others. You’re also bubbly, in an infectious, happy, joyful way. You see the best in people, despite what others may say about them. And you’re a forgiver—to a fault. As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', topBold: 'Optimistic, Friendly, Perceptive', buttonLink: '', buttonTitle: 'Share'},
+  }; //title : body text
+
   //Functions
+
+  // ****Init
+  useEffect(() => {
+  //StatusBar.setHidden(true, 'none');
+
+  setCurrentKey('yourCOLOR');
+  setUsername('Skylar');
+
+  AsyncStorage.getItem('username')
+    .then((item) => {
+         if (item) {
+           // do the damage
+           setUsername(item);
+           console.log('We remember you! '+username);
+         }
+    });
+});
 
   function elevationShadowStyle(elevation) {
     return {
@@ -64,8 +121,10 @@ export default function App() {
   const handleMenuToggle = isMenuOpen =>
     setIsMenuOpen(isMenuOpen);
 
-  const handleItemPress = (item, index) =>
+  const handleItemPress = (item, index) => {
     console.log('pressed item', item.color);
+    setCurrentColor(item.color);
+  }
 
   const renderMenuIcon = (menuState) => {
     const { menuButtonDown } = menuState;
@@ -97,6 +156,29 @@ export default function App() {
     });
   };
 
+  const saveName = (name) => {
+    AsyncStorage.setItem('username', name);
+    setUsername(name);
+  };
+
+  const saveDate = (date) => {
+    AsyncStorage.setItem('quizDate', date);
+    setDateOfQuiz(date);
+  };
+
+  const toggleCredits = () => {
+    console.log('credits');
+  }
+
+  const openLink = (link) => {
+    if(link == '')
+    {
+      console.log('EMPTY LINK');
+    } else {
+      Linking.openURL(link);
+    }
+  }
+
   React.useEffect(() => {
     if (backgroundColor._value === 0) {
       startBackgroundColorAnimation();
@@ -115,7 +197,7 @@ export default function App() {
   			}),
         Animated.spring(containerOffsetY, {
   				toValue: hp('-3%'),
-  				bounciness: 11,
+  				bounciness: 5,
   				useNativeDriver: false,
           speed: 1.2
   			})
@@ -134,20 +216,20 @@ const styles = StyleSheet.create({
   shadow1: elevationShadowStyle(5),
   shadow2: elevationShadowStyle(10),
   shadow3: elevationShadowStyle(20),
-  box: {
+
+  button: {
     borderRadius: 8,
     backgroundColor: 'white',
-    padding: 24
+    padding: 24,
+    marginTop: hp('2%')
   },
-
-  // supporting styles
   container: {
     flex: 1,
     paddingTop: 30,
     backgroundColor: '#fff',
-    padding: 24,
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    overflow: "visible"
   },
   contentContainer:
   {
@@ -171,6 +253,11 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: hp('2.2%')
   },
+  topBold: {
+    fontFamily: 'CircularStd-Black',
+    color: 'black',
+    fontSize: hp('2.2%')
+  },
   splash: {
         ...StyleSheet.absoluteFillObject,
         resizeMode: "cover",
@@ -183,8 +270,14 @@ const styles = StyleSheet.create({
       paddingLeft: wp('10%'),
       paddingRight: wp('10%'),
       zIndex: 10,
-      backgroundColor: 'blue'
     },
+    creditsBtn: {
+      backgroundColor: 'yellow',
+      width: wp('18%'),
+      height: wp('15%'),
+      marginTop: -hp('5%'),
+      marginLeft: wp('11%')
+    }
 });
 
 // <Animated.View style = {{width: 300, height: 300, backgroundColor: backgroundColor.interpolate({
@@ -200,9 +293,6 @@ const styles = StyleSheet.create({
 //   }),}}>
 // </Animated.View>
 
-// <Animated.View style={[styles.box, styles.centerContent, styles.shadow3]}>
-//   <Text style = {styles.headerText}>Hello world</Text>
-// </Animated.View>
 
 //VIEW ELEMENTS ------------------------------------------------------
   return (
@@ -211,7 +301,10 @@ const styles = StyleSheet.create({
 
       <Animated.View style={styles.contentContainer}>
           <View style={styles.topBar}>
-            <Text style = {[styles.headerText, styles.shadow1]}>Hello world</Text>
+            <Text style = {[styles.headerText, styles.shadow1]}>{currentKey}</Text>
+
+            <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
+            </TouchableOpacity>
           </View>
 
             <FloatingMenu
@@ -227,38 +320,23 @@ const styles = StyleSheet.create({
                 dimmerStyle={{opacity: 0}}
               />
               <View style = {styles.scrollContainer}>
-              <SafeAreaView style={{flex: 1}}>
+              <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
                   <ScrollView
                   showsVerticalScrollIndicator= {false}
                   showsHorizontalScrollIndicator= {false}
                   style={styles.scrollView}>
+
+                    <Text style = {styles.topBold}>{bodyTexts[currentKey].topBold}</Text>
                     <Text style={styles.bodyText}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                      minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                      aliquip ex ea commodo consequat. Duis aute irure dolor in
-                      reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                      culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                      minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                      aliquip ex ea commodo consequat. Duis aute irure dolor in {"\n"}{"\n"}
-                      reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                      culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                      minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                      aliquip ex ea commodo consequat. Duis aute irure dolor in
-                      reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in {"\n"}{"\n"}
-                      culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                      minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                      aliquip ex ea commodo consequat. Duis aute irure dolor in
-                      reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                      culpa qui officia deserunt mollit anim id est laborum.
+                      {bodyTexts[currentKey].body}
                     </Text>
+
+                    <TouchableOpacity onPress = {() => {
+                          openLink(bodyTexts[currentKey].buttonLink);
+                        }} style={[styles.button, styles.shadow3]}>
+                      <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
+                    </TouchableOpacity>
+                    <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                   </ScrollView>
                 </SafeAreaView>
               </View>
