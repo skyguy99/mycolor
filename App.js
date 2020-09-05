@@ -7,6 +7,10 @@ import { AppLoading } from 'expo';
 import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import { FloatingMenu } from 'react-native-floating-action-menu';
+import { Jiro } from 'react-native-textinput-effects';
+import MaskedView from '@react-native-community/masked-view';
+import * as Progress from 'expo-progress';
+import LottieView from "lottie-react-native";
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
 import {
@@ -49,6 +53,7 @@ export default function App() {
 
   const [backgroundColor, setBackgroundColor] = React.useState(new Animated.Value(0));
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isCreditsOpen, setIsCreditsOpen] = React.useState(false);
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
 
@@ -58,14 +63,17 @@ export default function App() {
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('');
 
+  const LottieRef = React.useRef(null);
+  const [lottieProgress, setLottieProgress] = React.useState(new Animated.Value(0.5));
+
   const SliderWidth = Dimensions.get('screen').width;
   const colorMenuItems = [
-    { label: '', color: '#fca500', darkerColor: '#AF7300'},
-    { label: '', color: '#0081d1', darkerColor: '#00578D'},
-    { label: '', color: '#6fa229', darkerColor: '#47651D'},
-    { label: '', color: '#939598', darkerColor: '#5C5D5F'},
-    { label: '', color: '#d12b51', darkerColor: '#901F39'},
-    { label: '', color: '#b15de6', darkerColor: '#901F39'},
+    { label: '', header: 'Orange', color: '#fca500', darkerColor: '#AF7300'},
+    { label: '', header: 'Blue', color: '#0081d1', darkerColor: '#00578D'},
+    { label: '', header: 'Green', color: '#6fa229', darkerColor: '#47651D'},
+    { label: '', header: 'Gray', color: '#939598', darkerColor: '#5C5D5F'},
+    { label: '', header: 'Crimson', color: '#d12b51', darkerColor: '#901F39'},
+    { label: '', header: 'Purple', color: '#b15de6', darkerColor: '#901F39'},
   ];
 
   const bodyTexts = {
@@ -168,6 +176,12 @@ export default function App() {
 
   const toggleCredits = () => {
     console.log('credits');
+
+    Animated.timing(lottieProgress, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true
+      }).start();
   }
 
   const openLink = (link) => {
@@ -272,12 +286,40 @@ const styles = StyleSheet.create({
       zIndex: 10,
     },
     creditsBtn: {
-      backgroundColor: 'yellow',
-      width: wp('18%'),
-      height: wp('15%'),
-      marginTop: -hp('5%'),
+      width: wp('20%'),
+      height: wp('17%'),
+      marginTop: -hp('5.2%'),
       marginLeft: wp('11%')
-    }
+    },
+    quizParagraph: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      question: {
+        paddingVertical: 20,
+      },
+      answer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      resultText: {
+        fontSize: 16,
+        padding: 10,
+        color: 'white',
+      },
+      retake: {
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderColor: 'white',
+        backgroundColor: 'black',
+        borderRadius: 5,
+        width: 200,
+        alignSelf: 'center',
+      },
 });
 
 // <Animated.View style = {{width: 300, height: 300, backgroundColor: backgroundColor.interpolate({
@@ -304,6 +346,13 @@ const styles = StyleSheet.create({
             <Text style = {[styles.headerText, styles.shadow1]}>{currentKey}</Text>
 
             <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
+                <LottieView
+                      ref={LottieRef}
+                      style={styles.cardInstagram}
+                      source={require('./assets/hamburger.json')}
+                      loop={false}
+                      progress={lottieProgress}
+                    />
             </TouchableOpacity>
           </View>
 
