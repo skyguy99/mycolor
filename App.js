@@ -73,12 +73,12 @@ export default function App() {
 
   const SliderWidth = Dimensions.get('screen').width;
   const colorMenuItems = [
-    { label: '', header: 'Orange', color: '#fca500', darkerColor: '#AF7300'},
-    { label: '', header: 'Blue', color: '#0081d1', darkerColor: '#00578D'},
-    { label: '', header: 'Green', color: '#6fa229', darkerColor: '#47651D'},
-    { label: '', header: 'Gray', color: '#939598', darkerColor: '#5C5D5F'},
-    { label: '', header: 'Crimson', color: '#d12b51', darkerColor: '#901F39'},
-    { label: '', header: 'Purple', color: '#b15de6', darkerColor: '#901F39'},
+    { label: '', header: 'orange', color: '#fca500', darkerColor: '#AF7300'},
+    { label: '', header: 'blue', color: '#0081d1', darkerColor: '#00578D'},
+    { label: '', header: 'green', color: '#6fa229', darkerColor: '#47651D'},
+    { label: '', header: 'gray', color: '#939598', darkerColor: '#5C5D5F'},
+    { label: '', header: 'crimson', color: '#d12b51', darkerColor: '#901F39'},
+    { label: '', header: 'purple', color: '#b15de6', darkerColor: '#901F39'},
   ];
 
   const bodyTexts = {
@@ -283,8 +283,13 @@ export default function App() {
       return result;
     };
 
-    const handleBackPress = (id, index) => {
+    const handleBackPress = (index) => {
       console.log('back quiz');
+      setTimeout(() => {
+        if (index > 0) {
+          setCurrentQuestionIndex(index - 1);
+        }
+      }, 200);
     }
 
     const handleOptionPress = (id, index) => {
@@ -318,6 +323,8 @@ export default function App() {
     };
 
     const handleRetakePress = () => {
+      console.log('Retake');
+
       setSelectedAnswer('');
       setCurrentQuestionIndex(0);
       setShowResult(false);
@@ -408,7 +415,14 @@ const styles = StyleSheet.create({
         fontFamily: 'CircularStd-Black',
         color: 'black',
         fontSize: hp('2.2%'),
-        marginBottom: hp('7%')
+        marginBottom: hp('2%')
+      },
+      colorAttributesText: {
+        fontFamily: 'CircularStd-Black',
+        color: 'black',
+        fontSize: hp('2.2%'),
+        textTransform: 'capitalize',
+        marginTop: hp('2%')
       },
       answer: {
         flexDirection: 'row',
@@ -416,9 +430,18 @@ const styles = StyleSheet.create({
         paddingTop: hp('3%'),
       },
       resultText: {
-        fontSize: 16,
-        padding: 10,
-        color: 'white',
+        fontFamily: 'CircularStd-Book',
+        color: 'black',
+        fontSize: hp('2.2%'),
+        textAlign: 'center'
+      },
+      resultTextBig: {
+        fontFamily: 'CircularStd-Black',
+        color: 'black',
+        fontSize: hp('4%'),
+        textAlign: 'center',
+        textTransform: 'capitalize',
+        marginBottom: hp('4%')
       },
       retake: {
         marginTop: 20,
@@ -510,30 +533,34 @@ const styles = StyleSheet.create({
 
               <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
 
+          <SafeAreaView style={{flex: 1}}>
+              <ScrollView
+              showsVerticalScrollIndicator= {false}
+              showsHorizontalScrollIndicator= {false}
+              style={{zIndex: 10}}>
+
               <View style = {styles.quizContent}>
-                        <Text style={styles.question}>
-                          {quizQuestions[currentQuestionIndex].question}
+                        <Text style={[styles.question, {display: showResult ? 'none' : 'flex'}]}>
+                          {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                         </Text>
-                          <Progress.Bar isAnimated duration={200} progress={parseInt(currentQuestionIndex + 1) / 20} color={"#333333"} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+                        <Text style={styles.resultText}>{showResult ? 'You are...' : ''}</Text>
+                        <Text style={styles.resultTextBig}>{showResult ? resultColor : ''}</Text>
+                          <Progress.Bar isAnimated duration={200} progress={parseInt(currentQuestionIndex + 1) / 21} color={showResult ? resultColor : "#333333"} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
                           <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                    <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => handleBackPress(answer.id, index)}>
-                                    <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                      <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
-                                      <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Back</Text>
-                                    </View>
+                                    <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
+                                        <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+                                          <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
+                                          <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>{showResult ? 'Take Again' : 'Back'}</Text>
+                                        </View>
                                     </TouchableOpacity>
-                                <Text style={[styles.quizParagraph, {alignSelf: 'flex-start', marginTop: hp('1.5%'), marginLeft: wp('2%')}]}>{showResult ? 'Result' : 'Q' + parseInt(currentQuestionIndex + 1)+"/20"}</Text>
+                                <Text style={[styles.quizParagraph, {alignSelf: 'flex-start', marginTop: hp('1.5%'), marginLeft: wp('2%')}]}>{showResult ? '' : 'Q' + parseInt(currentQuestionIndex + 1)+"/20"}</Text>
                           </View>
                       {showResult ? (
-                        <View style={{ backgroundColor: resultColor, flex: 1 }}>
-                          <Text style={styles.resultText}>Your color is {resultColor}</Text>
-                          <Text style={styles.resultText}>
-                            Attributes: {resultAttributes.toString()}
-                          </Text>
-                          <TouchableOpacity style={styles.retake} onPress={handleRetakePress}>
-                            <Text style={styles.resultText}> RE-TAKE </Text>
-                          </TouchableOpacity>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.colorAttributesText}>{resultAttributes.toString()}</Text>
+                            <Text style={styles.bodyText}></Text>
                         </View>
+
                       ) : (
                           <>
                             {quizQuestions[currentQuestionIndex].answers.map((answer, index) => {
@@ -542,23 +569,30 @@ const styles = StyleSheet.create({
                                   style={[styles.answer, {flexDirection:'row'}]}
                                   key={index}
                                   onPress={() => handleOptionPress(answer.id, index)}>
-                                  <Text style = {styles.bodyText}>{answer.value}</Text>
-                                  <RadioButton.Android
-                                    style={{height: 100}}
-                                    uncheckedColor={"#F0F0F0"}
-                                    color={'black'}
-                                    value="first"
-                                    status={
-                                      answer.id === selectedAnswer ? 'checked' : 'unchecked'
-                                    }
-                                    onPress={() => handleOptionPress(answer.id, index)}
-                                  />
+                                  <View style={{flexDirection:"row",alignItems:'center'}}>
+                                      <View style={{flex:9}}>
+                                          <Text style = {styles.bodyText}>{answer.value}</Text>
+                                      </View>
+                                      <View style={{flex:1, paddingLeft: wp('2%')}}>
+                                          <RadioButton.Android
+                                            uncheckedColor={"#F0F0F0"}
+                                            color={'black'}
+                                            value="first"
+                                            status={
+                                              answer.id === selectedAnswer ? 'checked' : 'unchecked'
+                                            }
+                                            onPress={() => handleOptionPress(answer.id, index)}
+                                          />
+                                      </View>
+                                  </View>
                                 </TouchableOpacity>
                               );
                             })}
                           </>
                         )}
                 </View>
+                </ScrollView>
+                </SafeAreaView>
               </Animated.View>
 
               <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
