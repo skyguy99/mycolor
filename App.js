@@ -261,6 +261,71 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+    //Quiz functions
+    React.useEffect(() => {
+      if (resultColor) {
+        colors.forEach((color) => {
+          if (color.name === resultColor) {
+            setResultAttributes(color.attributes);
+          }
+        });
+      }
+    }, [resultColor]);
+
+    const mergeObjects = (obj1, obj2) => {
+      var objs = [obj1, obj2];
+      var result = objs.reduce(function (r, o) {
+        Object.keys(o).forEach(function (k) {
+          r[k] = o[k];
+        });
+        return r;
+      }, {});
+      return result;
+    };
+
+    const handleBackPress = (id, index) => {
+      console.log('back quiz');
+    }
+
+    const handleOptionPress = (id, index) => {
+      setSelectedAnswer(id);
+      const answer = convertIndexToAnswer(currentQuestionIndex + 1, index + 1);
+      const userAnswersCombined = mergeObjects(userAnswers, {
+        [currentQuestionIndex + 1]: answer,
+      });
+
+      setUserAnswers(userAnswersCombined);
+
+      const tiedIndexes =
+        currentQuestionIndex > 19 ? checkForTie(userAnswers) : [];
+
+      const colorResult =
+        currentQuestionIndex > 19
+          ? tiedIndexes.length > 1
+            ? convertIndexToColorName(tiedIndexes[0])
+            : calculateResultIndex(userAnswers)
+          : '';
+      setResultColor(colorResult);
+
+
+      setTimeout(() => {
+        if (quizQuestions.length > currentQuestionIndex + 1) {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+          setShowResult(true);
+        }
+      }, 200);
+    };
+
+    const handleRetakePress = () => {
+      setSelectedAnswer('');
+      setCurrentQuestionIndex(0);
+      setShowResult(false);
+      setUserAnswers({});
+      setResultColor('');
+      setResultAttributes('');
+    };
+
 //------------------------------------------------------------------->
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -335,16 +400,20 @@ const styles = StyleSheet.create({
       zIndex: 4
     },
     quizParagraph: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
+      fontFamily: 'CircularStd-Book',
+      color: 'black',
+      fontSize: hp('2.2%'),
       },
       question: {
-        paddingVertical: 20,
+        fontFamily: 'CircularStd-Black',
+        color: 'black',
+        fontSize: hp('2.2%'),
+        marginBottom: hp('7%')
       },
       answer: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+        paddingTop: hp('3%'),
       },
       resultText: {
         fontSize: 16,
@@ -382,6 +451,11 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'absolute',
         ...StyleSheet.absoluteFillObject,
+      },
+      quizContent: {
+        justifyContent: 'center',
+        padding: wp('14%'),
+        marginTop: hp('10%')
       }
 });
 
@@ -433,7 +507,58 @@ const styles = StyleSheet.create({
                 onItemPress={handleItemPress}
                 dimmerStyle={{opacity: 0}}
               />
+
               <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
+
+              <View style = {styles.quizContent}>
+                        <Text style={styles.question}>
+                          {quizQuestions[currentQuestionIndex].question}
+                        </Text>
+                          <Progress.Bar isAnimated duration={200} progress={parseInt(currentQuestionIndex + 1) / 20} color={"#333333"} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+                          <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+                                    <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => handleBackPress(answer.id, index)}>
+                                    <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+                                      <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
+                                      <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Back</Text>
+                                    </View>
+                                    </TouchableOpacity>
+                                <Text style={[styles.quizParagraph, {alignSelf: 'flex-start', marginTop: hp('1.5%'), marginLeft: wp('2%')}]}>{showResult ? 'Result' : 'Q' + parseInt(currentQuestionIndex + 1)+"/20"}</Text>
+                          </View>
+                      {showResult ? (
+                        <View style={{ backgroundColor: resultColor, flex: 1 }}>
+                          <Text style={styles.resultText}>Your color is {resultColor}</Text>
+                          <Text style={styles.resultText}>
+                            Attributes: {resultAttributes.toString()}
+                          </Text>
+                          <TouchableOpacity style={styles.retake} onPress={handleRetakePress}>
+                            <Text style={styles.resultText}> RE-TAKE </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : (
+                          <>
+                            {quizQuestions[currentQuestionIndex].answers.map((answer, index) => {
+                              return (
+                                <TouchableOpacity
+                                  style={[styles.answer, {flexDirection:'row'}]}
+                                  key={index}
+                                  onPress={() => handleOptionPress(answer.id, index)}>
+                                  <Text style = {styles.bodyText}>{answer.value}</Text>
+                                  <RadioButton.Android
+                                    style={{height: 100}}
+                                    uncheckedColor={"#F0F0F0"}
+                                    color={'black'}
+                                    value="first"
+                                    status={
+                                      answer.id === selectedAnswer ? 'checked' : 'unchecked'
+                                    }
+                                    onPress={() => handleOptionPress(answer.id, index)}
+                                  />
+                                </TouchableOpacity>
+                              );
+                            })}
+                          </>
+                        )}
+                </View>
               </Animated.View>
 
               <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
