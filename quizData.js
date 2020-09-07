@@ -585,7 +585,7 @@ export const quizQuestions = [
         id: 'ab38ea94'
       },
       {
-        value: 'I prefer a 4a breakfast so I can sleep through brunch.',
+        value: 'I prefer a 4am breakfast so I can sleep through brunch.',
         color: 'purple',
         id: 'ab38efee'
       },
@@ -595,7 +595,7 @@ export const quizQuestions = [
         id: 'ab38f246'
       },
       {
-        value: "It's always a quest. I'll travel far and wide to get to what's new and hapening.",
+        value: "It's always a quest. I'll travel far and wide to get to what's new and happening.",
         color: 'crimson',
         id: 'ab38f49e'
       },
