@@ -666,9 +666,11 @@ const styles = StyleSheet.create({
                   style={styles.scrollView}>
 
                     <Text style = {styles.topBold}>{bodyTexts[currentKey].topBold}</Text>
-                    <Text style={styles.bodyText}>
-                      {bodyTexts[currentKey].body}
+                    <Text style={styles.bodyText}>{bodyTexts[currentKey].body}</Text>
+                    <Text style={[styles.bodyText, {display: (currentKey == 'Teams') ? 'flex' : 'none'}]}>
+                    “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
                     </Text>
+                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text>- Chris Younger</Text></TouchableOpacity>
 
                     <TouchableOpacity onPress = {() => {
                           if(currentKey == 'myCOLOR')
