@@ -238,6 +238,17 @@ export default function App() {
 
     //button functions
 
+    // <Jiro
+      //     style={{width: hp('35%'), marginLeft: -50}}
+      //     label={'Your name'}
+      //     labelStyle={{color: '#F48D10', fontFamily: 'SequelSans-BlackDisp', fontSize: hp('1.5%'), marginLeft: 28}}
+      //     borderColor={'#FDE6C9'}
+      //     inputPadding={16}
+      //     inputStyle={{ color: '#F48D10', fontFamily: 'SequelSans-RomanDisp', fontSize: hp('4.8%'), marginLeft: 28}}
+      //     returnKeyType="next"
+      //     onSubmitEditing={(textVal) => saveName(textVal.nativeEvent.text)}
+      //   />
+
     const buttonPress = (link, isShare, string) => {
 
       if(isShare) {
@@ -298,7 +309,7 @@ export default function App() {
   			})
       ]).start();
 
-  }, 0); //add this in
+  }, 3000); //add this in
     return () => clearInterval(interval);
   }, []);
 
@@ -462,7 +473,7 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       transform: [{translateX: -wp('32%')}, {translateY: hp('8%')}],
       position: 'absolute',
-      zIndex: 4
+      zIndex: 2
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -559,11 +570,24 @@ const styles = StyleSheet.create({
   return (
     <View style={[styles.container]}>
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
-      <Animated.View pointerEvents={"none"} style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
-        <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is. </Text>
-        <Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('45%')}]}>© a.network.</Text>
+      <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 3, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
+          inputRange: [0, 30, 60, 90, 120, 150],
+          outputRange: [
+            '#fca500',
+            '#0081d1',
+            '#6fa229',
+            '#939598',
+            '#d12b51',
+            '#b15de6',
+          ],
+        }),}]}>
       </Animated.View>
-      <TouchableOpacity style = {styles.creditsBtn} onPress={toggleQuiz}>
+
+      <Animated.View pointerEvents={"none"} style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
+        <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and reimagined as a mobile experience by Skylar Thomas at Ayzenberg Group, an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of Listen, Create, and Share. </Text>
+        <TouchableOpacity onPress={() => {openLink('')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('45%')}]}>© a.network.</Text></TouchableOpacity>
+      </Animated.View>
+      <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
           <LottieView
                 ref={LottieRef}
                 style={styles.shadow1}
