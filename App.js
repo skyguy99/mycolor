@@ -35,6 +35,7 @@ export default function App() {
   let [fontsLoaded] = useFonts({
         'CircularStd-Book' : require('./assets/CircularStd-Book.ttf'),
         'CircularStd-Black' : require('./assets/CircularStd-Black.ttf'),
+        'CircularStd-BookItalic' : require('./assets/CircularStd-BookItalic.ttf'),
   });
 
   //persistent vars
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: 'white',
     padding: 24,
-    marginTop: hp('2%')
+    marginTop: hp('5%')
   },
   container: {
     flex: 1,
@@ -667,10 +668,25 @@ const styles = StyleSheet.create({
 
                     <Text style = {styles.topBold}>{bodyTexts[currentKey].topBold}</Text>
                     <Text style={styles.bodyText}>{bodyTexts[currentKey].body}</Text>
-                    <Text style={[styles.bodyText, {display: (currentKey == 'Teams') ? 'flex' : 'none'}]}>
-                    “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
-                    </Text>
-                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text>- Chris Younger</Text></TouchableOpacity>
+
+                    <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
+                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
+                        “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
+                        </Text>
+                        <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.topBold}>- Chris Younger</Text></TouchableOpacity>
+
+                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
+                            {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}{"\n"}My approach to finding the right team for each project is to start building outward and continually ask myself whether we have what we need to succeed. Diversity across the team - regardless of its size - is a must. And all of this quickly increases the potential size of our adequate team. So because I am a great believer in smallness, I am always asking myself – “can I achieve more than one goal with each person whom I add to the team?” This is where personality assessment tools like My Color can be extremely useful in anticipating how people will get along or perhaps more importantly, coaching the team in how to get along with one another.”{"\n"}
+                            </Text>
+                        <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.topBold}>- Matt Bretz</Text></TouchableOpacity>
+
+                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
+                            {"\n"}"My TEAM is made up of people who can fill in the holes. I need a safety net when I walk into a room, and knowing my teammates have my back because they are strongly suited in the areas I am not, is an ideal situation for me.{"\n"}{"\n"}
+                                  Knowing what the ask is determines the team; with 9 clubs in a golf bag I need to know which team member to call on to complete what is needed.
+                                  {"\n"}{"\n"}Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
+                            </Text>
+                        <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.topBold}>- Gary Goodman</Text></TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity onPress = {() => {
                           if(currentKey == 'myCOLOR')
