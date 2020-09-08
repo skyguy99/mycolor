@@ -12,7 +12,7 @@ import MaskedView from '@react-native-community/masked-view';
 import * as Progress from 'expo-progress';
 import LottieView from "lottie-react-native";
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
-import { StyleSheet, Text, View, Image, ImageBackground, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -39,7 +39,7 @@ export default function App() {
 
   //persistent vars
   const [username, setUsername] = useState('');
-  const [userColor, setUserColor] = useState('no color');
+  const [userColor, setUserColor] = useState('');
 
   //quiz vars
   const [progress, setProgress] = useState(new Animated.Value(0));
@@ -48,15 +48,17 @@ export default function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
   const [showResult, setShowResult] = React.useState(false);
   const [userAnswers, setUserAnswers] = React.useState({});
-  const [resultColor, setResultColor] = React.useState(''); //persistent
+  const [resultColor, setResultColor] = React.useState('');
   const [resultAttributes, setResultAttributes] = React.useState('');
 
   const [backgroundColor, setBackgroundColor] = React.useState(new Animated.Value(0));
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isCreditsOpen, setIsCreditsOpen] = React.useState(false);
   const [isQuizOpen, setIsQuizOpen] = React.useState(false);
+
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
+  const [secondColor, setSecondColor] = React.useState('');
 
   const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
   const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
@@ -94,24 +96,15 @@ export default function App() {
   ];
 
   const bodyTexts = {
-    'myCOLOR': {body: 'mycolor body text', topBold: '', buttonLink: '', buttonTitle: 'Learn more'},
+    'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
-    'yourCOLOR': {body: 'yourcolor body text', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
+    'yourCOLOR': {body: '', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
 
     'Quiz': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
 
-    'Teams':{body: 'teams bod', topBold: '', buttonLink: '', buttonTitle: 'Learn more'},
+    'Teams':{body: 'We each have a personality type, wired into us in a way that can’t be denied. It’s who we are. But when we build teams, we have the opportunity to create a dynamic based on the right mix of different types. \n\nThat’s what makes myCOLOR for Teams so powerful. By understanding how people with different personality colors work best together, you can gain insights into crafting the right team for any situation, from work to sports to social events.\n\nFrom the optimism of Oranges to the creativity of Purples to the dependability of Blues, aligning our strengths (and balancing our weaknesses) can result in teams that perform to their maximum potential.\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
-    'Connect': {body: '', topBold: '', buttonLink: 'instagram://user?username=mycolorpersonality', buttonTitle: ''},
-
-    'Credits': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
-
-
-    'Blue': {body: 'Dependability is a key feature that characterizes people, like you, whose personality color is blue. Blues tend to be rule-following, dependable, long-enduring, and tenacious. You make sacrifices in order to rise up the ranks in the world. You put in the extra hours in the office. You always fill out your taxes and pay your bills on time. You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all. You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', topBold: 'Dependable, Practical, Directive', buttonLink: '', buttonTitle: 'Share'},
-
-    'Blue/Crimson':{body: '', topBold: '', buttonLink: '', buttonTitle: 'Share'},
-
-    'Orange': {body: 'Optimism and friendliness characterize people, like you, whose personality color is Orange. You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else. You’re whimsical and value zaniness in others. You’re also bubbly, in an infectious, happy, joyful way. You see the best in people, despite what others may say about them. And you’re a forgiver—to a fault. As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', topBold: 'Optimistic, Friendly, Perceptive', buttonLink: '', buttonTitle: 'Share'},
+    'Connect': {body: '', topBold: '', buttonLink: 'instagram://user?username=mycolorpersonality', buttonTitle: ''}
   }; //title : body text
 
   //Functions
@@ -120,17 +113,23 @@ export default function App() {
   useEffect(() => {
   //StatusBar.setHidden(true, 'none');
 
-  setCurrentKey('yourCOLOR');
-  setUsername('Skylar');
+  setCurrentKey('Teams');
 
   AsyncStorage.getItem('username')
     .then((item) => {
          if (item) {
            // do the damage
            setUsername(item);
-           console.log('We remember you! '+username);
+           //console.log('We remember you! '+username);
          }
     });
+    AsyncStorage.getItem('userColor')
+      .then((item) => {
+           if (item) {
+             // do the damage
+             setUserColor(item);
+           }
+      });
 });
 
   function elevationShadowStyle(elevation) {
@@ -148,7 +147,12 @@ export default function App() {
 
   const handleItemPress = (item, index) => {
     console.log('pressed item', item.color);
-    setCurrentColor(item.color);
+    if(!isSelectingSecondColor)
+    {
+      setCurrentColor(item.color);
+    } else {
+      setSecondColor(item.color);
+    }
   }
 
   const renderMenuIcon = (menuState) => {
@@ -231,11 +235,40 @@ export default function App() {
         ]).start();
       }
 
+    //button functions
+
+    const buttonPress = (link, isShare, string) => {
+
+      if(isShare) {
+            onShare(link, string);
+      } else {
+            openLink(link);
+      }
+    }
+
+  const onShare = async (btnLink, string) => {
+        try {
+          const result = await Share.share({
+            message:
+              string +" "+ btnLink
+          });
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+  };
+
   const openLink = (link) => {
-    if(link == '')
+    if(link != '')
     {
-      console.log('EMPTY LINK');
-    } else {
       Linking.openURL(link);
     }
   }
@@ -319,6 +352,8 @@ export default function App() {
           : '';
       setResultColor(colorResult);
 
+      setUserColor(colorResult);
+      AsyncStorage.setItem('userColor', userColor);
 
       setTimeout(() => {
         if (quizQuestions.length > currentQuestionIndex + 1) {
@@ -346,9 +381,13 @@ export default function App() {
 
     function getResultColorItem(color) {
 
-      console.log('RESULT: '+color);
-      console.log(colorMenuItems.filter((item) => item.header === color));
-      return colorMenuItems.filter((item) => item.header === color);
+      if(color)
+      {
+        console.log('**RESULT: '+color);
+        console.log(colorMenuItems.filter((item) => item.header === color));
+        return colorMenuItems.filter((item) => item.header === color);
+      }
+      return {color: '#ffffff'}
     }
 
 //------------------------------------------------------------------->
@@ -458,10 +497,10 @@ const styles = StyleSheet.create({
       resultTextBig: {
         fontFamily: 'CircularStd-Black',
         color: 'black',
-        fontSize: hp('4%'),
+        fontSize: hp('5%'),
         textAlign: 'center',
         textTransform: 'capitalize',
-        marginBottom: hp('4%')
+        marginBottom: hp('7%')
       },
       retake: {
         marginTop: 20,
@@ -579,7 +618,7 @@ const styles = StyleSheet.create({
                             <Text style={styles.colorAttributesText}>{showResult ? getResultColorItem(resultColor)[0].attributes : ''}</Text>
                             <Text style={styles.bodyText}>{showResult ? getResultColorItem(resultColor)[0].bodyText : ''}</Text>
                             <TouchableOpacity onPress = {() => {
-                                  openLink(bodyTexts[currentKey].buttonLink);
+                                  buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${resultColor}`);
                                 }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none'}]}>
                               <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
                             </TouchableOpacity>
@@ -632,9 +671,24 @@ const styles = StyleSheet.create({
                     </Text>
 
                     <TouchableOpacity onPress = {() => {
-                          openLink(bodyTexts[currentKey].buttonLink);
+                          if(currentKey == 'myCOLOR')
+                          {
+                            buttonPress(bodyTexts[currentKey].buttonLink, false, '');
+                          } else if(currentKey == 'Teams')
+                          {
+                            buttonPress(bodyTexts[currentKey].buttonLink, true, 'Check out myCOLOR Teams');
+                          } else if(currentKey == 'color') //1 color (not me)
+                          {
+                            buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentColor}`);
+                          } else if(currentKey == 'colors') //2 color combo
+                          {
+                            buttonPress('https://thecolorofmypersonality.com/', true, `Here's what happens when you put a ${currentColor} and ${secondColor} together`);
+                          } else if (currentKey == 'yourCOLOR') //my color (last time taken under my name)
+                          {
+                            buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
+                          }
                         }} style={[styles.button, styles.shadow3]}>
-                      <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
+                      <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{bodyTexts[currentKey].buttonTitle}</Text>
                     </TouchableOpacity>
                     <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                   </ScrollView>
