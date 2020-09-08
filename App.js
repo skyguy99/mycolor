@@ -296,10 +296,10 @@ export default function App() {
 
       Animated.parallel([
         Animated.spring(splashOffsetY, {
-  				toValue: hp('60%'),
-  				bounciness: 11,
+  				toValue: hp('100%'),
+  				bounciness: 1,
   				useNativeDriver: false,
-          speed: 1.2
+          speed: 2
   			}),
         Animated.spring(containerOffsetY, {
   				toValue: hp('-3%'),
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         height: hp('100%'),
         width: wp('100%'),
-        zIndex: 4,
+        zIndex: 10,
       },
   scrollView: {
       marginHorizontal: 20,
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       transform: [{translateX: -wp('32%')}, {translateY: hp('8%')}],
       position: 'absolute',
-      zIndex: 2
+      zIndex: 5
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
   return (
     <View style={[styles.container]}>
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
-      <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 3, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
+      <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 9, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
           inputRange: [0, 30, 60, 90, 120, 150],
           outputRange: [
             '#fca500',
@@ -583,7 +583,7 @@ const styles = StyleSheet.create({
         }),}]}>
       </Animated.View>
 
-      <Animated.View pointerEvents={"none"} style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
+      <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
         <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and reimagined as a mobile experience by Skylar Thomas at Ayzenberg Group, an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of Listen, Create, and Share. </Text>
         <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('10%')}]}>© a.network.</Text></TouchableOpacity>
       </Animated.View>
