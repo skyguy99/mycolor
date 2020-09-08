@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
 
       <Animated.View pointerEvents={"none"} style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
         <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and reimagined as a mobile experience by Skylar Thomas at Ayzenberg Group, an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of Listen, Create, and Share. </Text>
-        <TouchableOpacity onPress={() => {openLink('')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('45%')}]}>© a.network.</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('10%')}]}>© a.network.</Text></TouchableOpacity>
       </Animated.View>
       <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
           <LottieView
