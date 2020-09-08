@@ -176,6 +176,8 @@ export default function App() {
   };
 
   const startBackgroundColorAnimation = () => {
+    console.log('bg color');
+
     Animated.timing(backgroundColor, {
       toValue: 150,
       duration: 10000,
@@ -309,7 +311,7 @@ export default function App() {
   			})
       ]).start();
 
-  }, 3000); //add this in
+  }, 10000); //add this in
     return () => clearInterval(interval);
   }, []);
 
