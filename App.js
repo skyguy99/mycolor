@@ -167,24 +167,23 @@ export default function App() {
   const endBackgroundColorAnimation = () => {
     Animated.timing(backgroundColor, {
       toValue: 0,
-      duration: 10000,
+      duration: 1200,
       easing: Easing.easeOut,
       useNativeDriver: false
     }).start(() => {
-      setBackgroundColor(new Animated.Value(0));
+      //setBackgroundColor(new Animated.Value(0));
     });
   };
 
   const startBackgroundColorAnimation = () => {
-    console.log('bg color');
 
     Animated.timing(backgroundColor, {
-      toValue: 150,
-      duration: 10000,
+      toValue: 180,
+      duration: 1200,
       easing: Easing.easeOut,
       useNativeDriver: false
     }).start(() => {
-      endBackgroundColorAnimation();
+      //endBackgroundColorAnimation();
     });
   };
 
@@ -301,7 +300,7 @@ export default function App() {
   				toValue: hp('100%'),
   				bounciness: 1,
   				useNativeDriver: false,
-          speed: 2
+          speed: 1.4
   			}),
         Animated.spring(containerOffsetY, {
   				toValue: hp('-3%'),
@@ -311,7 +310,7 @@ export default function App() {
   			})
       ]).start();
 
-  }, 10000); //add this in
+  }, 4200); //add this in
     return () => clearInterval(interval);
   }, []);
 
@@ -430,7 +429,7 @@ const styles = StyleSheet.create({
   },
   contentContainer:
   {
-    flex: 1, justifyContent: 'center', transform: [{translateY: containerOffsetY }], width: wp('101%')
+    flex: 1, justifyContent: 'center', width: wp('101%')
   },
   scrollContainer: {
     flex: 1,
@@ -473,9 +472,9 @@ const styles = StyleSheet.create({
       height: wp('17%'),
       flex: 1,
       justifyContent: 'flex-start',
-      transform: [{translateX: -wp('32%')}, {translateY: hp('8%')}],
+      transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
-      zIndex: 5
+      zIndex: 5,
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -573,173 +572,176 @@ const styles = StyleSheet.create({
     <View style={[styles.container]}>
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
       <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 9, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
-          inputRange: [0, 30, 60, 90, 120, 150],
+          inputRange: [0, 30, 60, 90, 120, 150, 180],
           outputRange: [
-            '#fca500',
+            '#d12b51',
             '#0081d1',
             '#6fa229',
             '#939598',
-            '#d12b51',
+            '#fca500',
             '#b15de6',
+            '#d12b51'
           ],
         }),}]}>
       </Animated.View>
 
-      <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
-        <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and reimagined as a mobile experience by Skylar Thomas at Ayzenberg Group, an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of Listen, Create, and Share. </Text>
-        <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('10%')}]}>© a.network.</Text></TouchableOpacity>
-      </Animated.View>
-      <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
-          <LottieView
-                ref={LottieRef}
-                style={styles.shadow1}
-                source={require('./assets/hamburger.json')}
-                loop={false}
-                progress={lottieProgress}
-              />
-      </TouchableOpacity>
-      <Animated.View style={[styles.contentContainer, { transform: [{translateX: containerOffsetX }]} ]}>
-          <View style={styles.topBar}>
-            <Text style = {[styles.headerText, styles.shadow1]}>{currentKey}</Text>
-          </View>
+      <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
+                  <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
+                    <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
+                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('10%')}]}>© a.network.</Text></TouchableOpacity>
+                  </Animated.View>
+                  <TouchableOpacity style = {styles.creditsBtn} onPress={toggleQuiz}>
+                      <LottieView
+                            ref={LottieRef}
+                            style={styles.shadow1}
+                            source={require('./assets/hamburger.json')}
+                            loop={false}
+                            progress={lottieProgress}
+                          />
+                  </TouchableOpacity>
+                  <Animated.View style={[styles.contentContainer, { transform: [{translateX: containerOffsetX }]} ]}>
+                      <View style={styles.topBar}>
+                        <Text style = {[styles.headerText, styles.shadow1]}>{currentKey}</Text>
+                      </View>
 
-            <FloatingMenu
-                items={colorMenuItems}
-                isOpen={isMenuOpen}
-                position={"top-right"}
-                borderColor={'white'}
-                primaryColor={'white'}
-                buttonWidth={wp('10%')}
-                borderWidth={0}
-                onMenuToggle={handleMenuToggle}
-                onItemPress={handleItemPress}
-                dimmerStyle={{opacity: 0}}
-              />
+                        <FloatingMenu
+                            items={colorMenuItems}
+                            isOpen={isMenuOpen}
+                            position={"top-right"}
+                            borderColor={'white'}
+                            primaryColor={'white'}
+                            buttonWidth={wp('10%')}
+                            borderWidth={0}
+                            onMenuToggle={handleMenuToggle}
+                            onItemPress={handleItemPress}
+                            dimmerStyle={{opacity: 0}}
+                          />
 
-              <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
+                          <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
 
-          <SafeAreaView style={{flex: 1, marginTop: hp('16%')}}>
-              <ScrollView
-              showsVerticalScrollIndicator= {false}
-              showsHorizontalScrollIndicator= {false}
-              style={{zIndex: 10}}>
+                      <SafeAreaView style={{flex: 1, marginTop: hp('16%')}}>
+                          <ScrollView
+                          showsVerticalScrollIndicator= {false}
+                          showsHorizontalScrollIndicator= {false}
+                          style={{zIndex: 10}}>
 
-              <View style = {styles.quizContent}>
-                        <Text style={[styles.question, {display: showResult ? 'none' : 'flex'}]}>
-                          {showResult ? '' : quizQuestions[currentQuestionIndex].question}
-                        </Text>
-                        <Text style={styles.resultText}>{showResult ? 'You are...' : ''}</Text>
-                        <Text style={styles.resultTextBig}>{showResult ? resultColor : ''}</Text>
-                          <Progress.Bar isAnimated duration={showResult ? 1000 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? getResultColorItem(resultColor)[0].color : "#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
-                          <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                    <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
-                                        <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                          <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
-                                          <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>{showResult ? 'Take Again' : 'Back'}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                <Text style={[styles.quizParagraph, {alignSelf: 'flex-start', marginTop: hp('1.5%'), marginLeft: wp('2%')}]}>{showResult ? '' : 'Q' + parseInt(currentQuestionIndex + 1)+"/21"}</Text>
-                          </View>
-                      {showResult ? (
-                        <View style={{ flex: 1 }}>
-                            <Text style={styles.colorAttributesText}>{showResult ? getResultColorItem(resultColor)[0].attributes : ''}</Text>
-                            <Text style={styles.bodyText}>{showResult ? getResultColorItem(resultColor)[0].bodyText : ''}</Text>
-                            <TouchableOpacity onPress = {() => {
-                                  buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${resultColor}`);
-                                }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none'}]}>
-                              <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                      ) : (
-                          <>
-                            {quizQuestions[currentQuestionIndex].answers.map((answer, index) => {
-                              return (
-                                <TouchableOpacity
-                                  style={[styles.answer, {flexDirection:'row'}]}
-                                  key={index}
-                                  onPress={() => handleOptionPress(answer.id, index)}>
-                                  <View style={{flexDirection:"row",alignItems:'center'}}>
-                                      <View style={{flex:9}}>
-                                          <Text style = {styles.bodyText}>{answer.value}</Text>
+                          <View style = {styles.quizContent}>
+                                    <Text style={[styles.question, {display: showResult ? 'none' : 'flex'}]}>
+                                      {showResult ? '' : quizQuestions[currentQuestionIndex].question}
+                                    </Text>
+                                    <Text style={styles.resultText}>{showResult ? 'You are...' : ''}</Text>
+                                    <Text style={styles.resultTextBig}>{showResult ? resultColor : ''}</Text>
+                                      <Progress.Bar isAnimated duration={showResult ? 1000 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? getResultColorItem(resultColor)[0].color : "#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+                                      <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+                                                <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
+                                                    <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+                                                      <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
+                                                      <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>{showResult ? 'Take Again' : 'Back'}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            <Text style={[styles.quizParagraph, {alignSelf: 'flex-start', marginTop: hp('1.5%'), marginLeft: wp('2%')}]}>{showResult ? '' : 'Q' + parseInt(currentQuestionIndex + 1)+"/21"}</Text>
                                       </View>
-                                      <View style={{flex:1, paddingLeft: wp('2%')}}>
-                                          <RadioButton.Android
-                                            uncheckedColor={"#F0F0F0"}
-                                            color={'black'}
-                                            value="first"
-                                            status={
-                                              answer.id === selectedAnswer ? 'checked' : 'unchecked'
-                                            }
-                                            onPress={() => handleOptionPress(answer.id, index)}
-                                          />
-                                      </View>
-                                  </View>
+                                  {showResult ? (
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.colorAttributesText}>{showResult ? getResultColorItem(resultColor)[0].attributes : ''}</Text>
+                                        <Text style={styles.bodyText}>{showResult ? getResultColorItem(resultColor)[0].bodyText : ''}</Text>
+                                        <TouchableOpacity onPress = {() => {
+                                              buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${resultColor}`);
+                                            }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none'}]}>
+                                          <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                  ) : (
+                                      <>
+                                        {quizQuestions[currentQuestionIndex].answers.map((answer, index) => {
+                                          return (
+                                            <TouchableOpacity
+                                              style={[styles.answer, {flexDirection:'row'}]}
+                                              key={index}
+                                              onPress={() => handleOptionPress(answer.id, index)}>
+                                              <View style={{flexDirection:"row",alignItems:'center'}}>
+                                                  <View style={{flex:9}}>
+                                                      <Text style = {styles.bodyText}>{answer.value}</Text>
+                                                  </View>
+                                                  <View style={{flex:1, paddingLeft: wp('2%')}}>
+                                                      <RadioButton.Android
+                                                        uncheckedColor={"#F0F0F0"}
+                                                        color={'black'}
+                                                        value="first"
+                                                        status={
+                                                          answer.id === selectedAnswer ? 'checked' : 'unchecked'
+                                                        }
+                                                        onPress={() => handleOptionPress(answer.id, index)}
+                                                      />
+                                                  </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          );
+                                        })}
+                                      </>
+                                    )}
+                            </View>
+                            </ScrollView>
+                            </SafeAreaView>
+                          </Animated.View>
+
+                          <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
+                          <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
+                              <ScrollView
+                              showsVerticalScrollIndicator= {false}
+                              showsHorizontalScrollIndicator= {false}
+                              style={styles.scrollView}>
+
+                                <Text style = {styles.topBold}>{bodyTexts[currentKey].topBold}</Text>
+                                <Text style={styles.bodyText}>{bodyTexts[currentKey].body}</Text>
+
+                                <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
+                                <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
+                                    “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
+                                    </Text>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.topBold}>- Chris Younger</Text></TouchableOpacity>
+
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
+                                        {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}{"\n"}My approach to finding the right team for each project is to start building outward and continually ask myself whether we have what we need to succeed. Diversity across the team - regardless of its size - is a must. And all of this quickly increases the potential size of our adequate team. So because I am a great believer in smallness, I am always asking myself – “can I achieve more than one goal with each person whom I add to the team?” This is where personality assessment tools like My Color can be extremely useful in anticipating how people will get along or perhaps more importantly, coaching the team in how to get along with one another.”{"\n"}
+                                        </Text>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.topBold}>- Matt Bretz</Text></TouchableOpacity>
+
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
+                                        {"\n"}"My TEAM is made up of people who can fill in the holes. I need a safety net when I walk into a room, and knowing my teammates have my back because they are strongly suited in the areas I am not, is an ideal situation for me.{"\n"}{"\n"}
+                                              Knowing what the ask is determines the team; with 9 clubs in a golf bag I need to know which team member to call on to complete what is needed.
+                                              {"\n"}{"\n"}Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
+                                        </Text>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.topBold}>- Gary Goodman</Text></TouchableOpacity>
+                                </View>
+
+                                <TouchableOpacity onPress = {() => {
+                                      if(currentKey == 'myCOLOR')
+                                      {
+                                        buttonPress(bodyTexts[currentKey].buttonLink, false, '');
+                                      } else if(currentKey == 'Teams')
+                                      {
+                                        buttonPress(bodyTexts[currentKey].buttonLink, true, 'Check out myCOLOR Teams');
+                                      } else if(currentKey == 'color') //1 color (not me)
+                                      {
+                                        buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentColor}`);
+                                      } else if(currentKey == 'colors') //2 color combo
+                                      {
+                                        buttonPress('https://thecolorofmypersonality.com/', true, `Here's what happens when you put a ${currentColor} and ${secondColor} together`);
+                                      } else if (currentKey == 'yourCOLOR') //my color (last time taken under my name)
+                                      {
+                                        buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
+                                      }
+                                    }} style={[styles.button, styles.shadow3]}>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{bodyTexts[currentKey].buttonTitle}</Text>
                                 </TouchableOpacity>
-                              );
-                            })}
-                          </>
-                        )}
-                </View>
-                </ScrollView>
-                </SafeAreaView>
-              </Animated.View>
+                                <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
+                              </ScrollView>
+                            </SafeAreaView>
+                          </Animated.View>
 
-              <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
-              <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
-                  <ScrollView
-                  showsVerticalScrollIndicator= {false}
-                  showsHorizontalScrollIndicator= {false}
-                  style={styles.scrollView}>
-
-                    <Text style = {styles.topBold}>{bodyTexts[currentKey].topBold}</Text>
-                    <Text style={styles.bodyText}>{bodyTexts[currentKey].body}</Text>
-
-                    <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
-                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                        “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
-                        </Text>
-                        <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.topBold}>- Chris Younger</Text></TouchableOpacity>
-
-                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                            {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}{"\n"}My approach to finding the right team for each project is to start building outward and continually ask myself whether we have what we need to succeed. Diversity across the team - regardless of its size - is a must. And all of this quickly increases the potential size of our adequate team. So because I am a great believer in smallness, I am always asking myself – “can I achieve more than one goal with each person whom I add to the team?” This is where personality assessment tools like My Color can be extremely useful in anticipating how people will get along or perhaps more importantly, coaching the team in how to get along with one another.”{"\n"}
-                            </Text>
-                        <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.topBold}>- Matt Bretz</Text></TouchableOpacity>
-
-                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                            {"\n"}"My TEAM is made up of people who can fill in the holes. I need a safety net when I walk into a room, and knowing my teammates have my back because they are strongly suited in the areas I am not, is an ideal situation for me.{"\n"}{"\n"}
-                                  Knowing what the ask is determines the team; with 9 clubs in a golf bag I need to know which team member to call on to complete what is needed.
-                                  {"\n"}{"\n"}Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
-                            </Text>
-                        <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.topBold}>- Gary Goodman</Text></TouchableOpacity>
-                    </View>
-
-                    <TouchableOpacity onPress = {() => {
-                          if(currentKey == 'myCOLOR')
-                          {
-                            buttonPress(bodyTexts[currentKey].buttonLink, false, '');
-                          } else if(currentKey == 'Teams')
-                          {
-                            buttonPress(bodyTexts[currentKey].buttonLink, true, 'Check out myCOLOR Teams');
-                          } else if(currentKey == 'color') //1 color (not me)
-                          {
-                            buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentColor}`);
-                          } else if(currentKey == 'colors') //2 color combo
-                          {
-                            buttonPress('https://thecolorofmypersonality.com/', true, `Here's what happens when you put a ${currentColor} and ${secondColor} together`);
-                          } else if (currentKey == 'yourCOLOR') //my color (last time taken under my name)
-                          {
-                            buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
-                          }
-                        }} style={[styles.button, styles.shadow3]}>
-                      <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{bodyTexts[currentKey].buttonTitle}</Text>
-                    </TouchableOpacity>
-                    <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
-                  </ScrollView>
-                </SafeAreaView>
-              </Animated.View>
-
-        </Animated.View>
+                    </Animated.View>
+            </Animated.View>
       </View>
   );
   }
