@@ -161,7 +161,7 @@ export default function App() {
   };
 
   const toggleHeader = () => {
-    if (headerMenu._value === 300) {
+    if (headerMenu._value === 200) {
       Animated.timing(headerMenu, {
         toValue: 30,
         duration: 400,
@@ -179,7 +179,7 @@ export default function App() {
       setHeaderMenuOptionsVisible(true);
       setoptionsVisible(true);
       Animated.timing(headerMenu, {
-        toValue: 300,
+        toValue: 200,
         duration: 400,
         easing: Easing.bounce,
         useNativeDriver: false,
@@ -654,75 +654,88 @@ const styles = StyleSheet.create({
   return (
     <View style={[styles.container]}>
     <View style={styles.dropDown}>
-      <Animated.View
+    <Animated.View
+      style={
+        (styles.topBar,
+        [
+          {
+            height: headerMenu,
+            overflow: "hidden",
+            paddingVertical: 5,
+          },
+        ])
+      }
+    >
+      <View
         style={
-          (styles.topBar,
-          [
-            {
-              height: headerMenu,
-              overflow: "hidden",
-              paddingVertical: 5
-            },
-          ])
+          headerMenuOptionsVisible
+            ? [styles.elevatedMenuContainer, styles.shadow1]
+            : null
         }
       >
-        <View
-          style={
-            headerMenuOptionsVisible ? styles.elevatedMenuContainer : null
-          }
+        <TouchableOpacity
+          onPress={toggleHeader}
+          style={{ flexDirection: "row", alignItems: "flex-start" }}
         >
-          <TouchableOpacity
-            onPress={toggleHeader}
-            style={{ flexDirection: "row", alignItems: "flex-start" }}
-          >
-            {optionsHeaderVisible && (
-              <Text style={[styles.headerText, styles.shadow1]}>
+          {optionsHeaderVisible && (
+            <Text
+              style={[
+                styles.headerText,
+                styles.shadow1,
+                { marginTop: 15 },
+              ]}
+            >
+              {currentKey}
+            </Text>
+          )}
+          {!optionsVisible && !optionsHeaderVisible && (
+            <View style={{ width: 120 }} />
+          )}
+          {optionsVisible && (
+            <View style={{ width: 120 }}>
+              <Text
+                style={[
+                  styles.headerText,
+                  styles.shadow1,
+                  { marginBottom: 10, marginTop: 15 },
+                ]}
+              >
                 {currentKey}
               </Text>
-            )}
-            {!optionsVisible && !optionsHeaderVisible && (
-              <View style={{ width: 120 }} />
-            )}
-            {optionsVisible && (
-              <View style={{ width: 120 }}>
-                <Text
-                  style={[
-                    styles.headerText,
-                    styles.shadow1,
-                    { marginBottom: 15 },
-                  ]}
-                >
-                  {currentKey}
-                </Text>
-                {Object.keys(bodyTexts).map((val, k) => (
-                  <TouchableOpacity
-                    key={k}
-                    onPress={() => handleValueSelect(val)}
-                  >
-                    <Text
-                      style={[
-                        styles.headerText,
-                        styles.shadow1,
-                        { marginBottom: 3 },
-                      ]}
+              {Object.keys(bodyTexts).map((val, k) => {
+                if (val !== currentKey) {
+                  return (
+                    <TouchableOpacity
+                      key={k}
+                      onPress={() => handleValueSelect(val)}
                     >
-                      {val}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-            <Animated.Image
-              style={{
-                width: wp("8%"),
-                height: wp("8%"),
-                transform: [{ rotate: spin }],
-              }}
-              source={require("./assets/arrow.png")}
-            />
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
+                      <Text
+                        style={[
+                          styles.headerText,
+                          styles.shadow1,
+                          { marginBottom: 10 },
+                        ]}
+                      >
+                        {val}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }
+              })}
+            </View>
+          )}
+          <Animated.Image
+            style={{
+              width: wp("8%"),
+              height: wp("8%"),
+              transform: [{ rotate: spin }],
+              marginTop: 10,
+            }}
+            source={require("./assets/arrow.png")}
+          />
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
     </View>
 
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
