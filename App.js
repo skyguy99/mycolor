@@ -69,7 +69,16 @@ export default function App() {
   const [scrollOffsetX, setScrollOffsetX] = React.useState(new Animated.Value(0));
 
   const [bodyText, setBodyText] = React.useState('');
-  const [currentKey, setCurrentKey] = React.useState('');
+  const [currentKey, setCurrentKey] = React.useState('myCOLOR');
+
+  const [headerMenu, setHeaderMenu] = React.useState(new Animated.Value(60));
+  const [
+    headerMenuOptionsVisible,
+    setHeaderMenuOptionsVisible,
+  ] = React.useState(false);
+  const [optionsVisible, setoptionsVisible] = React.useState(false);
+  const [optionsHeaderVisible, setoptionsHeaderVisible] = React.useState(true);
+  const [spinValue, setSpinValue] = React.useState(new Animated.Value(0));
 
   const LottieRef = React.useRef(null);
   const [lottieProgress, setLottieProgress] = React.useState(new Animated.Value(0.5));
@@ -114,8 +123,6 @@ export default function App() {
   useEffect(() => {
   //StatusBar.setHidden(true, 'none');
 
-  setCurrentKey('Teams');
-
   AsyncStorage.getItem('username')
     .then((item) => {
          if (item) {
@@ -143,6 +150,72 @@ export default function App() {
     };
   }
 
+  const toggleHeaderMenu = (value) => {
+    if (!value) {
+      setTimeout(() => {
+        setHeaderMenuOptionsVisible(value);
+        setoptionsHeaderVisible(true);
+        setoptionsVisible(value);
+      }, 500);
+    }
+  };
+
+  const toggleHeader = () => {
+    if (headerMenu._value === 300) {
+      Animated.timing(headerMenu, {
+        toValue: 30,
+        duration: 400,
+        easing: Easing.bounce,
+        useNativeDriver: false,
+      }).start(toggleHeaderMenu(false));
+      Animated.timing(spinValue, {
+        toValue: 0,
+        duration: 100,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setoptionsHeaderVisible(false);
+      setHeaderMenuOptionsVisible(true);
+      setoptionsVisible(true);
+      Animated.timing(headerMenu, {
+        toValue: 300,
+        duration: 400,
+        easing: Easing.bounce,
+        useNativeDriver: false,
+      }).start(toggleHeaderMenu(true));
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 100,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const handleValueSelect = (value) => {
+
+    console.log('Selecting '+value);
+    setCurrentKey(value);
+    Animated.timing(headerMenu, {
+      toValue: 30,
+      duration: 1000,
+      easing: Easing.bounce,
+      useNativeDriver: false,
+    }).start(toggleHeaderMenu(false));
+    Animated.timing(spinValue, {
+      toValue: 0,
+      duration: 100,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "180deg"],
+  });
+
   const handleMenuToggle = isMenuOpen =>
     setIsMenuOpen(isMenuOpen);
 
@@ -154,6 +227,7 @@ export default function App() {
     } else {
       setSecondColor(item.color);
     }
+    setCurrentKey(item.header);
   }
 
   const renderMenuIcon = (menuState) => {
@@ -310,7 +384,7 @@ export default function App() {
   			})
       ]).start();
 
-  }, 4200); //add this in
+  }, 100); //WAS 4200
     return () => clearInterval(interval);
   }, []);
 
@@ -433,7 +507,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    marginTop: hp('6%'),
+    marginTop: hp('14%'),
   },
   topBar: {
     marginTop: hp('7%'),
@@ -550,26 +624,107 @@ const styles = StyleSheet.create({
       quizContent: {
         justifyContent: 'center',
         padding: wp('14%'),
-      }
+      },
+      dropDown: {
+        position: 'absolute',
+        zIndex: 5,
+        alignSelf: "center",
+        marginTop: hp('7%'),
+      },
+      elevatedMenuContainer: {
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 5,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 20,
+        borderRadius: 10,
+        elevation: 9,
+        marginHorizontal: 10,
+        backgroundColor: "white",
+        alignItems: "center",
+        flex: 1,
+        width: 200,
+        alignItems: "center",
+      },
 });
-
-// <Animated.View style = {{width: 300, height: 300, backgroundColor: backgroundColor.interpolate({
-//     inputRange: [0, 30, 60, 90, 120, 150],
-//     outputRange: [
-//       '#fca500',
-//       '#0081d1',
-//       '#6fa229',
-//       '#939598',
-//       '#d12b51',
-//       '#b15de6',
-//     ],
-//   }),}}>
-// </Animated.View>
-
 
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
+    <View style={styles.dropDown}>
+      <Animated.View
+        style={
+          (styles.topBar,
+          [
+            {
+              height: headerMenu,
+              overflow: "hidden",
+              paddingVertical: 5
+            },
+          ])
+        }
+      >
+        <View
+          style={
+            headerMenuOptionsVisible ? styles.elevatedMenuContainer : null
+          }
+        >
+          <TouchableOpacity
+            onPress={toggleHeader}
+            style={{ flexDirection: "row", alignItems: "flex-start" }}
+          >
+            {optionsHeaderVisible && (
+              <Text style={[styles.headerText, styles.shadow1]}>
+                {currentKey}
+              </Text>
+            )}
+            {!optionsVisible && !optionsHeaderVisible && (
+              <View style={{ width: 120 }} />
+            )}
+            {optionsVisible && (
+              <View style={{ width: 120 }}>
+                <Text
+                  style={[
+                    styles.headerText,
+                    styles.shadow1,
+                    { marginBottom: 15 },
+                  ]}
+                >
+                  {currentKey}
+                </Text>
+                {Object.keys(bodyTexts).map((val, k) => (
+                  <TouchableOpacity
+                    key={k}
+                    onPress={() => handleValueSelect(val)}
+                  >
+                    <Text
+                      style={[
+                        styles.headerText,
+                        styles.shadow1,
+                        { marginBottom: 3 },
+                      ]}
+                    >
+                      {val}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+            <Animated.Image
+              style={{
+                width: wp("8%"),
+                height: wp("8%"),
+                transform: [{ rotate: spin }],
+              }}
+              source={require("./assets/arrow.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
+    </View>
+
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
       <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 9, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
           inputRange: [0, 30, 60, 90, 120, 150, 180],
@@ -590,7 +745,7 @@ const styles = StyleSheet.create({
                     <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
                     <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('10%')}]}>© a.network.</Text></TouchableOpacity>
                   </Animated.View>
-                  <TouchableOpacity style = {styles.creditsBtn} onPress={toggleQuiz}>
+                  <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
                       <LottieView
                             ref={LottieRef}
                             style={styles.shadow1}
@@ -600,9 +755,6 @@ const styles = StyleSheet.create({
                           />
                   </TouchableOpacity>
                   <Animated.View style={[styles.contentContainer, { transform: [{translateX: containerOffsetX }]} ]}>
-                      <View style={styles.topBar}>
-                        <Text style = {[styles.headerText, styles.shadow1]}>{currentKey}</Text>
-                      </View>
 
                         <FloatingMenu
                             items={colorMenuItems}
@@ -693,8 +845,12 @@ const styles = StyleSheet.create({
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}>
 
-                                <Text style = {styles.topBold}>{bodyTexts[currentKey].topBold}</Text>
-                                <Text style={styles.bodyText}>{bodyTexts[currentKey].body}</Text>
+                              <Text style={styles.topBold}>
+                                {bodyTexts[currentKey]?.topBold || ""}
+                              </Text>
+                              <Text style={styles.bodyText}>
+                                {bodyTexts[currentKey]?.body || ""}
+                              </Text>
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
                                 <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
@@ -718,10 +874,10 @@ const styles = StyleSheet.create({
                                 <TouchableOpacity onPress = {() => {
                                       if(currentKey == 'myCOLOR')
                                       {
-                                        buttonPress(bodyTexts[currentKey].buttonLink, false, '');
+                                        buttonPress(bodyTexts[currentKey]?.buttonLink, false, '');
                                       } else if(currentKey == 'Teams')
                                       {
-                                        buttonPress(bodyTexts[currentKey].buttonLink, true, 'Check out myCOLOR Teams');
+                                        buttonPress(bodyTexts[currentKey]?.buttonLink, true, 'Check out myCOLOR Teams');
                                       } else if(currentKey == 'color') //1 color (not me)
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentColor}`);
@@ -733,7 +889,7 @@ const styles = StyleSheet.create({
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
                                     }} style={[styles.button, styles.shadow3]}>
-                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{bodyTexts[currentKey].buttonTitle}</Text>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{bodyTexts[currentKey]?.buttonTitle || ""}</Text>
                                 </TouchableOpacity>
                                 <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>
