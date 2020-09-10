@@ -71,7 +71,7 @@ export default function App() {
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('myCOLOR');
 
-  const [headerMenu, setHeaderMenu] = React.useState(new Animated.Value(60));
+  const [headerMenu, setHeaderMenu] = React.useState(new Animated.Value(90));
   const [
     headerMenuOptionsVisible,
     setHeaderMenuOptionsVisible,
@@ -161,12 +161,12 @@ export default function App() {
   };
 
   const toggleHeader = () => {
-    if (headerMenu._value === 200) {
-      Animated.timing(headerMenu, {
-        toValue: 30,
-        duration: 400,
-        easing: Easing.bounce,
+    if (headerMenu._value > 120) {
+      Animated.spring(headerMenu, {
+        toValue: 50,
+        bounciness: 0.5,
         useNativeDriver: false,
+        speed: 0.2
       }).start(toggleHeaderMenu(false));
       Animated.timing(spinValue, {
         toValue: 0,
@@ -178,11 +178,11 @@ export default function App() {
       setoptionsHeaderVisible(false);
       setHeaderMenuOptionsVisible(true);
       setoptionsVisible(true);
-      Animated.timing(headerMenu, {
+      Animated.spring(headerMenu, {
         toValue: 200,
-        duration: 400,
-        easing: Easing.bounce,
+        bounciness: 0.5,
         useNativeDriver: false,
+        speed: 0.2
       }).start(toggleHeaderMenu(true));
       Animated.timing(spinValue, {
         toValue: 1,
@@ -515,18 +515,18 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: hp('2.2%'),
+    fontSize: hp('2.35%'),
     textAlign: 'center'
   },
   bodyText: {
     fontFamily: 'CircularStd-Book',
     color: 'black',
-    fontSize: hp('2.2%')
+    fontSize: hp('2.35%')
   },
   topBold: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: hp('2.2%')
+    fontSize: hp('2.35%')
   },
   splash: {
         ...StyleSheet.absoluteFillObject,
@@ -553,19 +553,19 @@ const styles = StyleSheet.create({
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
       color: 'black',
-      fontSize: hp('2.2%'),
+      fontSize: hp('2.35%'),
       },
       question: {
         fontFamily: 'CircularStd-Black',
         color: 'black',
-        fontSize: hp('2.2%'),
+        fontSize: hp('2.35%'),
         marginBottom: hp('7%'),
         marginTop: -hp('7%')
       },
       colorAttributesText: {
         fontFamily: 'CircularStd-Black',
         color: 'black',
-        fontSize: hp('2.2%'),
+        fontSize: hp('2.35%'),
         textTransform: 'capitalize',
         marginTop: hp('2%')
       },
@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
       resultText: {
         fontFamily: 'CircularStd-Book',
         color: 'black',
-        fontSize: hp('2.2%'),
+        fontSize: hp('2.35%'),
         textAlign: 'center',
         marginTop: -hp('7%')
       },
@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
       creditsTxt: {
         fontFamily: 'CircularStd-Book',
         color: 'black',
-        fontSize: hp('2.2%'),
+        fontSize: hp('2.35%'),
         marginTop: hp('10%'),
         padding: wp('14%')
       },
@@ -629,7 +629,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 5,
         alignSelf: "center",
-        marginTop: hp('7%'),
+        marginTop: hp('5.5%'),
+        overflow: 'visible',
       },
       elevatedMenuContainer: {
         shadowColor: "#000",
@@ -645,8 +646,9 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         alignItems: "center",
         flex: 1,
-        width: 200,
+        width: wp('47%'),
         alignItems: "center",
+        overflow: 'visible'
       },
 });
 
@@ -724,18 +726,19 @@ const styles = StyleSheet.create({
               })}
             </View>
           )}
-          <Animated.Image
-            style={{
-              width: wp("8%"),
-              height: wp("8%"),
-              transform: [{ rotate: spin }],
-              marginTop: 10,
-            }}
-            source={require("./assets/arrow.png")}
-          />
         </TouchableOpacity>
       </View>
     </Animated.View>
+    </View>
+    <View pointerEvents='none' style={{position: 'absolute', zIndex: 6, transform: [{translateX: wp('16%') }, {translateY: hp('7.5%')}]}}>
+    <Animated.Image
+      style={{
+        width: wp("8%"),
+        height: wp("8%"),
+        transform: [{ rotate: spin }],
+      }}
+      source={require("./assets/arrow.png")}
+    />
     </View>
 
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
