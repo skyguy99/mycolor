@@ -107,13 +107,13 @@ export default function App() {
   ];
 
   const bodyTexts = {
-    'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
+    'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
     'yourCOLOR': {body: '', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
 
     'Quiz': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
 
-    'Teams':{body: 'We each have a personality type, wired into us in a way that can’t be denied. It’s who we are. But when we build teams, we have the opportunity to create a dynamic based on the right mix of different types. \n\nThat’s what makes myCOLOR for Teams so powerful. By understanding how people with different personality colors work best together, you can gain insights into crafting the right team for any situation, from work to sports to social events.\n\nFrom the optimism of Oranges to the creativity of Purples to the dependability of Blues, aligning our strengths (and balancing our weaknesses) can result in teams that perform to their maximum potential.\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
+    'Teams':{body: 'We each have a personality type, wired into us in a way that can’t be denied. It’s who we are. But when we build teams, we have the opportunity to create a dynamic based on the right mix of different types. \n\nThat’s what makes myCOLOR for Teams so powerful. By understanding how people with different personality colors work best together, you can gain insights into crafting the right team for any situation, from work to sports to social events.\n\nFrom the optimism of Oranges to the creativity of Purples to the dependability of Blues, aligning our strengths (and balancing our weaknesses) can result in teams that perform to their maximum potential.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
     'Connect': {body: '', topBold: '', buttonLink: 'instagram://user?username=mycolorpersonality', buttonTitle: ''}
   }; //title : body text
@@ -180,7 +180,7 @@ export default function App() {
       setHeaderMenuOptionsVisible(true);
       setoptionsVisible(true);
       Animated.spring(headerMenu, {
-        toValue: 200,
+        toValue: KeyIsAColor(currentKey.toLowerCase()) ? 240 : 200,
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -518,8 +518,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 8,
     backgroundColor: 'white',
-    padding: 24,
-    marginTop: hp('5%')
+    padding: 24
   },
   container: {
     flex: 1,
@@ -893,9 +892,9 @@ const styles = StyleSheet.create({
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}>
-
                               <Text style={styles.topBold}>
-                                {bodyTexts[currentTextKey]?.topBold}
+                              <Text style={[styles.bodyText, {display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}]}>Welcome back.{"\n"}You are </Text>
+                                {colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].attributes : bodyTexts[currentTextKey]?.topBold}
                               </Text>
                               <Text style={styles.bodyText}>
                                 {colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].bodyText : bodyTexts[currentTextKey]?.body}
@@ -927,9 +926,9 @@ const styles = StyleSheet.create({
                                       } else if(currentKey == 'Teams')
                                       {
                                         buttonPress(bodyTexts[currentKey]?.buttonLink, true, 'Check out myCOLOR Teams');
-                                      } else if(currentKey == 'color') //1 color (not me)
+                                      } else if(colorMenuItems.filter((item) => item.header === currentTextKey).length > 0) //1 color (not me)
                                       {
-                                        buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentColor}`);
+                                        buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentTextKey}`);
                                       } else if(currentKey == 'colors') //2 color combo
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `Here's what happens when you put a ${currentColor} and ${secondColor} together`);
