@@ -7,8 +7,7 @@ import { AppLoading } from 'expo';
 import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import { FloatingMenu } from 'react-native-floating-action-menu';
-import { Jiro } from 'react-native-textinput-effects';
-import MaskedView from '@react-native-community/masked-view';
+//import { FloatingMenu } from './FloatingMenu/components/FloatingMenu/index';
 import * as Progress from 'expo-progress';
 import LottieView from "lottie-react-native";
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
@@ -122,7 +121,6 @@ export default function App() {
 
   // ****Init
   useEffect(() => {
-  //StatusBar.setHidden(true, 'none');
 
   AsyncStorage.getItem('username')
     .then((item) => {
@@ -135,9 +133,11 @@ export default function App() {
     AsyncStorage.getItem('userColor')
       .then((item) => {
            if (item) {
-             // do the damage
-             setUserColor(item);
-             console.log('We remember you! '+item);
+             // dont override otherwise
+             if(userColor == '')
+             {
+               setUserColor(item);
+             }
            }
       });
 
@@ -418,7 +418,7 @@ const KeyIsAColor = (key) => {
   			})
       ]).start();
 
-  }, 100); //WAS 4200
+  }, 4200); //WAS 4200
     return () => clearInterval(interval);
   }, []);
 
@@ -474,6 +474,8 @@ const KeyIsAColor = (key) => {
       setResultColor(colorResult);
       setUserColor(colorResult);
 
+      console.log('Setting user color: '+colorResult);
+
       AsyncStorage.setItem('userColor', userColor);
 
       setTimeout(() => {
@@ -501,14 +503,9 @@ const KeyIsAColor = (key) => {
     };
 
     function getResultColorItem(color) {
-
-      if(color)
-      {
         console.log('**RESULT: '+color);
         console.log(colorMenuItems.filter((item) => item.header === color));
         return colorMenuItems.filter((item) => item.header === color);
-      }
-      return {color: '#ffffff'}
     }
 
 //------------------------------------------------------------------->
@@ -836,8 +833,8 @@ const styles = StyleSheet.create({
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
                                     <Text style={styles.resultText}>{showResult ? 'You are...' : ''}</Text>
-                                    <Text style={styles.resultTextBig}>{showResult ? resultColor : ''}</Text>
-                                      <Progress.Bar isAnimated duration={showResult ? 1000 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? getResultColorItem(resultColor)[0].color : "#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+                                    <Text style={styles.resultTextBig}>{showResult ? userColor : ''}</Text>
+                                      <Progress.Bar isAnimated duration={showResult ? 1000 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? getResultColorItem(userColor)[0].color : "#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
                                       <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                                 <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
                                                     <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
@@ -849,10 +846,10 @@ const styles = StyleSheet.create({
                                       </View>
                                   {showResult ? (
                                     <View style={{ flex: 1 }}>
-                                        <Text style={styles.colorAttributesText}>{showResult ? getResultColorItem(resultColor)[0].attributes : ''}</Text>
-                                        <Text style={styles.bodyText}>{showResult ? getResultColorItem(resultColor)[0].bodyText : ''}</Text>
+                                        <Text style={styles.colorAttributesText}>{showResult ? getResultColorItem(userColor)[0].attributes : ''}</Text>
+                                        <Text style={styles.bodyText}>{showResult ? getResultColorItem(userColor)[0].bodyText : ''}</Text>
                                         <TouchableOpacity onPress = {() => {
-                                              buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${resultColor}`);
+                                              buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                             }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none'}]}>
                                           <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
                                         </TouchableOpacity>
