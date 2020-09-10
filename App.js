@@ -70,6 +70,7 @@ export default function App() {
 
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('myCOLOR');
+  const [currentTextKey, setCurrentTextKey] = React.useState('myCOLOR');
 
   const [headerMenu, setHeaderMenu] = React.useState(new Animated.Value(90));
   const [
@@ -163,7 +164,7 @@ export default function App() {
   const toggleHeader = () => {
     if (headerMenu._value > 120) {
       Animated.spring(headerMenu, {
-        toValue: 50,
+        toValue: 60,
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -193,15 +194,33 @@ export default function App() {
     }
   };
 
+//SELECT DROPDOWN
   const handleValueSelect = (value) => {
 
     console.log('Selecting '+value);
     setCurrentKey(value);
-    Animated.timing(headerMenu, {
-      toValue: 30,
-      duration: 1000,
-      easing: Easing.bounce,
+
+    if(value == 'yourCOLOR' || value == 'myCOLOR' || value == 'Teams')
+    {
+        setCurrentTextKey(value);
+    }
+
+    if(value == 'Quiz')
+    {
+      toggleQuiz(true);
+      console.log('this');
+    } else if (value == 'Connect')
+    {
+      openLink('instagram://user?username=mycolorpersonality');
+    } else {
+      toggleQuiz(false);
+    }
+
+    Animated.spring(headerMenu, {
+      toValue: 60,
+      bounciness: 0.5,
       useNativeDriver: false,
+      speed: 0.2
     }).start(toggleHeaderMenu(false));
     Animated.timing(spinValue, {
       toValue: 0,
@@ -219,6 +238,14 @@ export default function App() {
   const handleMenuToggle = isMenuOpen =>
     setIsMenuOpen(isMenuOpen);
 
+  const Capitalize = (str) => {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    const KeyIsAColor = (key) => {
+      return (key == 'purple' || key == 'blue' || key == 'green' || key == 'orange' || key == 'crimson' || key == 'grey');
+    }
+
   const handleItemPress = (item, index) => {
     console.log('pressed item', item.color);
     if(!isSelectingSecondColor)
@@ -227,7 +254,8 @@ export default function App() {
     } else {
       setSecondColor(item.color);
     }
-    setCurrentKey(item.header);
+    setCurrentKey(Capitalize(item.header));
+    setCurrentTextKey(item.header);
   }
 
   const renderMenuIcon = (menuState) => {
@@ -266,19 +294,19 @@ export default function App() {
     setUsername(name);
   };
 
-  const toggleQuiz = () => {
+  const toggleQuiz = (open) => {
 
-    setIsQuizOpen(!isQuizOpen);
+    setIsQuizOpen(open);
 
     Animated.parallel([
         Animated.spring(quizOffsetX, {
-          toValue: isQuizOpen ? -wp('100%') : wp('0%'),
+          toValue: open ? wp('0%') : -wp('100%'),
           bounciness: 2,
           useNativeDriver: false,
           speed: 1
         }),
         Animated.spring(scrollOffsetX, {
-          toValue: isQuizOpen ? wp('0%') : wp('100%'),
+          toValue: open ? wp('100%') : wp('0%'),
           bounciness: 2,
           useNativeDriver: false,
           speed: 1
@@ -650,6 +678,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         overflow: 'visible'
       },
+      arrow: {
+        position: 'absolute',
+        zIndex: 6,
+        transform: [{translateX: wp('17.5%') }, {translateY: hp('7.5%')}]
+      }
 });
 
 //VIEW ELEMENTS ------------------------------------------------------
@@ -730,7 +763,7 @@ const styles = StyleSheet.create({
       </View>
     </Animated.View>
     </View>
-    <View pointerEvents='none' style={{position: 'absolute', zIndex: 6, transform: [{translateX: wp('16%') }, {translateY: hp('7.5%')}]}}>
+    <View pointerEvents='none' style={styles.arrow}>
     <Animated.Image
       style={{
         width: wp("8%"),
@@ -862,10 +895,10 @@ const styles = StyleSheet.create({
                               style={styles.scrollView}>
 
                               <Text style={styles.topBold}>
-                                {bodyTexts[currentKey]?.topBold || ""}
+                                {bodyTexts[currentTextKey]?.topBold}
                               </Text>
                               <Text style={styles.bodyText}>
-                                {bodyTexts[currentKey]?.body || ""}
+                                {colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].bodyText : bodyTexts[currentTextKey]?.body}
                               </Text>
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
@@ -905,7 +938,7 @@ const styles = StyleSheet.create({
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
                                     }} style={[styles.button, styles.shadow3]}>
-                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{bodyTexts[currentKey]?.buttonTitle || ""}</Text>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle}</Text>
                                 </TouchableOpacity>
                                 <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>
