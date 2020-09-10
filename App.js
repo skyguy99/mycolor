@@ -106,7 +106,7 @@ export default function App() {
 
   ];
 
-  const bodyTexts = {
+  var bodyTexts = {
     'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
     'yourCOLOR': {body: '', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
@@ -137,9 +137,19 @@ export default function App() {
            if (item) {
              // do the damage
              setUserColor(item);
+             console.log('We remember you! '+item);
            }
       });
+
 });
+
+const getBodyText = () => {
+
+}
+
+const KeyIsAColor = (key) => {
+  return colorMenuItems.filter((item) => item.header === key).length > 0;
+}
 
   function elevationShadowStyle(elevation) {
     return {
@@ -240,10 +250,6 @@ export default function App() {
 
   const Capitalize = (str) => {
       return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    const KeyIsAColor = (key) => {
-      return (key == 'purple' || key == 'blue' || key == 'green' || key == 'orange' || key == 'crimson' || key == 'grey');
     }
 
   const handleItemPress = (item, index) => {
@@ -466,8 +472,8 @@ export default function App() {
             : calculateResultIndex(userAnswers)
           : '';
       setResultColor(colorResult);
-
       setUserColor(colorResult);
+
       AsyncStorage.setItem('userColor', userColor);
 
       setTimeout(() => {
@@ -791,7 +797,7 @@ const styles = StyleSheet.create({
       <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
                     <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
-                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('10%')}]}>© a.network.</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('3%')}]}>© a.network.</Text></TouchableOpacity>
                   </Animated.View>
                   <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
                       <LottieView
@@ -893,11 +899,11 @@ const styles = StyleSheet.create({
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}>
                               <Text style={styles.topBold}>
-                              <Text style={[styles.bodyText, {display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}]}>Welcome back.{"\n"}You are </Text>
-                                {colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].attributes : bodyTexts[currentTextKey]?.topBold}
+                              <Text style={[styles.bodyText]}>{(currentTextKey == 'yourCOLOR') ? 'Welcome back.\nAccording to our quiz, you are ' : ''}</Text>
+                                {(currentTextKey == 'yourCOLOR') ? (userColor != '' ? (colorMenuItems.filter((item) => item.header === userColor))[0].attributes : 'Nope no text') : colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].attributes : bodyTexts[currentTextKey]?.topBold}
                               </Text>
                               <Text style={styles.bodyText}>
-                                {colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].bodyText : bodyTexts[currentTextKey]?.body}
+                                {(currentTextKey == 'yourCOLOR') ? (userColor != '' ? (colorMenuItems.filter((item) => item.header === userColor))[0].bodyText : 'Nope no text') : colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].bodyText : bodyTexts[currentTextKey]?.body}
                               </Text>
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
