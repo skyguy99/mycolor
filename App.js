@@ -324,6 +324,11 @@ const KeyIsAColor = (key) => {
     console.log('credits');
     setIsCreditsOpen(!isCreditsOpen);
 
+    if(currentKey == 'Quiz')
+    {
+      toggleQuiz(isCreditsOpen);
+    }
+
     Animated.parallel([
         Animated.spring(creditsOffsetX, {
           toValue: isCreditsOpen ? wp('100%') : 0,
