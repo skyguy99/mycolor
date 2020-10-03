@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 6517,
+  "expoServerNgrokUrl": "https://dc-uzj.skyyguy1999.mycolor-v3.exp.direct",
+  "packagerNgrokUrl": "https://packager.dc-uzj.skyyguy1999.mycolor-v3.exp.direct",
+  "ngrokPid": 6546,
   "webpackServerPort": null
 }
