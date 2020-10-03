@@ -42,11 +42,12 @@ class FloatingItem extends React.PureComponent {
     const [vPos, hPos] = position.split('-');
     const multiple = vPos.toLowerCase() === 'bottom' ? 1 : -1;
 
+//CHANGE ITEM COLOR HERE!!!!
     const backgroundColor =
       pressAnimation &&
       pressAnimation.interpolate({
         inputRange: [0.0, 1.0],
-        outputRange: ['#ffffff', _backgroundColor || primaryColor],
+        outputRange: [_backgroundColor, item.darkerColor],
       });
     const translateY =
       fanAnimation &&
@@ -90,16 +91,7 @@ class FloatingItem extends React.PureComponent {
         extrapolate: 'clamp',
       });
 
-    let content = icon || (
-      <Text
-        style={[
-          globalStyles.missingIcon,
-          { color: itemDown ? '#fff' : _iconColor || primaryColor },
-        ]}
-      >
-        {index}
-      </Text>
-    );
+    let content = null;
 
     if (isPending)
       content = (

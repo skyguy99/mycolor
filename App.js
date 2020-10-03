@@ -34,6 +34,7 @@ export default function App() {
         'CircularStd-Book' : require('./assets/CircularStd-Book.ttf'),
         'CircularStd-Black' : require('./assets/CircularStd-Black.ttf'),
         'CircularStd-BookItalic' : require('./assets/CircularStd-BookItalic.ttf'),
+        'CircularStd-BlackItalic' : require('./assets/CircularStd-BlackItalic.ttf'),
   });
 
   //persistent vars
@@ -253,6 +254,8 @@ const KeyIsAColor = (key) => {
 
   const handleItemPress = (item, index) => {
     console.log('pressed item', item.color);
+    handleMenuToggle();
+
     if(!isSelectingSecondColor)
     {
       setCurrentColor(item.color);
@@ -422,7 +425,7 @@ const KeyIsAColor = (key) => {
   			})
       ]).start();
 
-  }, 4200); //WAS 4200
+  }, 0); //WAS 4200
     return () => clearInterval(interval);
   }, []);
 
@@ -688,6 +691,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 6,
         transform: [{translateX: wp('17.5%') }, {translateY: hp('7.5%')}]
+      },
+      pullQuote: {
+        fontFamily: 'CircularStd-BlackItalic',
+        color: 'black',
+        fontSize: hp('3.4%'),
+        textAlign: 'left'
       }
 });
 
@@ -943,8 +952,8 @@ const styles = StyleSheet.create({
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
-                                    }} style={[styles.button, styles.shadow3]}>
-                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle}</Text>
+                                    }} >
+                                  <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle}</Text>
                                 </TouchableOpacity>
                                 <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>

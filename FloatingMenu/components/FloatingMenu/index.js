@@ -101,6 +101,7 @@ class FloatingMenu extends React.PureComponent {
   };
 
   handleItemPress = index => () => {
+
     const { onItemPress } = this.props;
     const { items } = this.state;
     const item = items[index];
@@ -176,6 +177,7 @@ class FloatingMenu extends React.PureComponent {
     if (!dimmerActive) return null;
 
     return items.map((item, index) => {
+
       return (
         <FloatingItem
           key={`item-${index}`}
@@ -183,16 +185,14 @@ class FloatingMenu extends React.PureComponent {
           item={item}
           index={index}
           icon={
-            renderItemIcon
-              ? renderItemIcon(item, index, { ...this.state })
-              : null
+            null
           }
           position={position}
           isOpen={isOpen || dimmerActive}
-          backgroundColor={backgroundColor}
-          borderColor={borderColor}
+          backgroundColor={item.color}
+          borderColor={item.color}
           iconColor={iconColor}
-          primaryColor={primaryColor}
+          primaryColor={item.color}
           buttonWidth={buttonWidth}
           innerWidth={innerWidth}
           numItems={items.length}
@@ -227,7 +227,7 @@ class FloatingMenu extends React.PureComponent {
     const { menuButtonDown } = this.state;
 
     const bgColor = _backgroundColor || primaryColor;
-    const iconColor = _iconColor || primaryColor;
+    const iconColor = primaryColor;
     const borderColor = _borderColor || primaryColor;
     const backgroundColor = this.menuPressAnimation.interpolate({
       inputRange: [0.0, 1.0],
@@ -244,7 +244,7 @@ class FloatingMenu extends React.PureComponent {
           { color: menuButtonDown ? '#fff' : iconColor },
         ]}
       >
-        {isOpen ? '×' : '☰'}
+        {isOpen ? '' : ''}
       </Text>
     );
 
@@ -324,7 +324,7 @@ class FloatingMenu extends React.PureComponent {
           {this.renderItems()}
           {this.renderMenuButton()}
         </View>
-        {this.renderDimmer()}
+
       </View>
     );
   };
