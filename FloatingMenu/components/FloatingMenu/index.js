@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableWithoutFeedback, Animated } from 'react-native';
+import { Text, View, TouchableWithoutFeedback, Animated, Easing } from 'react-native';
 
 import FloatingItem from '../FloatingItem';
 import { Colors, Design, MenuPositions } from '../../constants';
@@ -17,6 +17,7 @@ class FloatingMenu extends React.PureComponent {
   };
 
   menuPressAnimation = new Animated.Value(0);
+  gradientBackgroundColor = new Animated.Value(0);
   itemPressAnimations = {};
   itemFanAnimations = {};
   dimmerTimeout = null;
@@ -30,8 +31,37 @@ class FloatingMenu extends React.PureComponent {
     };
   }
 
+
+    endBackgroundColorAnimation = () => {
+      Animated.timing(this.gradientBackgroundColor, {
+        toValue: 0,
+        duration: 15000,
+        easing: Easing.easeOut,
+        useNativeDriver: false
+      }).start(() => {
+        this.gradientBackgroundColor = new Animated.Value(0);
+        this.startBackgroundColorAnimation();
+      });
+    };
+
+    startBackgroundColorAnimation = () => {
+
+      Animated.timing(this.gradientBackgroundColor, {
+        toValue: 180,
+        duration: 15000,
+        easing: Easing.easeOut,
+        useNativeDriver: false
+      }).start(() => {
+        this.endBackgroundColorAnimation();
+      });
+    };
+
   componentDidMount() {
     this.initAnimations();
+
+    if (this.gradientBackgroundColor._value === 0) {
+      this.startBackgroundColorAnimation();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -229,10 +259,23 @@ class FloatingMenu extends React.PureComponent {
     const bgColor = _backgroundColor || primaryColor;
     const iconColor = primaryColor;
     const borderColor = _borderColor || primaryColor;
-    const backgroundColor = this.menuPressAnimation.interpolate({
-      inputRange: [0.0, 1.0],
-      outputRange: ['#ffffff', bgColor],
-    });
+    // const backgroundColor = this.menuPressAnimation.interpolate({
+    //   inputRange: [0.0, 1.0],
+    //   outputRange: ['#ffffff', 'red'],
+    // });
+
+    const backgroundColor = this.gradientBackgroundColor.interpolate({
+        inputRange: [0, 30, 60, 90, 120, 150, 180],
+        outputRange: [
+          '#d12b51',
+          '#0081d1',
+          '#6fa229',
+          '#939598',
+          '#fca500',
+          '#b15de6',
+          '#d12b51'
+        ],
+      });
 
     const content = renderMenuIcon ? (
       renderMenuIcon({ ...this.state })
@@ -267,7 +310,7 @@ class FloatingMenu extends React.PureComponent {
             style={[
               globalStyles.buttonInner,
               applyButtonWidth(innerWidth),
-              { backgroundColor },
+              {backgroundColor}
             ]}
           >
             {content}
