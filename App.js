@@ -143,10 +143,6 @@ export default function App() {
 
 });
 
-const getBodyText = () => {
-
-}
-
 const KeyIsAColor = (key) => {
   return colorMenuItems.filter((item) => item.header === key).length > 0;
 }
@@ -695,14 +691,43 @@ const styles = StyleSheet.create({
       pullQuote: {
         fontFamily: 'CircularStd-BlackItalic',
         color: 'black',
-        fontSize: hp('3.4%'),
+        fontSize: hp('3.1%'),
         textAlign: 'left'
       }
 });
 
+function getColorTextFormatted(color)
+{
+  if(color == 'orange')
+  {
+
+  } else if(color == 'green')
+  {
+    return ([
+      <Text style={[styles.pullQuote, {marginTop: hp('25%')}]}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>The Title</Text>,
+      <Text style ={[styles.bodyText, {marginBottom: hp('6%')}]}>{getResultColorItem(userColor)[0].attributes}</Text>,
+      <Progress.Bar isAnimated duration={1000} progress={0.3} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text>{'\n'}</Text>
+    ]);
+  } else if(color == 'blue')
+  {
+
+  } else if(color == 'crimson')
+  {
+
+  } else if(color == 'grey')
+  {
+
+  } else if(color == 'purple')
+  {
+
+  }
+}
+
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
+    <View pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(userColor).length > 0) ? getResultColorItem(userColor)[0].color : 'transparent', position: 'absolute', height: hp('36%'), width: wp('100%'), zIndex: -1}} ></View>
     <View style={styles.dropDown}>
     <Animated.View
       style={
@@ -908,31 +933,38 @@ const styles = StyleSheet.create({
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}>
-                              <Text style={styles.topBold}>
-                              <Text style={[styles.bodyText]}>{(currentTextKey == 'yourCOLOR') ? 'Welcome back.\nAccording to our quiz, you are ' : ''}</Text>
-                                {(currentTextKey == 'yourCOLOR') ? (userColor != '' ? (colorMenuItems.filter((item) => item.header === userColor))[0].attributes : 'Nope no text') : colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].attributes : bodyTexts[currentTextKey]?.topBold}
-                              </Text>
-                              <Text style={styles.bodyText}>
-                                {(currentTextKey == 'yourCOLOR') ? (userColor != '' ? (colorMenuItems.filter((item) => item.header === userColor))[0].bodyText : 'Nope no text') : colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? colorMenuItems.filter((item) => item.header === currentTextKey)[0].bodyText : bodyTexts[currentTextKey]?.body}
-                              </Text>
+
+
+
+                              <View style = {{display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}}>
+                              {getColorTextFormatted(userColor)}
+                              </View>
+
+
+                              <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
+
+                                  <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
+                                  <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
+                                  <Text style = {styles.bodyText}>{'\n'}{'\n'}By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.{'\n'}{'\n'}</Text>
+                                  <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>People are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality.</Text>
+                                  <Text style = {styles.bodyText}> {'\n'}{'\n'}Using our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.{'\n'}{'\n'}</Text>
+                              </View>
+
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
                                 <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                     “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
                                     </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.topBold}>- Chris Younger</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                                        {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}{"\n"}My approach to finding the right team for each project is to start building outward and continually ask myself whether we have what we need to succeed. Diversity across the team - regardless of its size - is a must. And all of this quickly increases the potential size of our adequate team. So because I am a great believer in smallness, I am always asking myself – “can I achieve more than one goal with each person whom I add to the team?” This is where personality assessment tools like My Color can be extremely useful in anticipating how people will get along or perhaps more importantly, coaching the team in how to get along with one another.”{"\n"}
+                                        {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.topBold}>- Matt Bretz</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Matt Bretz</Text></TouchableOpacity>
 
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                                        {"\n"}"My TEAM is made up of people who can fill in the holes. I need a safety net when I walk into a room, and knowing my teammates have my back because they are strongly suited in the areas I am not, is an ideal situation for me.{"\n"}{"\n"}
-                                              Knowing what the ask is determines the team; with 9 clubs in a golf bag I need to know which team member to call on to complete what is needed.
-                                              {"\n"}{"\n"}Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}> {"\n"} Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.topBold}>- Gary Goodman</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
