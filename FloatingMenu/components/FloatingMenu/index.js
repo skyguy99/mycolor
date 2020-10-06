@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableWithoutFeedback, Animated, Easing } from 'react-native';
+import { Text, View, TouchableWithoutFeedback, TouchableOpacity, Animated, Easing, ImageBackground, Image } from 'react-native';
 
 import FloatingItem from '../FloatingItem';
 import { Colors, Design, MenuPositions } from '../../constants';
@@ -299,7 +299,7 @@ class FloatingMenu extends React.PureComponent {
           { borderColor },
         ]}
       >
-        <TouchableWithoutFeedback
+        <TouchableOpacity
           style={globalStyles.button}
           onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
           onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
@@ -309,13 +309,13 @@ class FloatingMenu extends React.PureComponent {
           <Animated.View
             style={[
               globalStyles.buttonInner,
-              applyButtonWidth(innerWidth),
-              {backgroundColor}
+              applyButtonWidth(innerWidth)
             ]}
           >
+          <Image style = {{width: Design.buttonWidth-5, height: Design.buttonWidth-5, marginTop: 14}} source={require('../../../assets/rainbowcircle.png')}></Image>
             {content}
           </Animated.View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     );
   };

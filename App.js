@@ -85,17 +85,17 @@ export default function App() {
 
   const SliderWidth = Dimensions.get('screen').width;
   const colorMenuItems = [
-    { label: '', header: 'orange', color: '#fca500', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.3, openness: 0.4, agreeableness: 0.9, integrity: 0.2, stability: 0.6, conscientiousness: 0.6},
+    { label: '', header: 'orange', color: '#fca500', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: 'The Enthusiast'},
 
-    { label: '', header: 'blue', color: '#0081d1', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.4, agreeableness: 0.9, integrity: 0.2, stability: 0.6, conscientiousness: 0.6},
+    { label: '', header: 'blue', color: '#0081d1', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: 'The Director'},
 
-    { label: '', header: 'green', color: '#6fa229', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.3, openness: 0.4, agreeableness: 0.9, integrity: 0.2, stability: 0.6, conscientiousness: 0.6},
+    { label: '', header: 'green', color: '#6fa229', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.75, openness: 0.7, agreeableness: 0.95, integrity: 0.4, stability: 0.95, conscientiousness: 0.55, title: 'The Peacemaker'},
 
-    { label: '', header: 'grey', color: '#939598', darkerColor: '#5C5D5F', shareLink: '', attributes: 'Powerful, Mysterious, Provocative', extraversion: 0.3, openness: 0.4, agreeableness: 0.9, integrity: 0.2, stability: 0.6, conscientiousness: 0.6},
+    { label: '', header: 'grey', color: '#939598', darkerColor: '#5C5D5F', shareLink: '', attributes: 'Powerful, Mysterious, Provocative', extraversion: 0.1, openness: 0.1, agreeableness: 0.1, integrity: 0.9, stability: 0.8, conscientiousness: 0.45, title: 'The Brooder'},
 
-    { label: '', header: 'crimson', color: '#d12b51', darkerColor: '#901F39', shareLink: '', attributes: 'Adventurous, Bold, Direct', extraversion: 0.3, openness: 0.4, agreeableness: 0.9, integrity: 0.2, stability: 0.6, conscientiousness: 0.6},
+    { label: '', header: 'crimson', color: '#d12b51', darkerColor: '#901F39', shareLink: '', attributes: 'Adventurous, Bold, Direct', extraversion: 0.9, openness: 0.75, agreeableness: 0.1, integrity: 0.9, stability: 0.5, conscientiousness: 0.3, title: 'The Achiever'},
 
-    { label: '', header: 'purple', color: '#b15de6', darkerColor: '#901F39', shareLink: '', attributes: 'Creative, Expressive, Emotive', extraversion: 0.3, openness: 0.4, agreeableness: 0.9, integrity: 0.2, stability: 0.6, conscientiousness: 0.6},
+    { label: '', header: 'purple', color: '#b15de6', darkerColor: '#901F39', shareLink: '', attributes: 'Creative, Expressive, Emotive', extraversion: 0.8, openness: 0.7, agreeableness: 0.9, integrity: 0.5, stability: 0.1, conscientiousness: 0.85, title: 'The Explorer'},
 
   ];
 
@@ -698,21 +698,22 @@ function getColorTextFormatted(color)
   } else if(color == 'blue')
   {
     return ([
-      <Text style={[styles.pullQuote, {marginTop: hp('25%')}]}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>The Title</Text>,
-      <Text style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(userColor)[0].attributes}</Text>,
-      <Text style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} 30% </Text>,
-      <Progress.Bar isAnimated duration={1000} progress={0.3} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Openness </Text> {'//'} 30% </Text>,
-      <Progress.Bar isAnimated duration={1000} progress={0.3} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Agreeableness </Text> {'//'} {getResultColorItem(userColor)[0].agreeableness*100}%</Text>,
-      <Progress.Bar isAnimated duration={1000} progress={getResultColorItem(userColor)[0].agreeableness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Integrity </Text> {'//'} 30% </Text>,
-      <Progress.Bar isAnimated duration={1000} progress={0.3} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Emotional Stability </Text> {'//'} 30% </Text>,
-      <Progress.Bar isAnimated duration={1000} progress={0.3} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} 30% </Text>,
-      <Progress.Bar isAnimated duration={1000} progress={0.3} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text>{'\n'}</Text>
+      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(userColor).length > 0) ? getResultColorItem(userColor)[0].color : 'transparent', position: 'absolute', top: 0, left: 0, margin: 0, height: hp('36%'), width: wp('200%'), zIndex: -1}} ></View>,
+      <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>{getResultColorItem(userColor)[0].title}</Text>,
+      <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(userColor)[0].attributes}</Text>,
+      <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(userColor)[0].extraversion*100}% </Text>,
+      <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(userColor)[0].extraversion} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text key = {4} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Openness </Text> {'//'} {getResultColorItem(userColor)[0].openness*100}% </Text>,
+      <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(userColor)[0].openness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text key = {5} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Agreeableness </Text> {'//'} {getResultColorItem(userColor)[0].agreeableness*100}%</Text>,
+      <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(userColor)[0].agreeableness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text key = {6} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Integrity </Text> {'//'} {getResultColorItem(userColor)[0].integrity*100}% </Text>,
+      <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(userColor)[0].integrity} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text key = {7} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Emotional Stability </Text> {'//'} {getResultColorItem(userColor)[0].stability*100}% </Text>,
+      <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(userColor)[0].stability} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(userColor)[0].conscientiousness*100}% </Text>,
+      <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(userColor)[0].conscientiousness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
+      <Text key = {9} >{'\n'}</Text>
     ]);
   } else if(color == 'blue')
   {
@@ -732,7 +733,6 @@ function getColorTextFormatted(color)
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
-    <View pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(userColor).length > 0) ? getResultColorItem(userColor)[0].color : 'transparent', position: 'absolute', height: hp('36%'), width: wp('100%'), zIndex: -1}} ></View>
     <View style={styles.dropDown}>
     <Animated.View
       style={
