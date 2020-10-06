@@ -95,7 +95,7 @@ export default function App() {
 
     { label: '', header: 'crimson', color: '#d12b51', darkerColor: '#901F39', shareLink: '', attributes: 'Adventurous, Bold, Direct', extraversion: 0.9, openness: 0.75, agreeableness: 0.1, integrity: 0.9, stability: 0.5, conscientiousness: 0.3, title: 'The Achiever'},
 
-    { label: '', header: 'purple', color: '#b15de6', darkerColor: '#901F39', shareLink: '', attributes: 'Creative, Expressive, Emotive', extraversion: 0.8, openness: 0.7, agreeableness: 0.9, integrity: 0.5, stability: 0.1, conscientiousness: 0.85, title: 'The Explorer'},
+    { label: '', header: 'purple', color: '#b15de6', darkerColor: '#874AAD', shareLink: '', attributes: 'Creative, Expressive, Emotive', extraversion: 0.8, openness: 0.7, agreeableness: 0.9, integrity: 0.5, stability: 0.1, conscientiousness: 0.85, title: 'The Explorer'},
 
   ];
 
@@ -243,7 +243,6 @@ const KeyIsAColor = (key) => {
     }
 
   const handleItemPress = (item, index) => {
-    console.log('pressed item', item.color);
     handleMenuToggle();
 
     if(!isSelectingSecondColor)
@@ -252,6 +251,7 @@ const KeyIsAColor = (key) => {
     } else {
       setSecondColor(item.color);
     }
+
     setCurrentKey(Capitalize(item.header));
     setCurrentTextKey(item.header);
   }
@@ -500,7 +500,7 @@ const KeyIsAColor = (key) => {
     };
 
     function getResultColorItem(color) {
-        console.log('**RESULT: '+color);
+        //console.log('**RESULT: '+color);
         console.log(colorMenuItems.filter((item) => item.header === color));
         return colorMenuItems.filter((item) => item.header === color);
     }
@@ -855,7 +855,7 @@ function getColorTextFormatted(color)
                             isOpen={isMenuOpen}
                             position={"top-right"}
                             borderColor={'white'}
-                            primaryColor={'white'}
+                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : (currentKey == 'yourCOLOR' ? getResultColorItem(userColor)[0].color : '#ffffff')}
                             buttonWidth={wp('10%')}
                             borderWidth={0}
                             onMenuToggle={handleMenuToggle}

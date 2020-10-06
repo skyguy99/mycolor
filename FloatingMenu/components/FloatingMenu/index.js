@@ -136,6 +136,8 @@ class FloatingMenu extends React.PureComponent {
     const { items } = this.state;
     const item = items[index];
 
+    console.log('Pressing: ', item);
+
     if (!item) return;
 
     if (item.onPress) {
@@ -149,6 +151,10 @@ class FloatingMenu extends React.PureComponent {
     const { isOpen, onMenuToggle } = this.props;
 
     onMenuToggle(!isOpen);
+  };
+
+  handleLongMenuPress = () => {
+    console.log('long menu press');
   };
 
   toggleMenu = isOpen => {
@@ -264,18 +270,19 @@ class FloatingMenu extends React.PureComponent {
     //   outputRange: ['#ffffff', 'red'],
     // });
 
-    const backgroundColor = this.gradientBackgroundColor.interpolate({
-        inputRange: [0, 30, 60, 90, 120, 150, 180],
-        outputRange: [
-          '#d12b51',
-          '#0081d1',
-          '#6fa229',
-          '#939598',
-          '#fca500',
-          '#b15de6',
-          '#d12b51'
-        ],
-      });
+    const backgroundColor = primaryColor;
+    // const backgroundColor = this.gradientBackgroundColor.interpolate({
+    //     inputRange: [0, 30, 60, 90, 120, 150, 180],
+    //     outputRange: [
+    //       '#d12b51',
+    //       '#0081d1',
+    //       '#6fa229',
+    //       '#939598',
+    //       '#fca500',
+    //       '#b15de6',
+    //       '#d12b51'
+    //     ],
+    //   });
 
     const content = renderMenuIcon ? (
       renderMenuIcon({ ...this.state })
@@ -301,6 +308,7 @@ class FloatingMenu extends React.PureComponent {
       >
         <TouchableOpacity
           style={globalStyles.button}
+          onLongPress={this.handleLongMenuPress}
           onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
           onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
           onPress={this.handleMenuPress}
@@ -309,10 +317,11 @@ class FloatingMenu extends React.PureComponent {
           <Animated.View
             style={[
               globalStyles.buttonInner,
-              applyButtonWidth(innerWidth)
+              applyButtonWidth(innerWidth),
+              {backgroundColor}
             ]}
           >
-          <Image style = {{width: Design.buttonWidth-5, height: Design.buttonWidth-5, marginTop: 14}} source={require('../../../assets/rainbowcircle.png')}></Image>
+          <Image style = {{display: primaryColor == '#ffffff' ? 'flex' : 'none', width: Design.buttonWidth-5, height: Design.buttonWidth-5, marginTop: 14}} source={require('../../../assets/rainbowcircle.png')}></Image>
             {content}
           </Animated.View>
         </TouchableOpacity>
