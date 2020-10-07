@@ -3,12 +3,12 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Animated,
   ActivityIndicator,
 } from 'react-native';
 
 import { applyButtonWidth } from '../../helpers';
-
 import globalStyles from '../../styles';
 import styles from './styles';
 
@@ -33,6 +33,7 @@ class FloatingItem extends React.PureComponent {
       onPressIn,
       onPressOut,
       onPress,
+      isInLongPress,
     } = this.props;
     const { label, labelStyle, isPending, isDisabled } = item;
 
@@ -43,12 +44,9 @@ class FloatingItem extends React.PureComponent {
     const multiple = vPos.toLowerCase() === 'bottom' ? 1 : -1;
 
 //CHANGE ITEM COLOR HERE!!!!
-    const backgroundColor =
-      pressAnimation &&
-      pressAnimation.interpolate({
-        inputRange: [0.0, 1.0],
-        outputRange: [_backgroundColor, item.darkerColor],
-      });
+    //const backgroundColor = isInLongPress ? 'red' : _backgroundColor; //put half and half here
+    const backgroundColor = _backgroundColor;
+
     const translateY =
       fanAnimation &&
       fanAnimation.interpolate({
@@ -93,14 +91,7 @@ class FloatingItem extends React.PureComponent {
 
     let content = null;
 
-    if (isPending)
-      content = (
-        <ActivityIndicator
-          size="small"
-          color={_iconColor || primaryColor}
-          style={styles.activityIndicator}
-        />
-      );
+
     const borderColor = isDisabled
       ? `${_borderColor || primaryColor}80`
       : _borderColor || primaryColor;
@@ -121,23 +112,8 @@ class FloatingItem extends React.PureComponent {
         ]}
       >
         <View style={isDisabled && globalStyles.disabled}>
-          <Animated.Text
-            style={[
-              globalStyles.text,
-              styles.itemLabel,
-              labelStyle,
-              {
-                opacity: fastOpacity,
-                transform: fanAnimation ? [{ rotate: oppositeRotate }] : [],
-                left: hPos.toLowerCase() === 'right' ? -171 : 72,
-                textAlign: hPos.toLowerCase() === 'right' ? 'right' : 'left',
-              },
-            ]}
-          >
-            {label}
-          </Animated.Text>
 
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             style={globalStyles.button}
             disabled={isDisabled || isPending || !isOpen}
             hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
@@ -152,9 +128,11 @@ class FloatingItem extends React.PureComponent {
                 { backgroundColor },
               ]}
             >
+
+            <View style = {{display: isInLongPress ? 'flex' : 'none', backgroundColor: 'red', width: 20}} />
               {content}
             </Animated.View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
       </Animated.View>
     );

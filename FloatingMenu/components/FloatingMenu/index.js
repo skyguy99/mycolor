@@ -8,6 +8,9 @@ import { applyButtonWidth } from '../../helpers';
 import globalStyles from '../../styles';
 import styles from './styles';
 
+var isSelectingSecondColor = false;
+var isinLongPress = false;
+
 class FloatingMenu extends React.PureComponent {
   state = {
     dimmerActive: false,
@@ -116,6 +119,7 @@ class FloatingMenu extends React.PureComponent {
     animatedValue,
     useNativeDriver = false
   ) => () => {
+
     // Animate out
     Animated.timing(animatedValue, {
       toValue: 0.0,
@@ -136,7 +140,9 @@ class FloatingMenu extends React.PureComponent {
     const { items } = this.state;
     const item = items[index];
 
-    console.log('Pressing: ', item);
+    isinLongPress = false;
+
+    //console.log('Pressing: ', item);
 
     if (!item) return;
 
@@ -151,10 +157,19 @@ class FloatingMenu extends React.PureComponent {
     const { isOpen, onMenuToggle } = this.props;
 
     onMenuToggle(!isOpen);
+
+    isinLongPress = false;
   };
 
   handleLongMenuPress = () => {
     console.log('long menu press');
+    if(isSelectingSecondColor)
+    {
+      const { isOpen, onMenuToggle } = this.props;
+
+      onMenuToggle(true);
+      isinLongPress = true;
+    }
   };
 
   toggleMenu = isOpen => {
@@ -214,38 +229,42 @@ class FloatingMenu extends React.PureComponent {
 
     return items.map((item, index) => {
 
-      return (
-        <FloatingItem
-          key={`item-${index}`}
-          {...item}
-          item={item}
-          index={index}
-          icon={
-            null
-          }
-          position={position}
-          isOpen={isOpen || dimmerActive}
-          backgroundColor={item.color}
-          borderColor={item.color}
-          iconColor={iconColor}
-          primaryColor={item.color}
-          buttonWidth={buttonWidth}
-          innerWidth={innerWidth}
-          numItems={items.length}
-          itemsDown={itemsDown}
-          itemFanAnimations={this.itemFanAnimations}
-          itemPressAnimations={this.itemPressAnimations}
-          onPress={this.handleItemPress(index)}
-          onPressIn={this.handleItemPressIn(
-            index,
-            this.itemPressAnimations[index]
-          )}
-          onPressOut={this.handleItemPressOut(
-            index,
-            this.itemPressAnimations[index]
-          )}
-        />
-      );
+      if(item.color != primaryColor)
+      {
+        return (
+          <FloatingItem
+            key={`item-${index}`}
+            {...item}
+            item={item}
+            index={index}
+            icon={
+              null
+            }
+            position={position}
+            isOpen={isOpen || dimmerActive}
+            backgroundColor={item.color}
+            borderColor={item.color}
+            iconColor={iconColor}
+            primaryColor={item.color}
+            buttonWidth={buttonWidth}
+            innerWidth={innerWidth}
+            numItems={items.length}
+            itemsDown={itemsDown}
+            itemFanAnimations={this.itemFanAnimations}
+            itemPressAnimations={this.itemPressAnimations}
+            onPress={this.handleItemPress(index)}
+            onPressIn={this.handleItemPressIn(
+              index,
+              this.itemPressAnimations[index]
+            )}
+            onPressOut={this.handleItemPressOut(
+              index,
+              this.itemPressAnimations[index]
+            )}
+            isInLongPress={isinLongPress}
+          />
+        );
+      }
     });
   };
 
@@ -262,15 +281,16 @@ class FloatingMenu extends React.PureComponent {
     } = this.props;
     const { menuButtonDown } = this.state;
 
+    isSelectingSecondColor = (primaryColor != '#ffffff');
+
     const bgColor = _backgroundColor || primaryColor;
     const iconColor = primaryColor;
-    const borderColor = _borderColor || primaryColor;
-    // const backgroundColor = this.menuPressAnimation.interpolate({
-    //   inputRange: [0.0, 1.0],
-    //   outputRange: ['#ffffff', 'red'],
-    // });
-
+    //const borderColor = isinLongPress ? 'blue' : _borderColor;
+    const borderColor = _borderColor;
+    //const backgroundColor = isinLongPress ? 'white' : primaryColor;
     const backgroundColor = primaryColor;
+
+
     // const backgroundColor = this.gradientBackgroundColor.interpolate({
     //     inputRange: [0, 30, 60, 90, 120, 150, 180],
     //     outputRange: [
@@ -328,6 +348,7 @@ class FloatingMenu extends React.PureComponent {
       </View>
     );
   };
+
 
   renderDimmer = () => {
     const { isOpen, dimmerStyle } = this.props;
@@ -390,6 +411,7 @@ FloatingMenu.defaultProps = {
   position: MenuPositions.bottomRight,
   openEase: t => --t * t * t + 1,
   closeEase: t => t * t * t,
+  isSelectingSecondColor: isSelectingSecondColor
 };
 
 export default FloatingMenu;
