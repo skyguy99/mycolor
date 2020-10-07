@@ -9,6 +9,7 @@ import * as Linking from 'expo-linking';
 import FloatingMenu from './FloatingMenu/components/FloatingMenu';
 import * as Progress from 'expo-progress';
 import LottieView from "lottie-react-native";
+import Svg, { G, Path } from "react-native-svg";
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
 import {
@@ -67,6 +68,9 @@ export default function App() {
   const [quizOffsetX, setQuizOffsetX] = React.useState(new Animated.Value(-wp('100%')));
   const [scrollOffsetX, setScrollOffsetX] = React.useState(new Animated.Value(0));
 
+  const [scaleInAnimated, setScaleInAnimated] = React.useState(new Animated.Value(0));
+  const [scaleOutAnimated, setScaleOutAnimated] = React.useState(new Animated.Value(0));
+
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('myCOLOR');
   const [currentTextKey, setCurrentTextKey] = React.useState('myCOLOR');
@@ -84,6 +88,7 @@ export default function App() {
   const [lottieProgress, setLottieProgress] = React.useState(new Animated.Value(0.5));
 
   const SliderWidth = Dimensions.get('screen').width;
+  const colorWheelArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const colorMenuItems = [
     { label: '', header: 'orange', color: '#fca500', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: 'The Enthusiast'},
 
@@ -471,7 +476,7 @@ const KeyIsAColor = (key) => {
       setResultColor(colorResult);
       setUserColor(colorResult);
 
-      console.log('Setting user color: '+colorResult);
+      //console.log('Setting user color: '+colorResult);
 
       AsyncStorage.setItem('userColor', userColor);
 
@@ -501,7 +506,7 @@ const KeyIsAColor = (key) => {
 
     function getResultColorItem(color) {
         //console.log('**RESULT: '+color);
-        console.log(colorMenuItems.filter((item) => item.header === color));
+        //console.log(colorMenuItems.filter((item) => item.header === color));
         return colorMenuItems.filter((item) => item.header === color);
     }
 
@@ -687,6 +692,16 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: hp('3.1%'),
         textAlign: 'left'
+      },
+      colorWheel:
+      {
+        width: wp('100%'),
+        height: hp('40%'),
+        padding: wp('20%'),
+        marginLeft: -wp('10%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center'
       }
 });
 
@@ -727,6 +742,226 @@ function getColorTextFormatted(color)
   } else if(color == 'purple')
   {
 
+  }
+}
+
+const SCALE = {
+  // this defines the terms of our scaling animation.
+  getScaleTransformationStyle(animated: Animated.Value, startSize: number = 1, endSize: number = 0.99) {
+    const interpolation = animated.interpolate({
+      inputRange: [0, 1],
+      outputRange: [startSize, endSize],
+    });
+    return {
+      transform: [
+        { scale: interpolation },
+      ],
+    };
+  },
+  // This defines animation behavior we expext onPressIn
+ pressInAnimation(animated: Animated.Value, duration: number = 150) {
+    animated.setValue(0);
+    Animated.timing(animated, {
+      toValue: 1,
+      duration,
+      useNativeDriver: true,
+    }).start();
+  },
+  // This defines animatiom behavior we expect onPressOut
+  pressOutAnimation(animated: Animated.Value, duration: number = 150) {
+    animated.setValue(1);
+    Animated.timing(animated, {
+      toValue: 0,
+      duration,
+      useNativeDriver: true,
+    }).start();
+  },
+
+};
+
+const SvgComponent = (props) => {
+
+  console.log(props.id);
+  if(props.id == 0)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+            <Path
+              d="M281.51 182.41L213.86 65A447.58 447.58 0 0051.61 237.16L168.89 305a310.31 310.31 0 01112.62-122.59z"
+              fill="#e53112"
+            />
+          </G>
+        </G>
+      </Svg>
+    )
+  } else if(props.id == 1)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+            <Path
+              d="M444 136.05V0a443.45 443.45 0 00-230.31 65l67.79 117.4A307.32 307.32 0 01444 136.05z"
+              fill="#f9ad0a"
+            />
+          </G>
+        </G>
+      </Svg>
+    )
+  } else if(props.id == 2)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+            <Path
+              d="M444.31 136.05a307.41 307.41 0 01162.31 46.06l68.44-118.55A443.3 443.3 0 00445.61 0H444v136z"
+              fill="#f3f40f"
+            />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 3)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M719.6 304.72l119.26-68.86a447.38 447.38 0 00-163.8-172.3l-68.44 118.55A310.29 310.29 0 01719.6 304.72z"
+            fill="#4cd71c"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 4)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M838.86 235.86L719.6 304.72a307.55 307.55 0 0133.58 140.2c0 6.36-.21 12.67-.59 18.94h138.26q.38-9.08.37-18.25a443.55 443.55 0 00-52.36-209.75z"
+            fill="#38b54e"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 5)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M135.45 444.92A307.56 307.56 0 01168.87 305L51.58 237.32A443.69 443.69 0 000 445.61q0 9.18.38 18.25H136c-.34-6.27-.55-12.58-.55-18.94z"
+            fill="#de0037"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 6)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M136 463.86H.38a443.13 443.13 0 0067 217.43l117.91-68.09A307.09 307.09 0 01136 463.86z"
+            fill="#db00a0"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 7)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+           d="M752.59 463.86a307.17 307.17 0 01-49.45 149.64L823 682.69a443.09 443.09 0 0067.86-218.83z"
+           fill="#2bd49e"
+         />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 8)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M703.14 613.5a310.3 310.3 0 01-112.92 103.7l69 119.57A447.85 447.85 0 00823 682.69z"
+            fill="#1ba0e0"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 9)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M444.31 753.79H444v137.42h1.66a443.62 443.62 0 00213.64-54.45l-69-119.57a307.41 307.41 0 01-145.99 36.6z"
+            fill="#1230df"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 10)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M297.85 716.91l-68.39 118.46A443.24 443.24 0 00444 891.21V753.78a307.44 307.44 0 01-146.15-36.87z"
+            fill="#6a02e0"
+            fillRule="evenodd"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  }
+  else if(props.id == 11)
+  {
+    return (
+      <Svg viewBox="0 0 891.22 891.22" {...props}>
+        <G data-name="Layer 2">
+          <G data-name="Layer 13">
+          <Path
+            d="M185.29 613.2L67.35 681.29a447.83 447.83 0 00162.11 154.08l68.39-118.46A310.36 310.36 0 01185.29 613.2z"
+            fill="#a200e0"
+          />
+          </G>
+        </G>
+      </Svg>
+    )
+  } else {
+    return null;
   }
 }
 
@@ -940,13 +1175,26 @@ function getColorTextFormatted(color)
                               style={styles.scrollView}>
 
 
-
                               <View style = {{display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}}>
                               {getColorTextFormatted(userColor)}
                               </View>
 
 
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
+
+                              <View style = {styles.colorWheel}>
+                                {colorWheelArray.map((prop, key) => {
+                                   return (
+                                     <TouchableOpacity key={key}
+                                     onPressIn={() => {SCALE.pressInAnimation(scaleOutAnimated)}}
+                                     onPressOut={() => {SCALE.pressOutAnimation(scaleOutAnimated)}}
+                                     style={[SCALE.getScaleTransformationStyle(scaleOutAnimated, 1, 1.14), {justifyContent: 'center', alignItems: 'center'}]}
+                                     >
+                                       <SvgComponent style = {{position: 'absolute', width: wp('100%'), height: wp('80%'), top: -hp('15%'), left: -wp('52%'), right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}} id={key}/>
+                                   </TouchableOpacity>
+                                   );
+                                })}
+                              </View>
 
                                   <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
                                   <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
