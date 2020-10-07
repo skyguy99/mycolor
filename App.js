@@ -70,6 +70,7 @@ export default function App() {
 
   const [scaleInAnimated, setScaleInAnimated] = React.useState(new Animated.Value(0));
   const [scaleOutAnimated, setScaleOutAnimated] = React.useState(new Animated.Value(0));
+  const [currentWheelWord, setCurrentWheelWord] = React.useState('Extraversion');
 
   const [bodyText, setBodyText] = React.useState('');
   const [currentKey, setCurrentKey] = React.useState('myCOLOR');
@@ -94,7 +95,7 @@ export default function App() {
 
     { label: '', header: 'blue', color: '#0081d1', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: 'The Director'},
 
-    { label: '', header: 'green', color: '#6fa229', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.75, openness: 0.7, agreeableness: 0.95, integrity: 0.4, stability: 0.95, conscientiousness: 0.55, title: 'The Peacemaker'},
+    { label: '', header: 'green', color: '#6fa229', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.75, openness: 0.7, agreeableness: 0.95, integrity: 0.4, stability: 0.95, conscientiousness: 0.5, title: 'The Peacemaker'},
 
     { label: '', header: 'grey', color: '#939598', darkerColor: '#5C5D5F', shareLink: '', attributes: 'Powerful, Mysterious, Provocative', extraversion: 0.1, openness: 0.1, agreeableness: 0.1, integrity: 0.9, stability: 0.8, conscientiousness: 0.45, title: 'The Brooder'},
 
@@ -143,7 +144,7 @@ export default function App() {
 });
 
 const KeyIsAColor = (key) => {
-  return colorMenuItems.filter((item) => item.header === key).length > 0;
+  return colorMenuItems.filter((item) => item.header.toLowerCase() === key.toLowerCase()).length > 0;
 }
 
   function elevationShadowStyle(elevation) {
@@ -157,6 +158,7 @@ const KeyIsAColor = (key) => {
   }
 
   const toggleHeaderMenu = (value) => {
+
     if (!value) {
       setTimeout(() => {
         setHeaderMenuOptionsVisible(value);
@@ -202,7 +204,7 @@ const KeyIsAColor = (key) => {
 //SELECT DROPDOWN
   const handleValueSelect = (value) => {
 
-    console.log('Selecting '+value);
+    //console.log('Selecting '+value);
     setCurrentKey(value);
 
     if(value == 'yourCOLOR' || value == 'myCOLOR' || value == 'Teams')
@@ -213,7 +215,7 @@ const KeyIsAColor = (key) => {
     if(value == 'Quiz')
     {
       toggleQuiz(true);
-      console.log('this');
+
     } else if (value == 'Connect')
     {
       openLink('instagram://user?username=mycolorpersonality');
@@ -535,7 +537,7 @@ const styles = StyleSheet.create({
   },
   contentContainer:
   {
-    flex: 1, justifyContent: 'center', width: wp('101%')
+    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible'
   },
   scrollContainer: {
     flex: 1,
@@ -568,10 +570,9 @@ const styles = StyleSheet.create({
         zIndex: 10,
       },
   scrollView: {
-      marginHorizontal: 20,
-      paddingLeft: wp('10%'),
-      paddingRight: wp('10%'),
-      zIndex: 10,
+      paddingLeft: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      paddingRight: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      overflow: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
     },
     creditsBtn: {
       width: wp('20%'),
@@ -695,53 +696,42 @@ const styles = StyleSheet.create({
       },
       colorWheel:
       {
-        width: wp('100%'),
         height: hp('40%'),
         padding: wp('20%'),
-        marginLeft: -wp('10%'),
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center'
+        textAlign: 'center',
+        overflow: 'visible',
+        marginBottom: hp('5%'),
+        marginTop: hp('4%')
       }
 });
 
 function getColorTextFormatted(color)
 {
-  if(color == 'orange')
-  {
-
-  } else if(color == 'blue')
+  if(KeyIsAColor(color))
   {
     return ([
-      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(userColor).length > 0) ? getResultColorItem(userColor)[0].color : 'transparent', position: 'absolute', top: 0, left: 0, margin: 0, height: hp('36%'), width: wp('200%'), zIndex: -1}} ></View>,
-      <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>{getResultColorItem(userColor)[0].title}</Text>,
-      <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(userColor)[0].attributes}</Text>,
-      <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(userColor)[0].extraversion*100}% </Text>,
-      <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(userColor)[0].extraversion} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text key = {4} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Openness </Text> {'//'} {getResultColorItem(userColor)[0].openness*100}% </Text>,
-      <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(userColor)[0].openness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text key = {5} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Agreeableness </Text> {'//'} {getResultColorItem(userColor)[0].agreeableness*100}%</Text>,
-      <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(userColor)[0].agreeableness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text key = {6} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Integrity </Text> {'//'} {getResultColorItem(userColor)[0].integrity*100}% </Text>,
-      <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(userColor)[0].integrity} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text key = {7} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Emotional Stability </Text> {'//'} {getResultColorItem(userColor)[0].stability*100}% </Text>,
-      <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(userColor)[0].stability} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(userColor)[0].conscientiousness*100}% </Text>,
-      <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(userColor)[0].conscientiousness} color={getResultColorItem(userColor)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />,
-      <Text key = {9} >{'\n'}</Text>
+
+      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 0, zIndex: 0, marginTop: -hp('75%')}} ></View>,
+      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('3%')}}>
+          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>{getResultColorItem(color)[0].title}</Text>
+          <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(color)[0].attributes}</Text>
+          <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(color)[0].extraversion*100}% </Text>
+          <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Text key = {4} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Openness </Text> {'//'} {getResultColorItem(color)[0].openness*100}% </Text>
+          <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(color)[0].openness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Text key = {5} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Agreeableness </Text> {'//'} {getResultColorItem(color)[0].agreeableness*100}%</Text>
+          <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(color)[0].agreeableness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Text key = {6} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Integrity </Text> {'//'} {getResultColorItem(color)[0].integrity*100}% </Text>
+          <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(color)[0].integrity} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Text key = {7} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Emotional Stability </Text> {'//'} {getResultColorItem(color)[0].stability*100}% </Text>
+          <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(color)[0].conscientiousness*100}% </Text>
+          <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Text key = {9} >{'\n'}</Text>
+      </View>
     ]);
-  } else if(color == 'blue')
-  {
-
-  } else if(color == 'crimson')
-  {
-
-  } else if(color == 'grey')
-  {
-
-  } else if(color == 'purple')
-  {
-
   }
 }
 
@@ -781,7 +771,6 @@ const SCALE = {
 
 const SvgComponent = (props) => {
 
-  console.log(props.id);
   if(props.id == 0)
   {
     return (
@@ -1101,6 +1090,7 @@ const SvgComponent = (props) => {
                           <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
 
                       <SafeAreaView style={{flex: 1, marginTop: hp('16%')}}>
+
                           <ScrollView
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
@@ -1166,19 +1156,21 @@ const SvgComponent = (props) => {
                             </ScrollView>
                             </SafeAreaView>
                           </Animated.View>
-
                           <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
                           <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
+
                               <ScrollView
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}>
 
-
                               <View style = {{display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}}>
                               {getColorTextFormatted(userColor)}
                               </View>
 
+                              <View style = {{display: KeyIsAColor(currentKey) ? 'flex' : 'none'}}>
+                                {getColorTextFormatted(currentKey.toLowerCase())}
+                              </View>
 
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
@@ -1190,12 +1182,14 @@ const SvgComponent = (props) => {
                                      onPressOut={() => {SCALE.pressOutAnimation(scaleOutAnimated)}}
                                      style={[SCALE.getScaleTransformationStyle(scaleOutAnimated, 1, 1.14), {justifyContent: 'center', alignItems: 'center'}]}
                                      >
-                                       <SvgComponent style = {{position: 'absolute', width: wp('100%'), height: wp('80%'), top: -hp('15%'), left: -wp('52%'), right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}} id={key}/>
+                                       <SvgComponent style = {{position: 'absolute', width: wp('80%'), height: wp('80%'), top: -hp('16%'), left: 0, right: 0, marginLeft: -wp('40%')}} id={key}/>
                                    </TouchableOpacity>
                                    );
                                 })}
+                                <Text style = {[styles.pullQuote, {width: wp('100%'), textAlign: 'center'}]}>{currentWheelWord}</Text>
                               </View>
 
+                                  <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>What is the COLOR of your personality?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
                                   <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
                                   <Text style = {styles.bodyText}>{'\n'}{'\n'}By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.{'\n'}{'\n'}</Text>
