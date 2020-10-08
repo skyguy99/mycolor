@@ -9,7 +9,7 @@ import globalStyles from '../../styles';
 import styles from './styles';
 
 var isSelectingSecondColor = false;
-var isinLongPress = false;
+global.isinLongPress = false;
 
 class FloatingMenu extends React.PureComponent {
   state = {
@@ -140,7 +140,7 @@ class FloatingMenu extends React.PureComponent {
     const { items } = this.state;
     const item = items[index];
 
-    isinLongPress = false;
+    global.isinLongPress = false;
 
     //console.log('Pressing: ', item);
 
@@ -158,18 +158,16 @@ class FloatingMenu extends React.PureComponent {
 
     onMenuToggle(!isOpen);
 
-    isinLongPress = false;
+    global.isinLongPress = false;
   };
 
   handleLongMenuPress = () => {
-    console.log('long menu press');
-    if(isSelectingSecondColor)
-    {
       const { isOpen, onMenuToggle } = this.props;
 
       onMenuToggle(true);
-      isinLongPress = true;
-    }
+      global.isinLongPress = true;
+
+      console.log('long menu press ', global.isinLongPress);
   };
 
   toggleMenu = isOpen => {
@@ -246,6 +244,7 @@ class FloatingMenu extends React.PureComponent {
             borderColor={item.color}
             iconColor={iconColor}
             primaryColor={item.color}
+            selectedColor={primaryColor}
             buttonWidth={buttonWidth}
             innerWidth={innerWidth}
             numItems={items.length}
@@ -261,7 +260,7 @@ class FloatingMenu extends React.PureComponent {
               index,
               this.itemPressAnimations[index]
             )}
-            isInLongPress={isinLongPress}
+            isInLongPress={global.isinLongPress}
           />
         );
       }
@@ -409,9 +408,9 @@ FloatingMenu.defaultProps = {
   buttonWidth: Design.buttonWidth,
   innerWidth: Design.buttonWidth - 12,
   position: MenuPositions.bottomRight,
+  isInLongPress: isinLongPress,
   openEase: t => --t * t * t + 1,
-  closeEase: t => t * t * t,
-  isSelectingSecondColor: isSelectingSecondColor
+  closeEase: t => t * t * t
 };
 
 export default FloatingMenu;

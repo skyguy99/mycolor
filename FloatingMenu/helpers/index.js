@@ -1,6 +1,6 @@
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar } from "react-native";
 
-import { Design } from '../constants';
+import { Design } from "../constants";
 
 export const isPortrait = () => {
   return Design.window.height >= Design.window.width;
@@ -12,8 +12,22 @@ export const applyButtonWidth = (width = Design.buttonWidth) => ({
   borderRadius: width * 0.5,
 });
 
+export const applyButtonInnerWidthFirst = (width = Design.buttonWidth) => ({
+  width: width / 2,
+  height: width,
+  borderTopLeftRadius: width * 0.5,
+  borderBottomLeftRadius: width * 0.5,
+});
+
+export const applyButtonInnerWidthSecond = (width = Design.buttonWidth) => ({
+  width: width / 2,
+  height: width,
+  borderTopRightRadius: width * 0.5,
+  borderBottomRightRadius: width * 0.5,
+});
+
 export const isIphoneX = () =>
-  Platform.OS === 'ios' &&
+  Platform.OS === "ios" &&
   !Platform.isPad &&
   !Platform.isTVOS &&
   (Design.window.height === 812 ||
@@ -27,7 +41,7 @@ export const ifIphoneX = (iphoneXStyle, regularStyle) => {
   return regularStyle;
 };
 
-export const getStatusBarHeight = safe =>
+export const getStatusBarHeight = (safe) =>
   Platform.select({
     ios: ifIphoneX(safe ? 44 : 30, 20),
     android: StatusBar.currentHeight,

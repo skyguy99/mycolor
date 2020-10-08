@@ -10,6 +10,7 @@ export default StyleSheet.create({
     top: Design.buttonWidth * 0.5 - 12,
     zIndex: 7,
     transform: [{ rotate: '0deg' }],
+    overflow: 'hidden'
   },
 
   activityIndicator: {

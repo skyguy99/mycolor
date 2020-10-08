@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   Animated,
   ActivityIndicator,
-} from 'react-native';
+} from "react-native";
 
-import { applyButtonWidth } from '../../helpers';
-import globalStyles from '../../styles';
-import styles from './styles';
+import {
+  applyButtonWidth,
+  applyButtonInnerWidthFirst,
+  applyButtonInnerWidthSecond,
+} from "../../helpers";
+import globalStyles from "../../styles";
+import styles from "./styles";
 
 class FloatingItem extends React.PureComponent {
   render() {
@@ -34,16 +38,17 @@ class FloatingItem extends React.PureComponent {
       onPressOut,
       onPress,
       isInLongPress,
+      selectedColor,
     } = this.props;
     const { label, labelStyle, isPending, isDisabled } = item;
 
     const pressAnimation = itemPressAnimations[index];
     const fanAnimation = itemFanAnimations[index];
     const itemDown = itemsDown[index];
-    const [vPos, hPos] = position.split('-');
-    const multiple = vPos.toLowerCase() === 'bottom' ? 1 : -1;
+    const [vPos, hPos] = position.split("-");
+    const multiple = vPos.toLowerCase() === "bottom" ? 1 : -1;
 
-//CHANGE ITEM COLOR HERE!!!!
+    //CHANGE ITEM COLOR HERE!!!!
     //const backgroundColor = isInLongPress ? 'red' : _backgroundColor; //put half and half here
     const backgroundColor = _backgroundColor;
 
@@ -60,13 +65,13 @@ class FloatingItem extends React.PureComponent {
       fanAnimation &&
       fanAnimation.interpolate({
         inputRange: [0.0, 1.0],
-        outputRange: [`${15 * (numItems - index) * multiple}deg`, '0deg'],
+        outputRange: [`${15 * (numItems - index) * multiple}deg`, "0deg"],
       });
     const oppositeRotate =
       fanAnimation &&
       fanAnimation.interpolate({
         inputRange: [0.0, 1.0],
-        outputRange: [`${-15 * (numItems - index) * multiple}deg`, '0deg'],
+        outputRange: [`${-15 * (numItems - index) * multiple}deg`, "0deg"],
       });
     const scale =
       fanAnimation &&
@@ -79,18 +84,17 @@ class FloatingItem extends React.PureComponent {
       fanAnimation.interpolate({
         inputRange: [0.0, 0.25, 1.0],
         outputRange: [0.0, 0.0, 1.0],
-        extrapolate: 'clamp',
+        extrapolate: "clamp",
       });
     const fastOpacity =
       fanAnimation &&
       fanAnimation.interpolate({
         inputRange: [0.0, 0.8, 1.0],
         outputRange: [0.0, 0.0, 1.0],
-        extrapolate: 'clamp',
+        extrapolate: "clamp",
       });
 
     let content = null;
-
 
     const borderColor = isDisabled
       ? `${_borderColor || primaryColor}80`
@@ -111,10 +115,9 @@ class FloatingItem extends React.PureComponent {
           },
         ]}
       >
-        <View style={isDisabled && globalStyles.disabled}>
-
+        <View style={[isDisabled && globalStyles.disabled]}>
           <TouchableOpacity
-            style={globalStyles.button}
+            style={[globalStyles.button, {overflow: 'hidden'}]}
             disabled={isDisabled || isPending || !isOpen}
             hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
             onPressIn={onPressIn}
@@ -124,12 +127,40 @@ class FloatingItem extends React.PureComponent {
             <Animated.View
               style={[
                 globalStyles.buttonInner,
-                applyButtonWidth(innerWidth),
+                applyButtonInnerWidthFirst(innerWidth),
+                {
+                  //THIS CONTROLS SPLIT COLOR
+                  backgroundColor:
+                    isInLongPress
+                      ? selectedColor
+                      : backgroundColor,
+                },
+              ]}
+            >
+              <View
+                style={{
+                  display: isInLongPress ? "flex" : "none",
+                  backgroundColor: "red",
+                  width: 20,
+                }}
+              />
+              {content}
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                globalStyles.buttonInner,
+                applyButtonInnerWidthSecond(innerWidth),
                 { backgroundColor },
               ]}
             >
-
-            <View style = {{display: isInLongPress ? 'flex' : 'none', backgroundColor: 'red', width: 20}} />
+              <View
+                style={{
+                  display: isInLongPress ? "flex" : "none",
+                  backgroundColor: "red",
+                  width: 20,
+                }}
+              />
               {content}
             </Animated.View>
           </TouchableOpacity>

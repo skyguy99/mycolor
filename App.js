@@ -105,6 +105,10 @@ export default function App() {
 
   ];
 
+  var colorComboMenuItems = [
+    {header1: 'blue', header2: 'blue', color1: '#0081d1', color2: '#0081d1', shareLink: '', bodyBlurb: 'Theoretically, two Blues working together should be an ideal pair. How could two dependable and organized folks not work together to improve the outcomes of both? Well, a part of being Blue is also having a distinct preference for calling the shots and we all know what happens when we have more than one chef in the kitchen. Sometimes you may find that it is best to agree to have different areas where you can each explore your own ideas. But that is certainly not the typical outcome, and with some compromises and cooperation you can both apply your incredible abilities to work together for everyone’s advantage.', pullQuote: ''},
+  ];
+
   var bodyTexts = {
     'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
@@ -243,21 +247,32 @@ const KeyIsAColor = (key) => {
   });
 
   const handleMenuToggle = isMenuOpen =>
+  {
     setIsMenuOpen(isMenuOpen);
+
+//if isInLongPress
+    if(!isMenuOpen && KeyIsAColor(currentKey))
+    {
+      console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', currentKey.toLowerCase());
+    }
+  }
 
   const Capitalize = (str) => {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
   const handleItemPress = (item, index) => {
-    handleMenuToggle();
+    setIsMenuOpen(false);
     toggleQuiz(false);
+    setCurrentColor(item.color);
 
-    if(!isSelectingSecondColor)
-    {
-      setCurrentColor(item.color);
-    } else {
-      setSecondColor(item.color);
+    console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
+
+      if(colorComboMenuItems.filter((item) => item.header1 === currentColor && item.header2 === item.color).length > 0)
+      {
+        console.log('Selecting combo color: ', colorComboMenuItems.filter((item) => item.header1 === currentColor && item.header2 === item.color)[0]);
+
+        //Set this after select
     }
 
     setCurrentKey(Capitalize(item.header));

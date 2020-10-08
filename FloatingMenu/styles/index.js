@@ -44,7 +44,7 @@ const globalStyles = StyleSheet.create({
     // borderRadius: Design.buttonWidth * 0.5,
     // borderColor: Colors.primaryColor,
     backgroundColor: '#fff',
-    borderWidth: 3,
+    borderWidth: 0,
     marginTop: 14,
     elevation: 5,
     shadowOffset: { width: 0, height: 0.5 * 20 },
@@ -53,10 +53,12 @@ const globalStyles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 7,
+    zIndex: 7
   },
 
-  button: {},
+  button: {
+    flexDirection: 'row',
+  },
 
   buttonInner: {
     // width: Design.innerWidth,
@@ -67,6 +69,7 @@ const globalStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 7,
+    overflow: 'hidden'
   },
 
   missingIcon: {
