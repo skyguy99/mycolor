@@ -714,8 +714,8 @@ function getColorTextFormatted(color)
     return ([
 
       <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 0, zIndex: 0, marginTop: -hp('75%')}} ></View>,
-      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('3%')}}>
-          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>{getResultColorItem(color)[0].title}</Text>
+      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
+          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].title}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(color)[0].attributes}</Text>
           <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(color)[0].extraversion*100}% </Text>
           <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
@@ -730,6 +730,8 @@ function getColorTextFormatted(color)
           <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(color)[0].conscientiousness*100}% </Text>
           <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
           <Text key = {9} >{'\n'}</Text>
+          <Text key = {20} style = {styles.bodyText}> color long description </Text>
+          <Text key = {21} >{'\n'}</Text>
       </View>
     ]);
   }
@@ -768,6 +770,31 @@ const SCALE = {
   },
 
 };
+
+//CONVERT SVG: https://react-svgr.com/playground/
+
+const InlineImage = (props) => {
+  let style = props.style;
+  if (style && Platform.OS !== 'ios') {
+    // Multiply width and height by pixel ratio to fix React Native bug
+    style = Object.assign({}, StyleSheet.flatten(props.style));
+    ['width', 'height'].forEach((propName) => {
+      if (style[propName]) {
+        style[propName] *= PixelRatio.get();
+      }
+    });
+  }
+
+  return (
+    <Image
+      {...props}
+      style={style}
+    />
+  );
+};
+
+// "Inherit" prop types from Image
+InlineImage.propTypes = Image.propTypes;
 
 const SvgComponent = (props) => {
 
@@ -1118,8 +1145,8 @@ const SvgComponent = (props) => {
                                         <Text style={styles.bodyText}>{showResult ? getResultColorItem(userColor)[0].bodyText : ''}</Text>
                                         <TouchableOpacity onPress = {() => {
                                               buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
-                                            }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none'}]}>
-                                          <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Share</Text>
+                                            }} style={{display: showResult ? 'flex' : 'none'}}>
+                                          <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>Share <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/externallink.png')} /></Text>
                                         </TouchableOpacity>
                                     </View>
 
@@ -1189,11 +1216,11 @@ const SvgComponent = (props) => {
                                 <Text style = {[styles.pullQuote, {width: wp('100%'), textAlign: 'center'}]}>{currentWheelWord}</Text>
                               </View>
 
-                                  <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>What is the COLOR of your personality?{'\n'}</Text>
+                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What is the COLOR of your personality?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
-                                  <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
+                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
                                   <Text style = {styles.bodyText}>{'\n'}{'\n'}By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.{'\n'}{'\n'}</Text>
-                                  <Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>People are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality.</Text>
+                                  <Text style = {styles.pullQuote}> <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> People are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality.</Text>
                                   <Text style = {styles.bodyText}> {'\n'}{'\n'}Using our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.{'\n'}{'\n'}</Text>
                               </View>
 
@@ -1202,16 +1229,16 @@ const SvgComponent = (props) => {
                                 <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                     “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
                                     </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Chris Younger</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                         {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Matt Bretz</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Matt Bretz</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}> {"\n"} Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><Text style = {{fontFamily: 'CircularStd-Book', fontSize: hp('2.3%')}}>> </Text>Gary Goodman{"\n"}</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
@@ -1232,7 +1259,7 @@ const SvgComponent = (props) => {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
                                     }} >
-                                  <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle}</Text>
+                                  <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle} <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/externallink.png')} /></Text>
                                 </TouchableOpacity>
                                 <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>
