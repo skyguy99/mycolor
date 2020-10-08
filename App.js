@@ -251,6 +251,7 @@ const KeyIsAColor = (key) => {
 
   const handleItemPress = (item, index) => {
     handleMenuToggle();
+    toggleQuiz(false);
 
     if(!isSelectingSecondColor)
     {
@@ -570,9 +571,9 @@ const styles = StyleSheet.create({
         zIndex: 10,
       },
   scrollView: {
-      paddingLeft: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
-      paddingRight: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
-      overflow: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
+      paddingLeft: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      paddingRight: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      overflow: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
     },
     creditsBtn: {
       width: wp('20%'),
@@ -653,10 +654,12 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'absolute',
         ...StyleSheet.absoluteFillObject,
+        overflow: 'visible',
+
       },
       quizContent: {
         justifyContent: 'center',
-        padding: wp('14%'),
+        overflow: 'visible',
       },
       dropDown: {
         position: 'absolute',
@@ -1108,7 +1111,7 @@ const SvgComponent = (props) => {
                             isOpen={isMenuOpen}
                             position={"top-right"}
                             borderColor={'white'}
-                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : (currentKey == 'yourCOLOR' ? getResultColorItem(userColor)[0].color : '#ffffff')}
+                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'yourCOLOR' && userColor != '') ? getResultColorItem(userColor)[0].color : '#ffffff')}
                             buttonWidth={wp('10%')}
                             borderWidth={0}
                             onMenuToggle={handleMenuToggle}
@@ -1116,21 +1119,19 @@ const SvgComponent = (props) => {
                             dimmerStyle={{opacity: 0}}
                           />
 
-                          <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }]} ]}>
+                          <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }], overflow: 'visible',} ]}>
 
-                      <SafeAreaView style={{flex: 1, marginTop: hp('16%')}}>
+                      <SafeAreaView style={{flex: 1, overflow: 'visible'}}>
 
                           <ScrollView
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
-                          style={{zIndex: 10}}>
+                          style={{zIndex: 10, overflow: 'visible', marginTop: hp('18%')}}>
 
-                          <View style = {styles.quizContent}>
-                                    <Text style={[styles.question, {display: showResult ? 'none' : 'flex'}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: wp('14%')}]}>
+                                    <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
-                                    <Text style={styles.resultText}>{showResult ? 'You are...' : ''}</Text>
-                                    <Text style={styles.resultTextBig}>{showResult ? userColor : ''}</Text>
                                       <Progress.Bar isAnimated duration={showResult ? 500 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? 'transparent' : "#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
                                       <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                                 <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
@@ -1142,14 +1143,16 @@ const SvgComponent = (props) => {
                                             <Text style={[styles.quizParagraph, {alignSelf: 'flex-start', marginTop: hp('1.5%'), marginLeft: wp('2%')}]}>{showResult ? '' : 'Q' + parseInt(currentQuestionIndex + 1)+"/21"}</Text>
                                       </View>
                                   {showResult ? (
-                                    <View style={{}}>
-                                        {getColorTextFormatted(userColor)}
+                                    <View>
+                                        {getColorTextFormatted(userColor)
+                                        }
                                         <TouchableOpacity onPress = {() => {
                                               buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                             }} style={{display: showResult ? 'flex' : 'none'}}>
                                           <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>Share <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/externallink.png')} /></Text>
                                         </TouchableOpacity>
                                     </View>
+
 
                                   ) : (
                                       <>
@@ -1181,6 +1184,7 @@ const SvgComponent = (props) => {
                                       </>
                                     )}
                             </View>
+
                             </ScrollView>
                             </SafeAreaView>
                           </Animated.View>
