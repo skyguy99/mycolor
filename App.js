@@ -1126,9 +1126,9 @@ const SvgComponent = (props) => {
                           <ScrollView
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
-                          style={{zIndex: 10, overflow: 'visible', marginTop: hp('18%')}}>
+                          style={{zIndex: -3, overflow: 'visible', marginTop: hp('18%')}}>
 
-                          <View style = {[styles.quizContent, {paddingHorizontal: wp('14%')}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%')}]}>
                                     <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
@@ -1144,7 +1144,7 @@ const SvgComponent = (props) => {
                                       </View>
                                   {showResult ? (
                                     <View>
-                                        {getColorTextFormatted(userColor)
+                                        { getColorTextFormatted(userColor)
                                         }
                                         <TouchableOpacity onPress = {() => {
                                               buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
