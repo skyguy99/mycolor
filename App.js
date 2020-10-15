@@ -136,7 +136,7 @@ export default function App() {
   ];
 
   var bodyTexts = {
-    'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
+    'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Take the Quiz'},
 
     'yourCOLOR': {body: '', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
 
@@ -282,14 +282,17 @@ const KeyIsAColor = (key) => {
   {
     setIsMenuOpen(isMenuOpen);
 
-    if(!isMenuOpen && KeyIsAColor(currentKey))
+    if(global.isinLongPress)
     {
-      console.log('SAME SELECTED! Current: ', currentKey.toLowerCase(), 'Secondary: ', currentKey.toLowerCase());
-      if(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase()).length > 0)
-      {
-        setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase())[0]);
-        console.log(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase())[0]);
-      }
+        if(!isMenuOpen && KeyIsAColor(currentKey))
+        {
+          console.log('SAME COLOR COMBO SELECTED! Current: ', currentKey.toLowerCase(), 'Secondary: ', currentKey.toLowerCase());
+          if(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase()).length > 0)
+          {
+            setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase())[0]);
+            console.log(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase())[0]);
+          }
+        }
     }
   }
 
@@ -302,11 +305,17 @@ const KeyIsAColor = (key) => {
     toggleQuiz(false);
     setCurrentColor(item.color);
 
-    console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
-    if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
+    console.log('GLOBAL: ', global.isinLongPress);
+
+    if(global.isinLongPress)
     {
-      setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
-      console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+      console.log('COLOR COMBO PRESS');
+      console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
+      if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
+      {
+        setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+        console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+      }
     }
 
 
@@ -1093,6 +1102,13 @@ const SvgComponent = (props) => {
   }
 }
 
+//old myCOLOR:
+// <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
+// <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
+// <Text style = {styles.bodyText}>{'\n'}{'\n'}By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.{'\n'}{'\n'}</Text>
+// <Text style = {styles.pullQuote}> <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> People are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality.</Text>
+// <Text style = {styles.bodyText}> {'\n'}{'\n'}Using our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.{'\n'}{'\n'}</Text>
+
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
@@ -1328,12 +1344,9 @@ const SvgComponent = (props) => {
 
                               </View>
 
-                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What is the COLOR of your personality?{'\n'}</Text>
-                                  <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
-                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
-                                  <Text style = {styles.bodyText}>{'\n'}{'\n'}By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.{'\n'}{'\n'}</Text>
-                                  <Text style = {styles.pullQuote}> <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> People are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality.</Text>
-                                  <Text style = {styles.bodyText}> {'\n'}{'\n'}Using our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.{'\n'}{'\n'}</Text>
+                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's your COLOR? What's your vibe?{'\n'}</Text>
+                                  <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n \n'}</Text>
+
                               </View>
 
 

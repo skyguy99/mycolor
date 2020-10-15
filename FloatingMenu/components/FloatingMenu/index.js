@@ -140,8 +140,6 @@ class FloatingMenu extends React.PureComponent {
     const { items } = this.state;
     const item = items[index];
 
-    global.isinLongPress = false;
-
     //console.log('Pressing: ', item);
 
     if (!item) return;
