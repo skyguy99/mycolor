@@ -44,6 +44,7 @@ export default function App() {
   const [username, setUsername] = useState('');
   const [industry, setIndustry] = useState('');
   const [role, setRole] = useState('');
+  const [didSetUsername, setDidSetUsername] = React.useState(false);
   const [userColor, setUserColor] = useState('');
 
   //quiz vars
@@ -160,6 +161,7 @@ export default function App() {
     .then((item) => {
          if (item) {
            setUsername(item);
+           setDidSetUsername(false);
          }
     });
     AsyncStorage.getItem('industry')
@@ -551,6 +553,10 @@ const KeyIsAColor = (key) => {
         }
       }, 100);
     };
+
+    const handleNextPress = () => {
+      setDidSetUsername(true);
+    }
 
     const handleRetakePress = () => {
       console.log('Retake');
@@ -1253,7 +1259,7 @@ const SvgComponent = (props) => {
                             isOpen={isMenuOpen}
                             position={"top-right"}
                             borderColor={'white'}
-                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'yourCOLOR' && userColor != '') ? getResultColorItem(userColor)[0].color : '#ffffff')}
+                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'yourCOLOR' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
                             buttonWidth={wp('10%')}
                             borderWidth={0}
                             onMenuToggle={handleMenuToggle}
@@ -1270,12 +1276,12 @@ const SvgComponent = (props) => {
                           showsHorizontalScrollIndicator= {false}
                           style={{zIndex: -3, overflow: 'visible', marginTop: hp('18%')}}>
 
-                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: username == '' ? 'flex' : 'none'}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('-5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
                           <Text style = {styles.pullQuote}>Hello.{'\n'}What’s your name?</Text>
                                   <Kohana
-                                    onChangeText={(text) => { //setUsername(text)
+                                    onChangeText={(text) => { setUsername(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff' }}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%')}}
                                     label={'My name'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1291,7 +1297,7 @@ const SvgComponent = (props) => {
                                   <Kohana
                                     onChangeText={(text) => { setIndustry(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%')}}
                                     label={'My industry'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1307,7 +1313,7 @@ const SvgComponent = (props) => {
                                   <Kohana
                                     onChangeText={(text) => { setRole(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff' }}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%') }}
                                     label={'My role'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1319,14 +1325,14 @@ const SvgComponent = (props) => {
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
-                            <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
+                            <TouchableOpacity style= {{marginTop: hp('1.5%')}} onPress = {() => handleNextPress()}>
                                 <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                  <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Next</Text>
+                                  <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Start Quiz</Text>
                                   <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
                                 </View>
                             </TouchableOpacity>
                           </View>
-                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: username == '' ? 'none' : 'flex'}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: !didSetUsername ? 'none' : 'flex'}]}>
                                     <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
@@ -1346,8 +1352,8 @@ const SvgComponent = (props) => {
                                         }
                                         <TouchableOpacity onPress = {() => {
                                               buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
-                                            }} style={{display: showResult ? 'flex' : 'none'}}>
-                                          <Text>Share</Text>
+                                            }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none', width: wp('80%'), alignSelf: 'center'}]}>
+                                          <Text style ={[styles.pullQuote, {textAlign: 'center'}]}>Share</Text>
                                         </TouchableOpacity>
                                     </View>
 
