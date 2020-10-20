@@ -287,19 +287,7 @@ class FloatingMenu extends React.PureComponent {
     //const backgroundColor = isinLongPress ? 'white' : primaryColor;
     const backgroundColor = primaryColor;
 
-
-    // const backgroundColor = this.gradientBackgroundColor.interpolate({
-    //     inputRange: [0, 30, 60, 90, 120, 150, 180],
-    //     outputRange: [
-    //       '#d12b51',
-    //       '#0081d1',
-    //       '#6fa229',
-    //       '#939598',
-    //       '#fca500',
-    //       '#b15de6',
-    //       '#d12b51'
-    //     ],
-    //   });
+    this.buttonSizeAnimated = new Animated.Value(Design.buttonWidth);
 
     const content = renderMenuIcon ? (
       renderMenuIcon({ ...this.state })
@@ -314,6 +302,28 @@ class FloatingMenu extends React.PureComponent {
         {isOpen ? '' : ''}
       </Text>
     );
+
+    //Animate button size
+    const onSpringCompletion = () => {
+        this.spring();
+      }
+
+    const spring = () => {
+            this.buttonSizeAnimated.setValue(Design.buttonWidth);
+            Animated.spring(
+                this.buttonSizeAnimated,
+                {
+                  useNativeDriver: false,
+                    toValue: 1,
+                    friction: 1,
+                    tension: 1,
+                    duration:5000
+
+                }
+            ).start(this.onSpringCompletion);
+        }
+
+      spring();
 
     return (
       <View
@@ -334,7 +344,7 @@ class FloatingMenu extends React.PureComponent {
           <Animated.View
             style={[
               globalStyles.buttonInner,
-              applyButtonWidth(innerWidth),
+              applyButtonWidth(Design.buttonWidth),
               {backgroundColor}
             ]}
           >
