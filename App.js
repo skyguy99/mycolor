@@ -10,6 +10,8 @@ import FloatingMenu from './FloatingMenu/components/FloatingMenu';
 import * as Progress from 'expo-progress';
 import LottieView from "lottie-react-native";
 import Svg, { G, Path } from "react-native-svg";
+import { Kohana } from 'react-native-textinput-effects';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
 import {
@@ -40,6 +42,8 @@ export default function App() {
 
   //persistent vars
   const [username, setUsername] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [role, setRole] = useState('');
   const [userColor, setUserColor] = useState('');
 
   //quiz vars
@@ -155,11 +159,21 @@ export default function App() {
   AsyncStorage.getItem('username')
     .then((item) => {
          if (item) {
-           // do the damage
            setUsername(item);
-           //console.log('We remember you! '+username);
          }
     });
+    AsyncStorage.getItem('industry')
+      .then((item) => {
+           if (item) {
+             setIndustry(item);
+           }
+      });
+    AsyncStorage.getItem('role')
+      .then((item) => {
+           if (item) {
+             setRole(item)
+           }
+      });
     AsyncStorage.getItem('userColor')
       .then((item) => {
            if (item) {
@@ -408,19 +422,6 @@ const KeyIsAColor = (key) => {
           })
         ]).start();
       }
-
-    //button functions
-
-    // <Jiro
-      //     style={{width: hp('35%'), marginLeft: -50}}
-      //     label={'Your name'}
-      //     labelStyle={{color: '#F48D10', fontFamily: 'SequelSans-BlackDisp', fontSize: hp('1.5%'), marginLeft: 28}}
-      //     borderColor={'#FDE6C9'}
-      //     inputPadding={16}
-      //     inputStyle={{ color: '#F48D10', fontFamily: 'SequelSans-RomanDisp', fontSize: hp('4.8%'), marginLeft: 28}}
-      //     returnKeyType="next"
-      //     onSubmitEditing={(textVal) => saveName(textVal.nativeEvent.text)}
-      //   />
 
     const buttonPress = (link, isShare, string) => {
 
@@ -1269,7 +1270,63 @@ const SvgComponent = (props) => {
                           showsHorizontalScrollIndicator= {false}
                           style={{zIndex: -3, overflow: 'visible', marginTop: hp('18%')}}>
 
-                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%')}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: username == '' ? 'flex' : 'none'}]}>
+                          <Text style = {styles.pullQuote}>Hello.{'\n'}What’s your name?</Text>
+                                  <Kohana
+                                    onChangeText={(text) => { //setUsername(text)
+                                    }}
+                                    style={{ backgroundColor: '#ffffff' }}
+                                    label={'My name'}
+                                    iconClass={MaterialsIcon}
+                                    iconName={''}
+                                    iconColor={'#f4d29a'}
+                                    inputPadding={0}
+                                    labelStyle={{ color: '#EAEAEA' }}
+                                    inputStyle={{ color: 'black'}}
+                                    labelContainerStyle={{ padding: 20 }}
+                                    iconContainerStyle={{ padding: 20 }}
+                                    useNativeDriver
+                                  />
+                                <Text style = {styles.pullQuote}>What's your industry?</Text>
+                                  <Kohana
+                                    onChangeText={(text) => { setIndustry(text)
+                                    }}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20}}
+                                    label={'My industry'}
+                                    iconClass={MaterialsIcon}
+                                    iconName={''}
+                                    iconColor={'#f4d29a'}
+                                    inputPadding={0}
+                                    labelStyle={{ color: '#EAEAEA' }}
+                                    inputStyle={{ color: 'black'}}
+                                    labelContainerStyle={{ padding: 20 }}
+                                    iconContainerStyle={{ padding: 20 }}
+                                    useNativeDriver
+                                  />
+                                <Text style = {styles.pullQuote}>What do you do?</Text>
+                                  <Kohana
+                                    onChangeText={(text) => { setRole(text)
+                                    }}
+                                    style={{ backgroundColor: '#ffffff' }}
+                                    label={'My role'}
+                                    iconClass={MaterialsIcon}
+                                    iconName={''}
+                                    iconColor={'#f4d29a'}
+                                    inputPadding={0}
+                                    labelStyle={{ color: '#EAEAEA' }}
+                                    inputStyle={{ color: 'black'}}
+                                    labelContainerStyle={{ padding: 20 }}
+                                    iconContainerStyle={{ padding: 20 }}
+                                    useNativeDriver
+                                  />
+                            <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
+                                <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+                                  <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Next</Text>
+                                  <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
+                                </View>
+                            </TouchableOpacity>
+                          </View>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: username == '' ? 'none' : 'flex'}]}>
                                     <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
