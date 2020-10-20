@@ -583,9 +583,9 @@ const styles = StyleSheet.create({
   shadow3: elevationShadowStyle(20),
 
   button: {
-    borderRadius: 8,
+    borderRadius: 13,
     backgroundColor: 'white',
-    padding: 24
+    padding: 20
   },
   container: {
     flex: 1,
@@ -1272,7 +1272,7 @@ const SvgComponent = (props) => {
                                         <TouchableOpacity onPress = {() => {
                                               buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                             }} style={{display: showResult ? 'flex' : 'none'}}>
-                                          <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>Share <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/externallink.png')} /></Text>
+                                          <Text>Share</Text>
                                         </TouchableOpacity>
                                     </View>
 
@@ -1365,11 +1365,13 @@ const SvgComponent = (props) => {
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
-
+                                <Image style = {{position: 'absolute', transform: [{translateX: wp('0%')}, {translateY: hp('0%')}, {scaleX: 1}, {scaleY: 1}] }} source={require('./assets/guy.png')}/>
                                 <TouchableOpacity onPress = {() => {
                                       if(currentKey == 'myCOLOR')
                                       {
-                                        buttonPress(bodyTexts[currentKey]?.buttonLink, false, '');
+                                        toggleQuiz(true);
+                                        setCurrentKey('Quiz');
+                                        //buttonPress(bodyTexts[currentKey]?.buttonLink, false, '');
                                       } else if(currentKey == 'Teams')
                                       {
                                         buttonPress(bodyTexts[currentKey]?.buttonLink, true, 'Check out myCOLOR Teams');
@@ -1383,8 +1385,8 @@ const SvgComponent = (props) => {
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
-                                    }} >
-                                  <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle} <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/externallink.png')} /></Text>
+                                    }} style={[styles.button, styles.shadow3, {width: wp('79%'), alignSelf: 'center'}]} >
+                                  <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle} </Text>
                                 </TouchableOpacity>
                                 <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>
