@@ -766,6 +766,24 @@ const styles = StyleSheet.create({
         overflow: 'visible',
         marginBottom: hp('4%'),
         marginTop: hp('0%')
+      },
+      colorChar1:
+      {
+        position: 'absolute',
+        width: wp('37%'),
+        height: wp('37%'),
+        marginLeft: wp('47%'),
+        marginTop: hp('45%'),
+        zIndex: 5
+      },
+      colorChar2:
+      {
+        position: 'absolute',
+        width: wp('41%'),
+        height: wp('41%'),
+        marginLeft: wp('-13%'),
+        marginTop: hp('95%'),
+        zIndex: 5
       }
 });
 
@@ -1343,9 +1361,9 @@ const SvgComponent = (props) => {
                                 </TouchableOpacity>
 
                               </View>
-
-                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's your COLOR? What's your vibe?{'\n'}</Text>
+                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n \n'}</Text>
+                                <Image style = {styles.colorChar1} source={require('./assets/guy.png')}/>
 
                               </View>
 
@@ -1365,7 +1383,7 @@ const SvgComponent = (props) => {
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
-                                <Image style = {{position: 'absolute', transform: [{translateX: wp('0%')}, {translateY: hp('0%')}, {scaleX: 1}, {scaleY: 1}] }} source={require('./assets/guy.png')}/>
+                                  <Image style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]} source={require('./assets/guy2.png')}/>
                                 <TouchableOpacity onPress = {() => {
                                       if(currentKey == 'myCOLOR')
                                       {
