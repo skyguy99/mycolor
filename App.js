@@ -1,6 +1,7 @@
 import React from 'react';
 import {useRef} from 'react';
 import { Component, useState, useEffect } from 'react';
+import * as firebase from 'firebase';
 import AsyncStorage from "@react-native-community/async-storage"
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
@@ -31,7 +32,7 @@ import {
   convertIndexToColorName,
 } from './answerFunctions';
 
-  global.lastColor = 'transparent';
+global.lastColor = 'transparent';
 
 export default function App() {
 
@@ -190,6 +191,37 @@ export default function App() {
       });
 
 });
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBkzGLgvzrvTIa6a6zOx-IIIZJetUwNllE",
+    authDomain: "mycolor-8176b.firebaseapp.com",
+    databaseURL: "https://mycolor-8176b.firebaseio.com",
+    projectId: "mycolor-8176b",
+    storageBucket: "mycolor-8176b.appspot.com",
+    messagingSenderId: "9703964298",
+    appId: "1:9703964298:web:d5974b8e51fecaff5d7773",
+    measurementId: "G-442K5YZLS7"
+  };
+
+if(!firebase.apps.length)
+{
+  firebase.initializeApp(firebaseConfig);
+  console.log('Initialized Firebase successfully');
+}
+
+function storeUserInfo(username, industry, role, color) {
+  if (username != null && industry != null && role != null && color != null) { //use for errors later
+
+    let push = firebase.database().ref('users').push();
+    push.set({
+      name: username,
+      industry: industry,
+      role: role,
+      color: color
+    });
+  }
+}
 
 const KeyIsAColor = (key) => {
   return (colorMenuItems.filter((item) => item.header.toLowerCase() === key.toLowerCase()).length > 0) || key == 'combo';
@@ -547,7 +579,10 @@ const KeyIsAColor = (key) => {
       setResultColor(colorResult);
       setUserColor(colorResult);
 
-      //console.log('Setting user color: '+colorResult);
+      if(colorResult != '')
+      {
+          storeUserInfo(username, industry, role, colorResult); //Firebase
+      }
 
       AsyncStorage.setItem('userColor', userColor);
 
