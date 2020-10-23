@@ -3,7 +3,11 @@ import { Text, View, TouchableWithoutFeedback, TouchableOpacity, Animated, Easin
 
 import FloatingItem from '../FloatingItem';
 import { Colors, Design, MenuPositions } from '../../constants';
-import { applyButtonWidth } from '../../helpers';
+import {
+  applyButtonWidth,
+  applyButtonInnerWidthFirst,
+  applyButtonInnerWidthSecond,
+ } from '../../helpers';
 
 import globalStyles from '../../styles';
 import styles from './styles';
@@ -328,23 +332,49 @@ class FloatingMenu extends React.PureComponent {
     return (
       <View
         style={[
+          {flexDirection: 'row'},
           globalStyles.buttonOuter,
           applyButtonWidth(buttonWidth),
           { borderColor },
         ]}
       >
         <TouchableOpacity
-          style={globalStyles.button}
+          style={globalStyles.button, {overflow: 'hidden'}}
           onLongPress={this.handleLongMenuPress}
           onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
           onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
           onPress={this.handleMenuPress}
           hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
         >
+        <Animated.View
+          style={[
+            globalStyles.buttonInner,
+            applyButtonInnerWidthFirst(innerWidth),
+            {
+              flexDirection: 'column',
+              display: global.lastColor != 'transparent' ? 'flex' : 'none',
+              //THIS CONTROLS SPLIT COLOR
+              backgroundColor:
+                global.lastColor != 'transparent'
+                  ? global.lastColor
+                  : 'transparent'
+            },
+          ]}
+        >
+          <View
+            style={{
+              display: 'flex',
+              backgroundColor: "red",
+              width: 20,
+            }}
+          />
+          {content}
+        </Animated.View>
           <Animated.View
             style={[
+              {flexDirection: 'column'},
               globalStyles.buttonInner,
-              applyButtonWidth(Design.buttonWidth),
+              applyButtonWidth(innerWidth),
               {backgroundColor}
             ]}
           >

@@ -149,6 +149,7 @@ class FloatingItem extends React.PureComponent {
 
             <Animated.View
               style={[
+
                 globalStyles.buttonInner,
                 applyButtonInnerWidthSecond(innerWidth),
                 { backgroundColor },
