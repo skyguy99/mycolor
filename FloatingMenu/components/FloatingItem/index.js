@@ -131,7 +131,7 @@ class FloatingItem extends React.PureComponent {
                 {
                   //THIS CONTROLS SPLIT COLOR
                   backgroundColor:
-                    isInLongPress
+                    isInLongPress && selectedColor !== "#ffffff"
                       ? selectedColor
                       : backgroundColor,
                 },

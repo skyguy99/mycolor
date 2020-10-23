@@ -190,7 +190,7 @@ export default function App() {
 });
 
 const KeyIsAColor = (key) => {
-  return colorMenuItems.filter((item) => item.header.toLowerCase() === key.toLowerCase()).length > 0;
+  return (colorMenuItems.filter((item) => item.header.toLowerCase() === key.toLowerCase()).length > 0) || key == 'combo';
 }
 
   function elevationShadowStyle(elevation) {
@@ -298,13 +298,14 @@ const KeyIsAColor = (key) => {
   {
     setIsMenuOpen(isMenuOpen);
 
-    if(global.isinLongPress)
+    if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()))
     {
         if(!isMenuOpen && KeyIsAColor(currentKey))
         {
           console.log('SAME COLOR COMBO SELECTED! Current: ', currentKey.toLowerCase(), 'Secondary: ', currentKey.toLowerCase());
           if(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase()).length > 0)
           {
+            setCurrentKey('Combo');
             setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase())[0]);
             console.log(getColorComboItemArray(currentKey.toLowerCase(), currentKey.toLowerCase())[0]);
           }
@@ -319,24 +320,23 @@ const KeyIsAColor = (key) => {
   const handleItemPress = (item, index) => {
     setIsMenuOpen(false);
     toggleQuiz(false);
-    setCurrentColor(item.color);
 
-    console.log('GLOBAL: ', global.isinLongPress);
-
-    if(global.isinLongPress)
+    if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()))
     {
-      console.log('COLOR COMBO PRESS');
-      console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
-      if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
-      {
-        setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
-        console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
-      }
+          console.log('COLOR COMBO PRESS');
+          setCurrentKey('Combo');
+          console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
+          if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
+          {
+            setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+            console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+          }
+    } else {
+      setCurrentColor(item.color);
+      setCurrentKey(Capitalize(item.header));
+      setCurrentTextKey(item.header);
     }
 
-
-    setCurrentKey(Capitalize(item.header));
-    setCurrentTextKey(item.header);
   }
 
   const renderMenuIcon = (menuState) => {
@@ -812,7 +812,11 @@ function getColorComboTextFormatted(colorItem)
 
 function getResultColorFormatted(color)
 {
-  if(KeyIsAColor(color))
+  if(color == 'combo')
+  {
+
+  }
+  else if(KeyIsAColor(color))
   {
     return ([
 
@@ -851,7 +855,11 @@ function getResultColorFormatted(color)
 
 function getColorTextFormatted(color)
 {
-  if(KeyIsAColor(color))
+  if (color == 'combo')
+  {
+
+  }
+  else if(KeyIsAColor(color))
   {
     return ([
 
@@ -1169,7 +1177,7 @@ const SvgComponent = (props) => {
                 { marginTop: 15 },
               ]}
             >
-              {currentKey}
+              {(currentKey != 'Combo') ? currentKey : Capitalize(currentColorCombo.header1)+'/'+Capitalize(currentColorCombo.header2)}
             </Text>
           )}
           {!optionsVisible && !optionsHeaderVisible && (
@@ -1400,7 +1408,7 @@ const SvgComponent = (props) => {
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}>
 
-                              <View style = {{display: isSelectingSecondColor ? 'flex' : 'none'}}>
+                              <View style = {{display: currentKey == 'Combo' ? 'flex' : 'none'}}>
                               {getColorComboTextFormatted(currentColorCombo)}
                               </View>
 
