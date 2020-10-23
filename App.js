@@ -1439,7 +1439,7 @@ const SvgComponent = (props) => {
                                 onPressOut={() => {SCALE.pressOutAnimation(scaleOutAnimated)}}
                                 style={[SCALE.getScaleTransformationStyle(scaleOutAnimated, 1, 1.14), {justifyContent: 'center', alignItems: 'center'}]}
                                 >
-                                    <Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/placeholder.png')} />
+                                    <Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
                                 </TouchableOpacity>
 
                               </View>
