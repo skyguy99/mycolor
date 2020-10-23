@@ -3,11 +3,7 @@ import { Text, View, TouchableWithoutFeedback, TouchableOpacity, Animated, Easin
 
 import FloatingItem from '../FloatingItem';
 import { Colors, Design, MenuPositions } from '../../constants';
-import {
-  applyButtonWidth,
-  applyButtonInnerWidthFirst,
-  applyButtonInnerWidthSecond,
- } from '../../helpers';
+import { applyButtonWidth, applyButtonInnerWidthFirst, applyButtonInnerWidthSecond } from '../../helpers';
 
 import globalStyles from '../../styles';
 import styles from './styles';
@@ -21,6 +17,7 @@ class FloatingMenu extends React.PureComponent {
     menuButtonDown: false,
     itemsDown: {},
     items: [],
+    isAnimated: false,
   };
 
   menuPressAnimation = new Animated.Value(0);
@@ -38,33 +35,32 @@ class FloatingMenu extends React.PureComponent {
     };
   }
 
+  endBackgroundColorAnimation = () => {
+    Animated.timing(this.gradientBackgroundColor, {
+      toValue: 0,
+      duration: 15000,
+      easing: Easing.easeOut,
+      useNativeDriver: false,
+    }).start(() => {
+      this.gradientBackgroundColor = new Animated.Value(0);
+      this.startBackgroundColorAnimation();
+    });
+  };
 
-    endBackgroundColorAnimation = () => {
-      Animated.timing(this.gradientBackgroundColor, {
-        toValue: 0,
-        duration: 15000,
-        easing: Easing.easeOut,
-        useNativeDriver: false
-      }).start(() => {
-        this.gradientBackgroundColor = new Animated.Value(0);
-        this.startBackgroundColorAnimation();
-      });
-    };
-
-    startBackgroundColorAnimation = () => {
-
-      Animated.timing(this.gradientBackgroundColor, {
-        toValue: 180,
-        duration: 15000,
-        easing: Easing.easeOut,
-        useNativeDriver: false
-      }).start(() => {
-        this.endBackgroundColorAnimation();
-      });
-    };
+  startBackgroundColorAnimation = () => {
+    Animated.timing(this.gradientBackgroundColor, {
+      toValue: 180,
+      duration: 15000,
+      easing: Easing.easeOut,
+      useNativeDriver: false,
+    }).start(() => {
+      this.endBackgroundColorAnimation();
+    });
+  };
 
   componentDidMount() {
     this.initAnimations();
+    this.spring();
 
     if (this.gradientBackgroundColor._value === 0) {
       this.startBackgroundColorAnimation();
@@ -123,7 +119,6 @@ class FloatingMenu extends React.PureComponent {
     animatedValue,
     useNativeDriver = false
   ) => () => {
-
     // Animate out
     Animated.timing(animatedValue, {
       toValue: 0.0,
@@ -138,8 +133,7 @@ class FloatingMenu extends React.PureComponent {
     }
   };
 
-  handleItemPress = index => () => {
-
+  handleItemPress = (index) => () => {
     const { onItemPress } = this.props;
     const { items } = this.state;
     const item = items[index];
@@ -164,15 +158,15 @@ class FloatingMenu extends React.PureComponent {
   };
 
   handleLongMenuPress = () => {
-      const { isOpen, onMenuToggle } = this.props;
+    const { isOpen, onMenuToggle } = this.props;
 
-      onMenuToggle(true);
-      global.isinLongPress = true;
+    onMenuToggle(true);
+    global.isinLongPress = true;
 
-      console.log('long menu press ', global.isinLongPress);
+    console.log("long menu press ", global.isinLongPress);
   };
 
-  toggleMenu = isOpen => {
+  toggleMenu = (isOpen) => {
     const { openEase, closeEase } = this.props;
     const { items } = this.state;
 
@@ -211,6 +205,31 @@ class FloatingMenu extends React.PureComponent {
     }
   };
 
+  //Animate button size
+  onSpringCompletion = () => {
+    Animated.spring(this.buttonSizeAnimated, {
+      useNativeDriver: false,
+      toValue: Design.buttonWidth * 0.9,
+      duration: 1000,
+      easing: Easing.bounce,
+    }).start(() => {
+      this.spring();
+    });
+  };
+
+  spring = () => {
+    Animated.spring(this.buttonSizeAnimated, {
+      useNativeDriver: false,
+      toValue: Design.buttonWidth * 1.1,
+      duration: 1000,
+      easing: Easing.bounce,
+    }).start(() => {
+      this.onSpringCompletion();
+    });
+  };
+
+
+
   renderItems = () => {
     const {
       isOpen,
@@ -228,18 +247,14 @@ class FloatingMenu extends React.PureComponent {
     if (!dimmerActive) return null;
 
     return items.map((item, index) => {
-
-      if(item.color != primaryColor)
-      {
+      if (item.color != primaryColor) {
         return (
           <FloatingItem
             key={`item-${index}`}
             {...item}
             item={item}
             index={index}
-            icon={
-              null
-            }
+            icon={null}
             position={position}
             isOpen={isOpen || dimmerActive}
             backgroundColor={item.color}
@@ -280,9 +295,9 @@ class FloatingMenu extends React.PureComponent {
       buttonWidth,
       innerWidth,
     } = this.props;
-    const { menuButtonDown } = this.state;
+    const { menuButtonDown, dimmerActive } = this.state;
 
-    isSelectingSecondColor = (primaryColor != '#ffffff');
+    isSelectingSecondColor = primaryColor != "#ffffff";
 
     const bgColor = _backgroundColor || primaryColor;
     const iconColor = primaryColor;
@@ -291,7 +306,7 @@ class FloatingMenu extends React.PureComponent {
     //const backgroundColor = isinLongPress ? 'white' : primaryColor;
     const backgroundColor = primaryColor;
 
-    this.buttonSizeAnimated = new Animated.Value(Design.buttonWidth);
+    this.buttonSizeAnimated = new Animated.Value(Design.buttonWidth * 0.9);
 
     const content = renderMenuIcon ? (
       renderMenuIcon({ ...this.state })
@@ -300,92 +315,82 @@ class FloatingMenu extends React.PureComponent {
         style={[
           globalStyles.missingIcon,
           isOpen ? styles.closeIcon : styles.menuIcon,
-          { color: menuButtonDown ? '#fff' : iconColor },
+          { color: menuButtonDown ? "#fff" : iconColor },
         ]}
       >
-        {isOpen ? '' : ''}
+        {isOpen ? "" : ""}
       </Text>
     );
 
-    //Animate button size
-    const onSpringCompletion = () => {
-        this.spring();
-      }
-
-    const spring = () => {
-            this.buttonSizeAnimated.setValue(Design.buttonWidth);
-            Animated.spring(
-                this.buttonSizeAnimated,
-                {
-                  useNativeDriver: false,
-                    toValue: 1,
-                    friction: 1,
-                    tension: 1,
-                    duration:5000
-
-                }
-            ).start(this.onSpringCompletion);
-        }
-
-      spring();
-
     return (
       <View
-        style={[
-          {flexDirection: 'row'},
-          globalStyles.buttonOuter,
-          applyButtonWidth(buttonWidth),
-          { borderColor },
-        ]}
+      style={[
+        globalStyles.buttonOuter,
+        applyButtonWidth(buttonWidth),
+        { borderColor },
+      ]}
+    >
+      <TouchableOpacity
+        style={(globalStyles.button, { flexDirection: "row" })}
+        onLongPress={this.handleLongMenuPress}
+        onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
+        onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
+        onPress={this.handleMenuPress}
+        hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
       >
-        <TouchableOpacity
-          style={globalStyles.button, {overflow: 'hidden'}}
-          onLongPress={this.handleLongMenuPress}
-          onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
-          onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
-          onPress={this.handleMenuPress}
-          hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
-        >
         <Animated.View
           style={[
             globalStyles.buttonInner,
             applyButtonInnerWidthFirst(innerWidth),
             {
-              flexDirection: 'column',
-              display: global.lastColor != 'transparent' ? 'flex' : 'none',
+              display: global.lastColor != "transparent"  ? "flex" : "none",
               //THIS CONTROLS SPLIT COLOR
               backgroundColor:
-                global.lastColor != 'transparent'
+                global.lastColor != "transparent"
                   ? global.lastColor
-                  : 'transparent'
+                  : "transparent",
             },
           ]}
         >
           <View
             style={{
-              display: 'flex',
+              display: "flex",
               backgroundColor: "red",
               width: 20,
             }}
           />
           {content}
         </Animated.View>
-          <Animated.View
-            style={[
-              {flexDirection: 'column'},
-              globalStyles.buttonInner,
-              applyButtonWidth(innerWidth),
-              {backgroundColor}
-            ]}
-          >
-          <Image style = {{display: primaryColor == '#ffffff' ? 'flex' : 'none', width: Design.buttonWidth-5, height: Design.buttonWidth-5, marginTop: 14}} source={require('../../../assets/rainbowcircle.png')}></Image>
-            {content}
-          </Animated.View>
-        </TouchableOpacity>
-      </View>
+        <Animated.View
+          style={[
+            globalStyles.buttonInner,
+            global.lastColor != "transparent"
+              ? applyButtonInnerWidthSecond(innerWidth)
+              : applyButtonWidth(innerWidth),
+            { backgroundColor },
+            isSelectingSecondColor &&
+              !dimmerActive && global.lastColor === "transparent" && {
+                width: this.buttonSizeAnimated,
+                height: this.buttonSizeAnimated,
+                borderRadius: Design.buttonWidth * 1.1 * 0.5
+              }
+          ]}
+        >
+          <Image
+            style={{
+              display: primaryColor == "#ffffff" ? "flex" : "none",
+              width: Design.buttonWidth - 5,
+              height: Design.buttonWidth - 5,
+              marginTop: 14,
+            }}
+            source={require("../../../assets/rainbowcircle.png")}
+          ></Image>
+          {content}
+        </Animated.View>
+      </TouchableOpacity>
+    </View>
     );
   };
-
 
   renderDimmer = () => {
     const { isOpen, dimmerStyle } = this.props;
@@ -397,7 +402,7 @@ class FloatingMenu extends React.PureComponent {
       fanAnimation.interpolate({
         inputRange: [0.0, 1.0],
         outputRange: [0.5, 1.0],
-        extrapolate: 'clamp',
+        extrapolate: "clamp",
       });
 
     return dimmerActive && items.length ? (
@@ -415,7 +420,7 @@ class FloatingMenu extends React.PureComponent {
   render = () => {
     const { position } = this.props;
 
-    const [vPos, hPos] = position.split('-');
+    const [vPos, hPos] = position.split("-");
 
     return (
       <View style={styles.container} pointerEvents="box-none">
@@ -426,7 +431,7 @@ class FloatingMenu extends React.PureComponent {
               [vPos]: 38,
               [hPos]: 38,
               flexDirection:
-                vPos.toLowerCase() === 'bottom' ? 'column' : 'column-reverse',
+                vPos.toLowerCase() === "bottom" ? "column" : "column-reverse",
             },
           ]}
           pointerEvents="box-none"
@@ -434,7 +439,6 @@ class FloatingMenu extends React.PureComponent {
           {this.renderItems()}
           {this.renderMenuButton()}
         </View>
-
       </View>
     );
   };
