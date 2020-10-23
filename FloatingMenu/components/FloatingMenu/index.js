@@ -207,28 +207,42 @@ class FloatingMenu extends React.PureComponent {
 
   //Animate button size
   onSpringCompletion = () => {
-    Animated.spring(this.buttonSizeAnimated, {
-      useNativeDriver: false,
-      toValue: Design.buttonWidth * 0.9,
-      duration: 1000,
-      easing: Easing.bounce,
-    }).start(() => {
+    Animated.parallel([
+      Animated.spring(this.buttonSizeAnimated, {
+        useNativeDriver: false,
+        toValue: Design.buttonWidth * 0.9,
+        duration: 1000,
+        easing: Easing.bounce,
+      }),
+      Animated.spring(this.splitButtonSizeAnimated, {
+        useNativeDriver: false,
+        toValue: Design.buttonWidth * 0.5 * 0.9,
+        duration: 1000,
+        easing: Easing.bounce,
+      }),
+    ]).start(() => {
       this.spring();
     });
   };
 
   spring = () => {
-    Animated.spring(this.buttonSizeAnimated, {
-      useNativeDriver: false,
-      toValue: Design.buttonWidth * 1.1,
-      duration: 1000,
-      easing: Easing.bounce,
-    }).start(() => {
+    Animated.parallel([
+      Animated.spring(this.buttonSizeAnimated, {
+        useNativeDriver: false,
+        toValue: Design.buttonWidth * 1.1,
+        duration: 1000,
+        easing: Easing.bounce,
+      }),
+      Animated.spring(this.splitButtonSizeAnimated, {
+        useNativeDriver: false,
+        toValue: Design.buttonWidth * 0.5 * 1.1,
+        duration: 1000,
+        easing: Easing.bounce,
+      }),
+    ]).start(() => {
       this.onSpringCompletion();
     });
   };
-
-
 
   renderItems = () => {
     const {
@@ -307,6 +321,9 @@ class FloatingMenu extends React.PureComponent {
     const backgroundColor = primaryColor;
 
     this.buttonSizeAnimated = new Animated.Value(Design.buttonWidth * 0.9);
+    this.splitButtonSizeAnimated = new Animated.Value(
+      Design.buttonWidth * 0.9 * 0.5
+    );
 
     const content = renderMenuIcon ? (
       renderMenuIcon({ ...this.state })
@@ -324,71 +341,91 @@ class FloatingMenu extends React.PureComponent {
 
     return (
       <View
-      style={[
-        globalStyles.buttonOuter,
-        applyButtonWidth(buttonWidth),
-        { borderColor },
-      ]}
-    >
-      <TouchableOpacity
-        style={(globalStyles.button, { flexDirection: "row" })}
-        onLongPress={this.handleLongMenuPress}
-        onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
-        onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
-        onPress={this.handleMenuPress}
-        hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+        style={[
+          globalStyles.buttonOuter,
+          applyButtonWidth(buttonWidth),
+          { borderColor },
+        ]}
       >
-        <Animated.View
-          style={[
-            globalStyles.buttonInner,
-            applyButtonInnerWidthFirst(innerWidth),
-            {
-              display: global.lastColor != "transparent"  ? "flex" : "none",
-              //THIS CONTROLS SPLIT COLOR
-              backgroundColor:
-                global.lastColor != "transparent"
-                  ? global.lastColor
-                  : "transparent",
-            },
-          ]}
+        <TouchableOpacity
+          style={(globalStyles.button, { flexDirection: "row" })}
+          onLongPress={this.handleLongMenuPress}
+          onPressIn={this.handleItemPressIn(null, this.menuPressAnimation)}
+          onPressOut={this.handleItemPressOut(null, this.menuPressAnimation)}
+          onPress={this.handleMenuPress}
+          hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
         >
-          <View
-            style={{
-              display: "flex",
-              backgroundColor: "red",
-              width: 20,
-            }}
-          />
-          {content}
-        </Animated.View>
-        <Animated.View
-          style={[
-            globalStyles.buttonInner,
-            global.lastColor != "transparent"
-              ? applyButtonInnerWidthSecond(innerWidth)
-              : applyButtonWidth(innerWidth),
-            { backgroundColor },
-            isSelectingSecondColor &&
-              !dimmerActive && global.lastColor === "transparent" && {
-                width: this.buttonSizeAnimated,
+          <Animated.View
+            style={[
+              globalStyles.buttonInner,
+              applyButtonInnerWidthFirst(innerWidth),
+              {
+                display: global.lastColor != "transparent" ? "flex" : "none",
+                //THIS CONTROLS SPLIT COLOR
+                backgroundColor:
+                  global.lastColor != "transparent"
+                    ? global.lastColor
+                    : "transparent",
+              },
+              isSelectingSecondColor &&
+                !dimmerActive &&
+                global.lastColor == "transparent" && {
+                  width: this.buttonSizeAnimated,
+                  height: this.buttonSizeAnimated,
+                  borderRadius: Design.buttonWidth * 1.1 * 0.5,
+                },
+              global.lastColor != "transparent" && !dimmerActive && {
+                width: this.splitButtonSizeAnimated,
                 height: this.buttonSizeAnimated,
-                borderRadius: Design.buttonWidth * 1.1 * 0.5
-              }
-          ]}
-        >
-          <Image
-            style={{
-              display: primaryColor == "#ffffff" ? "flex" : "none",
-              width: Design.buttonWidth - 5,
-              height: Design.buttonWidth - 5,
-              marginTop: 14,
-            }}
-            source={require("../../../assets/rainbowcircle.png")}
-          ></Image>
-          {content}
-        </Animated.View>
-      </TouchableOpacity>
-    </View>
+                borderTopLeftRadius: Design.buttonWidth * 1.1 * 0.5,
+                borderBottomLeftRadius: Design.buttonWidth * 1.1 * 0.5,
+              },
+            ]}
+          >
+            <View
+              style={{
+                display: "flex",
+                backgroundColor: "red",
+                width: 20,
+              }}
+            />
+            {content}
+          </Animated.View>
+          <Animated.View
+            style={[
+              globalStyles.buttonInner,
+              global.lastColor != "transparent"
+                ? applyButtonInnerWidthSecond(innerWidth)
+                : applyButtonWidth(innerWidth),
+              { backgroundColor },
+              isSelectingSecondColor &&
+                !dimmerActive &&
+                global.lastColor == "transparent" && {
+                  width: this.buttonSizeAnimated,
+                  height: this.buttonSizeAnimated,
+                  borderRadius: Design.buttonWidth * 1.1 * 0.5,
+                },
+              global.lastColor != "transparent" && !dimmerActive && {
+                width: this.splitButtonSizeAnimated,
+                height: this.buttonSizeAnimated,
+                borderTopRightRadius: Design.buttonWidth * 1.1 * 0.5,
+                borderBottomRightRadius: Design.buttonWidth * 1.1 * 0.5,
+              },
+            ]}
+          >
+            <Image
+              style={{
+                display: primaryColor == "#ffffff" ? "flex" : "none",
+                width: Design.buttonWidth - 5,
+                height: Design.buttonWidth - 5,
+                marginTop: 14,
+              }}
+              source={require("../../../assets/rainbowcircle.png")}
+            ></Image>
+            {content}
+          </Animated.View>
+        </TouchableOpacity>
+      </View>
     );
   };
 

@@ -491,7 +491,7 @@ const KeyIsAColor = (key) => {
   			})
       ]).start();
 
-  }, 0); //WAS 4200
+  }, 4200); //WAS 4200
     return () => clearInterval(interval);
   }, []);
 
