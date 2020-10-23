@@ -2,6 +2,7 @@ import React from 'react';
 import {useRef} from 'react';
 import { Component, useState, useEffect } from 'react';
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 import AsyncStorage from "@react-native-community/async-storage"
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
@@ -212,13 +213,15 @@ if(!firebase.apps.length)
 
 function storeUserInfo(username, industry, role, color) {
   if (username != null && industry != null && role != null && color != null) { //use for errors later
+    let timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
     let push = firebase.database().ref('users').push();
     push.set({
       name: username,
       industry: industry,
       role: role,
-      color: color
+      color: color,
+      date: new Date(timestamp.toDate()).toUTCString()
     });
   }
 }
@@ -523,7 +526,7 @@ const KeyIsAColor = (key) => {
   			})
       ]).start();
 
-  }, 4200); //WAS 4200
+  }, 0); //WAS 4200
     return () => clearInterval(interval);
   }, []);
 
