@@ -352,6 +352,7 @@ class FloatingMenu extends React.PureComponent {
             applyButtonInnerWidthFirst(innerWidth),
             {
               flexDirection: 'column',
+              position: 'absolute',
               display: global.lastColor != 'transparent' ? 'flex' : 'none',
               //THIS CONTROLS SPLIT COLOR
               backgroundColor:
