@@ -221,7 +221,7 @@ function storeUserInfo(username, industry, role, color) {
       industry: industry,
       role: role,
       color: color,
-      date: new Date(timestamp.toDate()).toUTCString()
+      date: new Date().toUTCString()
     });
   }
 }
