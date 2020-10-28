@@ -72,7 +72,10 @@ export default function App() {
 
   const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
   const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
-  const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('-200%')));
+  const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('200%')));
+  const [main3dOffsetY, setmain3dOffsetY] = React.useState(new Animated.Value(hp('200%')));
+  const [main3dScale, setmain3dScale] = React.useState(new Animated.Value(wp('140%')));
+
   const [containerOffsetX, setContainerOffsetX] = React.useState(new Animated.Value(hp('0%')));
   const [quizOffsetX, setQuizOffsetX] = React.useState(new Animated.Value(-wp('100%')));
   const [scrollOffsetX, setScrollOffsetX] = React.useState(new Animated.Value(0));
@@ -508,27 +511,47 @@ const KeyIsAColor = (key) => {
     }
   }, [backgroundColor, startBackgroundColorAnimation]);
 
+
+//ANIMATIONS IN
   useEffect(() => {
     const interval = setInterval(() => {
 
-      Animated.parallel([
-        Animated.spring(splashOffsetY, {
-  				toValue: hp('100%'),
-  				bounciness: 1,
-  				useNativeDriver: false,
-          speed: 1.4
-  			}),
-        Animated.spring(containerOffsetY, {
-  				toValue: hp('-3%'),
-  				bounciness: 5,
-  				useNativeDriver: false,
-          speed: 1.2
-  			})
+      Animated.sequence([
+          Animated.spring(splashOffsetY, {
+    				toValue: hp('100%'),
+    				bounciness: 1,
+    				useNativeDriver: false,
+            speed: 1.4
+    			}),
+          Animated.delay(1000),
+          Animated.spring(main3dOffsetY, {
+            toValue: hp('-2%'),
+            bounciness: 5,
+            useNativeDriver: false,
+            speed: 1.2
+          }),
+          Animated.delay(1000),
+          Animated.parallel([
+              Animated.spring(containerOffsetY, {
+                toValue: hp('-3%'),
+                bounciness: 5,
+                useNativeDriver: false,
+                speed: 1.2
+              }),
+              Animated.spring(main3dScale, {
+                toValue: wp('120%'),
+                bounciness: 5,
+                useNativeDriver: false,
+                speed: 1.2
+              })
+        ]),
       ]).start();
 
   }, 0); //WAS 4200
     return () => clearInterval(interval);
   }, []);
+
+
 
     //Quiz functions
     React.useEffect(() => {
@@ -901,6 +924,8 @@ function getResultColorFormatted(color)
   }
 }
 
+console.disableYellowBox = true;
+
 function getColorTextFormatted(color)
 {
   if (color == 'combo')
@@ -1183,13 +1208,6 @@ const SvgComponent = (props) => {
   }
 }
 
-//old myCOLOR:
-// <Text style = {styles.bodyText}>We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others.{'\n'}{'\n'}</Text>
-// <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Learning about your color will give you insights into yourself as well as how you can interact more effectively with others</Text>
-// <Text style = {styles.bodyText}>{'\n'}{'\n'}By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.{'\n'}{'\n'}</Text>
-// <Text style = {styles.pullQuote}> <InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> People are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality.</Text>
-// <Text style = {styles.bodyText}> {'\n'}{'\n'}Using our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.{'\n'}{'\n'}</Text>
-
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
@@ -1294,7 +1312,7 @@ const SvgComponent = (props) => {
         }),}]}>
       </Animated.View>
 
-      <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
+      <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
                     <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
                     <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('3%')}]}>© a.network.</Text></TouchableOpacity>
@@ -1471,19 +1489,16 @@ const SvgComponent = (props) => {
 
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
-                              <View style = {styles.colorWheel}>
-                                <TouchableOpacity key={200}
-                                onPressIn={() => {SCALE.pressInAnimation(scaleOutAnimated)}}
-                                onPressOut={() => {SCALE.pressOutAnimation(scaleOutAnimated)}}
-                                style={[SCALE.getScaleTransformationStyle(scaleOutAnimated, 1, 1.14), {justifyContent: 'center', alignItems: 'center'}]}
-                                >
-                                    <Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
-                                </TouchableOpacity>
+                              <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }]}]}>
+                                    <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
 
-                              </View>
+                              </Animated.View>
+
+                              <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
                                   <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n \n'}</Text>
-                                <Image style = {styles.colorChar1} source={require('./assets/guy.png')}/>
+                                  <Image style = {styles.colorChar1} source={require('./assets/guy.png')}/>
+                              </Animated.View>
 
                               </View>
 
