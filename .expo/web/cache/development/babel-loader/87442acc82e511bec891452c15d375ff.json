@@ -1,0 +1,1 @@
+{"ast":null,"code":"export { default as Bar } from \"./Bar\";","map":{"version":3,"sources":["../src/index.tsx"],"names":[],"mappings":"AAAA,SAAS,OAAO,IAAI,GAApB","sourcesContent":["export { default as Bar } from './Bar';\n"],"sourceRoot":""},"metadata":{},"sourceType":"module"}

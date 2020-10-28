@@ -73,8 +73,8 @@ export default function App() {
   const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
   const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
   const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('200%')));
-  const [main3dOffsetY, setmain3dOffsetY] = React.useState(new Animated.Value(hp('200%')));
-  const [main3dScale, setmain3dScale] = React.useState(new Animated.Value(wp('140%')));
+  const [main3dOffsetY, setmain3dOffsetY] = React.useState(new Animated.Value(hp('11%')));
+  const [main3dScale, setmain3dScale] = React.useState(new Animated.Value(1.15));
 
   const [containerOffsetX, setContainerOffsetX] = React.useState(new Animated.Value(hp('0%')));
   const [quizOffsetX, setQuizOffsetX] = React.useState(new Animated.Value(-wp('100%')));
@@ -523,23 +523,22 @@ const KeyIsAColor = (key) => {
     				useNativeDriver: false,
             speed: 1.4
     			}),
-          Animated.delay(1000),
-          Animated.spring(main3dOffsetY, {
-            toValue: hp('-2%'),
-            bounciness: 5,
-            useNativeDriver: false,
-            speed: 1.2
-          }),
-          Animated.delay(1000),
+          Animated.delay(1000), //was 3500
           Animated.parallel([
-              Animated.spring(containerOffsetY, {
-                toValue: hp('-3%'),
+            Animated.spring(main3dOffsetY, {
+              toValue: hp('-2%'),
+              bounciness: 5,
+              useNativeDriver: false,
+              speed: 1.2
+            }),
+              Animated.spring(main3dScale, {
+                toValue: 1,
                 bounciness: 5,
                 useNativeDriver: false,
                 speed: 1.2
               }),
-              Animated.spring(main3dScale, {
-                toValue: wp('120%'),
+              Animated.spring(containerOffsetY, {
+                toValue: hp('-3%'),
                 bounciness: 5,
                 useNativeDriver: false,
                 speed: 1.2
@@ -547,7 +546,7 @@ const KeyIsAColor = (key) => {
         ]),
       ]).start();
 
-  }, 0); //WAS 4200
+  }, 2000); //WAS 4200
     return () => clearInterval(interval);
   }, []);
 
@@ -671,7 +670,7 @@ const styles = StyleSheet.create({
   },
   contentContainer:
   {
-    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible'
+    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible', marginTop: -hp('2%')
   },
   scrollContainer: {
     flex: 1,
@@ -716,6 +715,7 @@ const styles = StyleSheet.create({
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
+       marginTop: -hp('2%')
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -774,7 +774,8 @@ const styles = StyleSheet.create({
         height: hp('100%'),
         width: wp('100%'),
         zIndex: 4,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+         marginTop: -hp('2%')
       },
       creditsTxt: {
         fontFamily: 'CircularStd-Book',
@@ -833,13 +834,12 @@ const styles = StyleSheet.create({
       colorWheel:
       {
         height: hp('40%'),
-        padding: wp('20%'),
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
         overflow: 'visible',
         marginBottom: hp('4%'),
-        marginTop: hp('0%')
+        marginTop: hp('0%'),
       },
       colorChar1:
       {
@@ -847,7 +847,7 @@ const styles = StyleSheet.create({
         width: wp('37%'),
         height: wp('37%'),
         marginLeft: wp('47%'),
-        marginTop: hp('45%'),
+        marginTop: hp('-1%'),
         zIndex: 5
       },
       colorChar2:
@@ -856,7 +856,7 @@ const styles = StyleSheet.create({
         width: wp('41%'),
         height: wp('41%'),
         marginLeft: wp('-13%'),
-        marginTop: hp('95%'),
+        marginTop: hp('92%'),
         zIndex: 5
       }
 });
@@ -1489,14 +1489,14 @@ const SvgComponent = (props) => {
 
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
-                              <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }]}]}>
+                              <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
                                     <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
 
                               </Animated.View>
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
                                   <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
-                                  <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n \n'}</Text>
+                                  <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
                                   <Image style = {styles.colorChar1} source={require('./assets/guy.png')}/>
                               </Animated.View>
 
