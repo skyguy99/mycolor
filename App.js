@@ -1490,7 +1490,12 @@ const SvgComponent = (props) => {
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
-                                    <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
+                                <LottieView
+                                      source={require('./assets/testimg4.json')}
+                                      loop={true}
+                                      autoPlay={true}
+                                    />
+
 
                               </Animated.View>
 
