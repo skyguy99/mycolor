@@ -14,6 +14,22 @@ import LottieView from "lottie-react-native";
 import Svg, { G, Path } from "react-native-svg";
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+
+import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
+import { Renderer, TextureLoader } from 'expo-three';
+import {
+  AmbientLight,
+  BoxBufferGeometry,
+  Fog,
+  GridHelper,
+  Mesh,
+  MeshStandardMaterial,
+  PerspectiveCamera,
+  PointLight,
+  Scene,
+  SpotLight,
+} from 'three';
+
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
 import {
@@ -43,6 +59,17 @@ export default function App() {
         'CircularStd-BookItalic' : require('./assets/CircularStd-BookItalic.ttf'),
         'CircularStd-BlackItalic' : require('./assets/CircularStd-BlackItalic.ttf'),
   });
+
+  class IconMesh extends Mesh {
+  constructor() {
+    super(
+      new BoxBufferGeometry(1.0, 1.0, 1.0),
+      new MeshStandardMaterial({
+          color: 0xff0000
+      })
+    );
+  }
+}
 
   //persistent vars
   const [username, setUsername] = useState('');
@@ -100,6 +127,7 @@ export default function App() {
 
   const SliderWidth = Dimensions.get('screen').width;
   const colorWheelArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  let timeout;
 
   const colorMenuItems = [
     { label: '', header: 'orange', color: '#fca500', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: 'The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: require('./assets/orangechar.png')},
@@ -192,6 +220,11 @@ export default function App() {
       });
 
 });
+
+React.useEffect(() => {
+  // Clear the animation loop when the component unmounts
+  return () => clearTimeout(timeout);
+}, []);
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -1471,16 +1504,59 @@ const SvgComponent = (props) => {
 
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
-                              <View style = {styles.colorWheel}>
-                                <TouchableOpacity key={200}
-                                onPressIn={() => {SCALE.pressInAnimation(scaleOutAnimated)}}
-                                onPressOut={() => {SCALE.pressOutAnimation(scaleOutAnimated)}}
-                                style={[SCALE.getScaleTransformationStyle(scaleOutAnimated, 1, 1.14), {justifyContent: 'center', alignItems: 'center'}]}
-                                >
-                                    <Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
-                                </TouchableOpacity>
+                              <GLView
+                                style={{ flex: 1, zIndex: 6, width: wp('100%'), height: hp('50%') }}
+                                onContextCreate={async (gl: ExpoWebGLRenderingContext) => {
+                                  const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
+                                  const sceneColor = 0x6ad6f0;
+                                  console.log('hello world');
 
-                              </View>
+                                  // Create a WebGLRenderer without a DOM element
+                                  const renderer = new Renderer({ gl });
+                                  renderer.setSize(width, height);
+                                  renderer.setClearColor(sceneColor);
+
+                                  const camera = new PerspectiveCamera(70, width / height, 0.01, 1000);
+                                  camera.position.set(2, 5, 5);
+
+                                  const scene = new Scene();
+                                  scene.fog = new Fog(sceneColor, 1, 10000);
+                                  scene.add(new GridHelper(10, 10));
+
+                                  const ambientLight = new AmbientLight(0x101010);
+                                  scene.add(ambientLight);
+
+                                  const pointLight = new PointLight(0xffffff, 2, 1000, 1);
+                                  pointLight.position.set(0, 200, 200);
+                                  scene.add(pointLight);
+
+                                  const spotLight = new SpotLight(0xffffff, 0.5);
+                                  spotLight.position.set(0, 500, 100);
+                                  spotLight.lookAt(scene.position);
+                                  scene.add(spotLight);
+
+                                  const cube = new BoxBufferGeometry(1.0, 1.0, 1.0)
+                                  scene.add(cube);
+
+                                  camera.lookAt(cube.position);
+
+                                  function update() {
+                                    cube.rotation.y += 0.05;
+                                    cube.rotation.x += 0.025;
+                                  }
+
+                                  // Setup an animation loop
+                                  const render = () => {
+                                    timeout = requestAnimationFrame(render);
+                                    update();
+                                    renderer.render(scene, camera);
+                                    gl.endFrameEXP();
+                                  };
+
+                                  render();
+                                }}
+                              />
+
                                   <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n \n'}</Text>
                                 <Image style = {styles.colorChar1} source={require('./assets/guy.png')}/>
