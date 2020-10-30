@@ -844,19 +844,19 @@ const styles = StyleSheet.create({
       colorChar1:
       {
         position: 'absolute',
-        width: wp('37%'),
-        height: wp('37%'),
-        marginLeft: wp('47%'),
-        marginTop: hp('-1%'),
-        zIndex: 5
+        width: wp('43%'),
+        height: wp('43%'),
+        marginLeft: wp('17%'),
+        marginTop: hp('0%'),
+        zIndex: -2
       },
       colorChar2:
       {
         position: 'absolute',
-        width: wp('41%'),
-        height: wp('41%'),
-        marginLeft: wp('-13%'),
-        marginTop: hp('92%'),
+        width: wp('39%'),
+        height: wp('39%'),
+        marginTop: hp('30%'),
+        marginLeft: wp('-3%'),
         zIndex: 5
       }
 });
@@ -925,6 +925,8 @@ function getResultColorFormatted(color)
 }
 
 console.disableYellowBox = true;
+
+//OLD COLORWHEEL:     <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
 
 function getColorTextFormatted(color)
 {
@@ -1490,19 +1492,24 @@ const SvgComponent = (props) => {
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
-                                <LottieView
-                                      source={require('./assets/testimg4.json')}
-                                      loop={true}
-                                      autoPlay={true}
-                                    />
-
-
+                                    <LottieView
+                                          style = {[{width: wp('40%'), height: hp('40%')}]}
+                                          source={require('./assets/colorwheel1.json')}
+                                          loop={true}
+                                          autoPlay={true}
+                                        />
                               </Animated.View>
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
                                   <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
-                                  <Image style = {styles.colorChar1} source={require('./assets/guy.png')}/>
+
+                                  <LottieView
+                                        style = {[styles.colorChar1, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
+                                        source={require('./assets/guy1.json')}
+                                        loop={true}
+                                        autoPlay={true}
+                                      />
                               </Animated.View>
 
                               </View>
@@ -1523,7 +1530,12 @@ const SvgComponent = (props) => {
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
-                                  <Image style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]} source={require('./assets/guy2.png')}/>
+                                  <LottieView
+                                        style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
+                                        source={require('./assets/guy3.json')}
+                                        loop={true}
+                                        autoPlay={true}
+                                      />
                                 <TouchableOpacity onPress = {() => {
                                       if(currentKey == 'myCOLOR')
                                       {
