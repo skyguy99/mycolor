@@ -211,13 +211,13 @@ class FloatingMenu extends React.PureComponent {
       Animated.spring(this.buttonSizeAnimated, {
         useNativeDriver: false,
         toValue: Design.buttonWidth * 0.9,
-        duration: 1000,
+        duration: 800,
         easing: Easing.bounce,
       }),
       Animated.spring(this.splitButtonSizeAnimated, {
         useNativeDriver: false,
         toValue: Design.buttonWidth * 0.5 * 0.9,
-        duration: 1000,
+        duration: 800,
         easing: Easing.bounce,
       }),
     ]).start(() => {
@@ -230,13 +230,13 @@ class FloatingMenu extends React.PureComponent {
       Animated.spring(this.buttonSizeAnimated, {
         useNativeDriver: false,
         toValue: Design.buttonWidth * 1.1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.bounce,
       }),
       Animated.spring(this.splitButtonSizeAnimated, {
         useNativeDriver: false,
         toValue: Design.buttonWidth * 0.5 * 1.1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.bounce,
       }),
     ]).start(() => {
@@ -343,7 +343,7 @@ class FloatingMenu extends React.PureComponent {
       <View
         style={[
           globalStyles.buttonOuter,
-          applyButtonWidth(buttonWidth),
+          applyButtonWidth(Design.buttonWidth * 0.9),
           { borderColor },
         ]}
       >
@@ -385,7 +385,6 @@ class FloatingMenu extends React.PureComponent {
             <View
               style={{
                 display: "flex",
-                backgroundColor: "red",
                 width: 20,
               }}
             />
@@ -416,8 +415,8 @@ class FloatingMenu extends React.PureComponent {
             <Image
               style={{
                 display: primaryColor == "#ffffff" ? "flex" : "none",
-                width: Design.buttonWidth - 5,
-                height: Design.buttonWidth - 5,
+                width: Design.buttonWidth,
+                height: Design.buttonWidth,
                 marginTop: 14,
               }}
               source={require("../../../assets/rainbowcircle.png")}
@@ -485,7 +484,7 @@ FloatingMenu.defaultProps = {
   items: [],
   primaryColor: Colors.primaryColor,
   buttonWidth: Design.buttonWidth,
-  innerWidth: Design.buttonWidth - 12,
+  innerWidth: Design.buttonWidth-12,
   position: MenuPositions.bottomRight,
   isInLongPress: isinLongPress,
   openEase: t => --t * t * t + 1,

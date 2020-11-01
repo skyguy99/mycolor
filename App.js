@@ -358,30 +358,31 @@ const KeyIsAColor = (key) => {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-  const handleItemPress = (item, index) => {
-    setIsMenuOpen(false);
-    toggleQuiz(false);
+    const handleItemPress = (item, index) => {
+      setIsMenuOpen(false);
+      toggleQuiz(false);
 
-    if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()))
-    {
-          console.log('COLOR COMBO PRESS');
-          setCurrentKey('Combo');
-          console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
-          if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
-          {
-            setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
-            console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
-            global.lastColor = getResultColorItem(item.header)[0].color;
+      global.lastColor = "transparent";
 
-          }
-    } else {
-      global.lastColor = 'transparent';
-      setCurrentColor(item.color);
-      setCurrentKey(Capitalize(item.header));
-      setCurrentTextKey(item.header);
+      if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()))
+      {
+            console.log('COLOR COMBO PRESS');
+            setCurrentKey('Combo');
+            console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
+            if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
+            {
+              setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+              console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+              global.lastColor = getResultColorItem(item.header)[0].color;
+
+            }
+      } else {
+        setCurrentColor(item.color);
+        setCurrentKey(Capitalize(item.header));
+        setCurrentTextKey(item.header);
+      }
+
     }
-
-  }
 
   const renderMenuIcon = (menuState) => {
     const { menuButtonDown } = menuState;
@@ -1506,7 +1507,7 @@ const SvgComponent = (props) => {
 
                                   <LottieView
                                         style = {[styles.colorChar1, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
-                                        source={require('./assets/guy1.json')}
+                                        source={require('./assets/yellow.json')}
                                         loop={true}
                                         autoPlay={true}
                                       />
