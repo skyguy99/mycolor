@@ -211,14 +211,14 @@ class FloatingMenu extends React.PureComponent {
       Animated.spring(this.buttonSizeAnimated, {
         useNativeDriver: false,
         toValue: Design.buttonWidth * 0.9,
-        duration: 800,
-        easing: Easing.bounce,
+        speed: 10,
+        bounciness: 0.5,
       }),
       Animated.spring(this.splitButtonSizeAnimated, {
         useNativeDriver: false,
         toValue: Design.buttonWidth * 0.5 * 0.9,
-        duration: 800,
-        easing: Easing.bounce,
+        speed: 10,
+        bounciness: 0.5,
       }),
     ]).start(() => {
       this.spring();
@@ -229,15 +229,15 @@ class FloatingMenu extends React.PureComponent {
     Animated.parallel([
       Animated.spring(this.buttonSizeAnimated, {
         useNativeDriver: false,
-        toValue: Design.buttonWidth * 1.1,
-        duration: 800,
-        easing: Easing.bounce,
+        toValue: Design.buttonWidth * 1.05,
+        speed: 10,
+        bounciness: 0.5,
       }),
       Animated.spring(this.splitButtonSizeAnimated, {
         useNativeDriver: false,
-        toValue: Design.buttonWidth * 0.5 * 1.1,
-        duration: 800,
-        easing: Easing.bounce,
+        toValue: Design.buttonWidth * 0.5 * 1.05,
+        speed: 10,
+        bounciness: 0.5,
       }),
     ]).start(() => {
       this.onSpringCompletion();
