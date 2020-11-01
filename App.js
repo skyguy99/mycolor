@@ -292,6 +292,7 @@ const KeyIsAColor = (key) => {
 
     //console.log('Selecting '+value);
     setCurrentKey(value);
+    global.lastColor = "transparent";
 
     if(value == 'yourCOLOR' || value == 'myCOLOR' || value == 'Teams')
     {
