@@ -847,7 +847,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: wp('43%'),
         height: wp('43%'),
-        marginLeft: wp('17%'),
+        marginLeft: wp('16.5%'),
         marginTop: hp('0%'),
         zIndex: -2
       },
@@ -857,9 +857,18 @@ const styles = StyleSheet.create({
         width: wp('39%'),
         height: wp('39%'),
         marginTop: hp('30%'),
-        marginLeft: wp('-3%'),
+        marginLeft: wp('-4%'),
         zIndex: 5
-      }
+      },
+      colorChar3:
+      {
+        position: 'absolute',
+        width: wp('43%'),
+        height: wp('43%'),
+        marginLeft: wp('16.5%'),
+        marginTop: hp('0%'),
+        zIndex: -2
+      },
 });
 
 function getColorComboTextFormatted(colorItem)
@@ -1507,7 +1516,7 @@ const SvgComponent = (props) => {
 
                                   <LottieView
                                         style = {[styles.colorChar1, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
-                                        source={require('./assets/yellow.json')}
+                                        source={require('./assets/yellowguy.json')}
                                         loop={true}
                                         autoPlay={true}
                                       />
@@ -1532,8 +1541,8 @@ const SvgComponent = (props) => {
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
                                   <LottieView
-                                        style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
-                                        source={require('./assets/guy3.json')}
+                                        style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' || currentKey == 'Teams' ? 'flex' : 'none'}]}
+                                        source={require('./assets/blueguy.json')}
                                         loop={true}
                                         autoPlay={true}
                                       />
