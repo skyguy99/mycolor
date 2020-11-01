@@ -395,7 +395,11 @@ class FloatingMenu extends React.PureComponent {
               globalStyles.buttonInner,
               global.lastColor != "transparent"
                 ? applyButtonInnerWidthSecond(innerWidth)
-                : applyButtonWidth(innerWidth),
+                : {
+                  width: this.buttonSizeAnimated,
+                  height: this.buttonSizeAnimated,
+                  borderRadius: Design.buttonWidth * 1.1 * 0.5,
+                },
               { backgroundColor },
               isSelectingSecondColor &&
                 !dimmerActive &&
@@ -412,15 +416,15 @@ class FloatingMenu extends React.PureComponent {
               },
             ]}
           >
-            <Image
+            <Animated.Image
               style={{
                 display: primaryColor == "#ffffff" ? "flex" : "none",
-                width: Design.buttonWidth,
-                height: Design.buttonWidth,
+                width: this.buttonSizeAnimated,
+                height: this.buttonSizeAnimated,
                 marginTop: 14,
               }}
               source={require("../../../assets/rainbowcircle.png")}
-            ></Image>
+            ></Animated.Image>
             {content}
           </Animated.View>
         </TouchableOpacity>
