@@ -857,7 +857,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: wp('39%'),
         height: wp('39%'),
-        marginTop: hp('30%'),
+        marginTop: currentKey == 'myCOLOR' ? hp('30%') : hp('29%'),
         marginLeft: wp('-4%'),
         zIndex: 5
       },
@@ -868,6 +868,15 @@ const styles = StyleSheet.create({
         height: wp('43%'),
         marginLeft: wp('16.5%'),
         marginTop: hp('0%'),
+        zIndex: -2
+      },
+      colorChar4:
+      {
+        position: 'absolute',
+        width: wp('43%'),
+        height: wp('43%'),
+        marginLeft: wp('16%'),
+        marginTop: hp('2.6%'),
         zIndex: -2
       },
 });
@@ -1530,6 +1539,12 @@ const SvgComponent = (props) => {
                                 <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                     “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
                                     </Text>
+                                    <LottieView
+                                          style = {[styles.colorChar4]}
+                                          source={require('./assets/yellowcompressed.json')}
+                                          loop={true}
+                                          autoPlay={true}
+                                        />
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
@@ -1543,7 +1558,7 @@ const SvgComponent = (props) => {
                                 </View>
                                   <LottieView
                                         style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' || currentKey == 'Teams' ? 'flex' : 'none'}]}
-                                        source={require('./assets/bluecompressed.json')}
+                                        source={require('./assets/bluepng.json')}
                                         loop={true}
                                         autoPlay={true}
                                       />
