@@ -1517,7 +1517,7 @@ const SvgComponent = (props) => {
 
                                   <LottieView
                                         style = {[styles.colorChar1, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
-                                        source={require('./assets/hamburger.json')}
+                                        source={require('./assets/yellowcompressed.json')}
                                         loop={true}
                                         autoPlay={true}
                                       />
@@ -1543,7 +1543,7 @@ const SvgComponent = (props) => {
                                 </View>
                                   <LottieView
                                         style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' || currentKey == 'Teams' ? 'flex' : 'none'}]}
-                                        source={require('./assets/hamburger.json')}
+                                        source={require('./assets/bluecompressed.json')}
                                         loop={true}
                                         autoPlay={true}
                                       />
