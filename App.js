@@ -1513,8 +1513,8 @@ const SvgComponent = (props) => {
 
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
                                     <LottieView
-                                          style = {[{width: wp('40%'), height: hp('40%')}]}
-                                          source={require('./assets/colorwheel1.json')}
+                                          style = {[{width: wp('46%'), height: hp('46%'), marginTop: hp('0.7%')}]}
+                                          source={require('./assets/colorviz.json')}
                                           loop={true}
                                           autoPlay={true}
                                         />
