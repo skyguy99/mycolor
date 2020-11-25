@@ -14,8 +14,9 @@ import LottieView from "lottie-react-native";
 import Svg, { G, Path } from "react-native-svg";
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import * as Device from 'expo-device';
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
-import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -150,7 +151,7 @@ export default function App() {
   var bodyTexts = {
     'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Take the Quiz'},
 
-    'yourCOLOR': {body: '', topBold: (username != '') ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `\n`, buttonLink: '', buttonTitle: 'Share'},
+    'yourCOLOR': {body: '', topBold: !didSetUsername ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `Hello.\n You don't have a color yet!`, buttonLink: '', buttonTitle: !didSetUsername ? 'Take the Quiz' : 'Share'},
 
     'Quiz': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
 
@@ -168,9 +169,10 @@ export default function App() {
     .then((item) => {
          if (item) {
            setUsername(item);
-           setDidSetUsername(false);
+           setDidSetUsername(false); //means has taken quiz at least once
          }
     });
+
     AsyncStorage.getItem('industry')
       .then((item) => {
            if (item) {
@@ -836,6 +838,7 @@ const styles = StyleSheet.create({
       colorWheel:
       {
         height: hp('40%'),
+        backgroundColor: 'red',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
@@ -903,6 +906,7 @@ function getColorComboTextFormatted(colorItem)
 
 function getResultColorFormatted(color)
 {
+
   if(color == 'combo')
   {
 
@@ -948,8 +952,19 @@ console.disableYellowBox = true;
 
 //OLD COLORWHEEL:     <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
 
-function getColorTextFormatted(color)
+function noColorYet()
 {
+  return ([
+
+    <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%')}}>
+        <Text key = {50} style={[styles.pullQuote, {textAlign: 'center'}]}>{'Hello. You dont have a color yet!\n'}</Text>
+    </View>
+  ]);
+}
+
+function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
+{
+
   if (color == 'combo')
   {
 
@@ -1428,7 +1443,7 @@ const SvgComponent = (props) => {
                                 </View>
                             </TouchableOpacity>
                           </View>
-                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: !didSetUsername ? 'none' : 'flex'}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: didSetUsername ? 'flex' : 'none' }]}>
                                     <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
@@ -1498,7 +1513,7 @@ const SvgComponent = (props) => {
 
 
                               <View style = {{display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}}>
-                              {getColorTextFormatted(userColor)}
+                              {didSetUsername ? getColorTextFormatted(userColor) : noColorYet()}
                               </View>
 
                               <View style = {{display: KeyIsAColor(currentKey) && currentKey != 'Combo' ? 'flex' : 'none'}}>
@@ -1512,24 +1527,14 @@ const SvgComponent = (props) => {
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
-                                    <LottieView
-                                          style = {[{width: wp('46%'), height: hp('46%'), marginTop: hp('0.5%')}]}
-                                          source={require('./assets/colorviz.json')}
-                                          loop={true}
-                                          autoPlay={true}
-                                        />
+
                               </Animated.View>
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
                                   <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
 
-                                  <LottieView
-                                        style = {[styles.colorChar1, {display: currentKey == 'myCOLOR' ? 'flex' : 'none'}]}
-                                        source={require('./assets/yellowcompressed.json')}
-                                        loop={true}
-                                        autoPlay={true}
-                                      />
+
                               </Animated.View>
 
                               </View>
@@ -1541,7 +1546,7 @@ const SvgComponent = (props) => {
                                     </Text>
                                     <LottieView
                                           style = {[styles.colorChar4]}
-                                          source={require('./assets/yellowcompressed.json')}
+                                          source={require('./assets/hamburger.json')}
                                           loop={true}
                                           autoPlay={true}
                                         />
@@ -1556,14 +1561,9 @@ const SvgComponent = (props) => {
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
-                                  <LottieView
-                                        style = {[styles.colorChar2, {display: currentKey == 'myCOLOR' || currentKey == 'Teams' ? 'flex' : 'none'}]}
-                                        source={require('./assets/bluepng.json')}
-                                        loop={true}
-                                        autoPlay={true}
-                                      />
+
                                 <TouchableOpacity onPress = {() => {
-                                      if(currentKey == 'myCOLOR')
+                                      if(currentKey == 'myCOLOR' || (!didSetUsername && currentKey == 'yourCOLOR'))
                                       {
                                         toggleQuiz(true);
                                         setCurrentKey('Quiz');
