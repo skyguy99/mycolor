@@ -196,6 +196,8 @@ export default function App() {
            }
       });
 
+      getDevice();
+
 });
 
 // Initialize Firebase
@@ -230,6 +232,18 @@ function storeUserInfo(username, industry, role, color) {
     });
   }
 }
+
+const getDevice = async () => {
+
+  console.log('***************');
+    console.log('DEVICE NAME: '+Device.modelName);
+
+    const deviceType = await Device.getDeviceTypeAsync();
+    console.log('IS TABLET:');
+    console.log(deviceType === Device.DeviceType.TABLET);
+
+      console.log('***************');
+  };
 
 const KeyIsAColor = (key) => {
   return (colorMenuItems.filter((item) => item.header.toLowerCase() === key.toLowerCase()).length > 0) || key == 'combo';
@@ -1513,7 +1527,7 @@ const SvgComponent = (props) => {
 
 
                               <View style = {{display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}}>
-                              {didSetUsername ? getColorTextFormatted(userColor) : noColorYet()}
+                              {userColor != '' ? getColorTextFormatted(userColor) : noColorYet()}
                               </View>
 
                               <View style = {{display: KeyIsAColor(currentKey) && currentKey != 'Combo' ? 'flex' : 'none'}}>
