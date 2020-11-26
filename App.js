@@ -258,9 +258,9 @@ const KeyIsAColor = (key) => {
   };
 
   const toggleHeader = () => {
-    if (headerMenu._value > 120) {
+    if (headerMenu._value > moderateScale(120)) {
       Animated.spring(headerMenu, {
-        toValue: 60,
+        toValue: moderateScale(60),
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -276,7 +276,7 @@ const KeyIsAColor = (key) => {
       setHeaderMenuOptionsVisible(true);
       setoptionsVisible(true);
       Animated.spring(headerMenu, {
-        toValue: KeyIsAColor(currentKey.toLowerCase()) ? 240 : 200,
+        toValue: KeyIsAColor(currentKey.toLowerCase()) ? (isTablet() ?  moderateScale(220) : moderateScale(240)) : (isTablet() ? moderateScale(190) : moderateScale(200)),
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -678,9 +678,10 @@ const styles = ScaledSheet.create({
   shadow3: elevationShadowStyle(20),
 
   button: {
-    borderRadius: 13,
+    borderRadius: '10@ms',
     backgroundColor: 'white',
-    padding: 20
+    padding: 20,
+    marginBottom: isTablet() ? '40@ms' : '0'
   },
   container: {
     flex: 1,
@@ -842,7 +843,7 @@ const styles = ScaledSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 20,
-        borderRadius: 10,
+        borderRadius: moderateScale(10),
         elevation: 9,
         marginHorizontal: 10,
         backgroundColor: "white",
@@ -855,7 +856,7 @@ const styles = ScaledSheet.create({
       arrow: {
         position: 'absolute',
         zIndex: 6,
-        transform: [{translateX: isOldPhone() ? '59@ms' : '65@ms0.6' }, {translateY: isOldPhone() ? '54@mvs' : '55@mvs'}]
+        transform: [{translateX: isOldPhone() ? '59@ms' : '69@ms0.6' }, {translateY: isOldPhone() ? '54@mvs' : '55@mvs'}]
       },
       pullQuote: {
         fontFamily: 'CircularStd-BlackItalic',
@@ -927,10 +928,10 @@ function getColorComboTextFormatted(colorItem)
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
-          <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}> {getResultColorItem(colorItem.header1)[0].title} and {getResultColorItem(colorItem.header2)[0].title}</Text>
-          <Text key = {25} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(0, colorItem.bodyBlurb.length/2)} {'\n'}{'\n'}</Text>
-          <Text key = {24} style = {styles.pullQuote}>{colorItem.pullQuote}{'\n'}{'\n'}</Text>
-            <Text key = {20} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(colorItem.bodyBlurb.length/2, colorItem.bodyBlurb.length)} {'\n'}{'\n'}</Text>
+          <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%'), marginTop: moderateScale(4)}]}> {getResultColorItem(colorItem.header1)[0].title} and {getResultColorItem(colorItem.header2)[0].title}</Text>
+          <Text key = {25} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(0, colorItem.bodyBlurb.length/2)} {'\n'}</Text>
+          <Text key = {24} style = {styles.pullQuote}>{colorItem.pullQuote}{'\n'}</Text>
+            <Text key = {20} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(colorItem.bodyBlurb.length/2, colorItem.bodyBlurb.length)} {'\n'}</Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
     ]);
@@ -971,9 +972,9 @@ function getResultColorFormatted(color)
           <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
           <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(color)[0].conscientiousness*100}% </Text>
           <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
-          <Text key = {9} >{'\n'}</Text>
+          <Text key = {9} >{'\n'}{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
-          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}{'\n'} </Text>
+          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'} </Text>
           <Text key = {25} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb2} </Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
@@ -1024,9 +1025,9 @@ function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
           <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
           <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(color)[0].conscientiousness*100}% </Text>
           <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
-          <Text key = {9} >{'\n'}</Text>
+          <Text key = {9} >{'\n'}{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
-          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}{'\n'} </Text>
+          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}</Text>
           <Text key = {25} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb2} </Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
@@ -1241,14 +1242,14 @@ InlineImage.propTypes = Image.propTypes;
                           <ScrollView
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
-                          style={{zIndex: -3, overflow: 'visible', marginTop: hp('18%')}}>
+                          style={{zIndex: -3, overflow: 'visible', marginTop: moderateScale(140)}}>
 
                           <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('-5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
                           <Text style = {styles.pullQuote}>Hello.{'\n'}What’s your name?</Text>
                                   <Kohana
                                     onChangeText={(text) => { setUsername(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%')}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%'), fontSize: 40}}
                                     label={'My name'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1440,7 +1441,7 @@ InlineImage.propTypes = Image.propTypes;
                                     }} style={[styles.button, styles.shadow3, {width: wp('79%'), alignSelf: 'center'}]} >
                                   <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{colorMenuItems.filter((item) => item.header === currentTextKey).length > 0 ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle} </Text>
                                 </TouchableOpacity>
-                                <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
+                                <Text>{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>
                             </SafeAreaView>
                           </Animated.View>
