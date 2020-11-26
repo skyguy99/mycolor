@@ -681,7 +681,7 @@ const styles = ScaledSheet.create({
     borderRadius: '10@ms',
     backgroundColor: 'white',
     padding: 20,
-    marginBottom: isTablet() ? '40@ms' : '0'
+    marginBottom: isTablet() ? '40@ms' : '0@ms'
   },
   container: {
     flex: 1,
@@ -1242,7 +1242,7 @@ InlineImage.propTypes = Image.propTypes;
                           <ScrollView
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
-                          style={{zIndex: -3, overflow: 'visible', marginTop: moderateScale(140)}}>
+                          style={{zIndex: -3, overflow: 'visible', marginTop: moderateScale(130)}}>
 
                           <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('-5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
                           <Text style = {styles.pullQuote}>Hello.{'\n'}What’s your name?</Text>
