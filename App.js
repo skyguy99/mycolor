@@ -681,7 +681,7 @@ const styles = ScaledSheet.create({
     borderRadius: '10@ms',
     backgroundColor: 'white',
     padding: 20,
-    marginBottom: isTablet() ? '40@ms' : '0@ms'
+    marginBottom: isTablet() ? '40@ms' : '0@ms' //always need to have @ if one does
   },
   container: {
     flex: 1,
@@ -1097,6 +1097,7 @@ InlineImage.propTypes = Image.propTypes;
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
+      <StatusBar barStyle="dark-content" />
     <View style={styles.dropDown}>
     <Animated.View
       style={
