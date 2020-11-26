@@ -564,7 +564,7 @@ const KeyIsAColor = (key) => {
   }
 
   const isTablet = () => {
-    return (Device.modelName.includes('iPad'));
+    return (Device.modelName.includes('iPad') || Device.modelName.includes('Tab') || Device.modelName.includes('Pad') || Device.modelName.includes('Fire'));
   }
 
   const isTabletAsync = async () => {
@@ -867,7 +867,6 @@ const styles = ScaledSheet.create({
       colorWheel:
       {
         height: hp('40%'),
-        backgroundColor: 'red',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
@@ -1402,12 +1401,6 @@ InlineImage.propTypes = Image.propTypes;
                                 <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                     “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
                                     </Text>
-                                    <LottieView
-                                          style = {[styles.colorChar4]}
-                                          source={require('./assets/hamburger.json')}
-                                          loop={true}
-                                          autoPlay={true}
-                                        />
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>

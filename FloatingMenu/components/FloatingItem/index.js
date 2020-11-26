@@ -105,7 +105,7 @@ class FloatingItem extends React.PureComponent {
         key={`item-${index}`}
         style={[
           globalStyles.buttonOuter,
-          applyButtonWidth(buttonWidth),
+          applyButtonWidth(buttonWidth*0.98),
           {
             opacity,
             transform: fanAnimation
@@ -127,7 +127,7 @@ class FloatingItem extends React.PureComponent {
             <Animated.View
               style={[
                 globalStyles.buttonInner,
-                applyButtonInnerWidthFirst(innerWidth),
+                applyButtonInnerWidthFirst(innerWidth*1.1),
                 {
                   //THIS CONTROLS SPLIT COLOR
                   backgroundColor:
@@ -140,8 +140,8 @@ class FloatingItem extends React.PureComponent {
               <View
                 style={{
                   display: isInLongPress ? "flex" : "none",
-                  backgroundColor: "red",
-                  width: 20,
+                  backgroundColor: "transparent",
+                  width: 10,
                 }}
               />
               {content}
@@ -151,15 +151,15 @@ class FloatingItem extends React.PureComponent {
               style={[
 
                 globalStyles.buttonInner,
-                applyButtonInnerWidthSecond(innerWidth),
+                applyButtonInnerWidthSecond(innerWidth*1.1),
                 { backgroundColor },
               ]}
             >
               <View
                 style={{
                   display: isInLongPress ? "flex" : "none",
-                  backgroundColor: "red",
-                  width: 20,
+                  backgroundColor: "transparent",
+                  width: 10,
                 }}
               />
               {content}

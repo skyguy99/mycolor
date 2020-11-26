@@ -1,6 +1,11 @@
 import { Platform, StatusBar } from "react-native";
-
+import * as Device from 'expo-device';
 import { Design } from "../constants";
+
+const isTablet = () => {
+  return (Device.modelName.includes('iPad') || Device.modelName.includes('Tab') || Device.modelName.includes('Pad') || Device.modelName.includes('Fire'));
+}
+
 
 export const isPortrait = () => {
   return Design.window.height >= Design.window.width;
