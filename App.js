@@ -14,8 +14,7 @@ import LottieView from "lottie-react-native";
 import Svg, { G, Path } from "react-native-svg";
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
-import { ScaledSheet } from 'react-native-size-matters';
-import { s, vs, ms, mvs } from 'react-native-size-matters';
+import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 import * as Device from 'expo-device';
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
@@ -564,7 +563,11 @@ const KeyIsAColor = (key) => {
     return (Device.modelName.includes('iPhone 8') || Device.modelName.includes('iPhone 7'));
   }
 
-  const isTablet = async () => {
+  const isTablet = () => {
+    return (Device.modelName.includes('iPad'));
+  }
+
+  const isTabletAsync = async () => {
 
       const deviceType = await Device.getDeviceTypeAsync();
       return (deviceType === Device.DeviceType.TABLET);
@@ -689,7 +692,7 @@ const styles = ScaledSheet.create({
   },
   contentContainer:
   {
-    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible', marginTop: isOldPhone() ? '-40@mvs' : '-24@mvs0.2'
+    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible', marginTop: isOldPhone() ? '-39@mvs' : '-24@mvs0.2'
   },
   scrollContainer: {
     flex: 1,
@@ -707,12 +710,12 @@ const styles = ScaledSheet.create({
   bodyText: {
     fontFamily: 'CircularStd-Book',
     color: 'black',
-    fontSize: hp('2.35%')
+    fontSize: '18@ms',
   },
   topBold: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: hp('2.35%')
+    fontSize: '18@ms',
   },
   splash: {
         ...StyleSheet.absoluteFillObject,
@@ -741,19 +744,19 @@ const styles = ScaledSheet.create({
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
       color: 'black',
-      fontSize: hp('2.35%'),
+      fontSize: '18@ms',
       },
       question: {
         fontFamily: 'CircularStd-Black',
         color: 'black',
-        fontSize: hp('2.35%'),
+        fontSize: '18@ms',
         marginBottom: hp('7%'),
         marginTop: -hp('7%')
       },
       colorAttributesText: {
         fontFamily: 'CircularStd-Black',
         color: 'black',
-        fontSize: hp('2.35%'),
+        fontSize: '18@ms',
         textTransform: 'capitalize',
         marginTop: hp('2%')
       },
@@ -765,7 +768,7 @@ const styles = ScaledSheet.create({
       resultText: {
         fontFamily: 'CircularStd-Book',
         color: 'black',
-        fontSize: hp('2.35%'),
+        fontSize: '18@ms',
         textAlign: 'center',
         marginTop: -hp('7%')
       },
@@ -809,8 +812,8 @@ const styles = ScaledSheet.create({
       creditsTxt: {
         fontFamily: 'CircularStd-Book',
         color: 'black',
-        fontSize: hp('2.35%'),
-        marginTop: hp('10%'),
+        fontSize: '18@ms',
+        marginTop: verticalScale(55),
         padding: wp('14%')
       },
       quizContainer: {
@@ -852,12 +855,12 @@ const styles = ScaledSheet.create({
       arrow: {
         position: 'absolute',
         zIndex: 6,
-        transform: [{translateX: '65@ms0.6' }, {translateY: '54@mvs0.6'}]
+        transform: [{translateX: isOldPhone() ? '59@ms' : '65@ms0.6' }, {translateY: isOldPhone() ? '54@mvs' : '55@mvs'}]
       },
       pullQuote: {
         fontFamily: 'CircularStd-BlackItalic',
         color: 'black',
-        fontSize: hp('3.1%'),
+        fontSize: '25@ms',
         textAlign: 'left'
       },
       colorWheel:
@@ -1129,10 +1132,10 @@ InlineImage.propTypes = Image.propTypes;
             </Text>
           )}
           {!optionsVisible && !optionsHeaderVisible && (
-            <View style={{ width: 120 }} />
+            <View style={{ width: moderateScale(120) }} />
           )}
           {optionsVisible && (
-            <View style={{ width: 120 }}>
+            <View style={{ width: moderateScale(120) }}>
               <Text
                 style={[
                   styles.headerText,
@@ -1196,8 +1199,16 @@ InlineImage.propTypes = Image.propTypes;
 
       <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
+
+                  <ScrollView
+                  showsVerticalScrollIndicator= {false}
+                  showsHorizontalScrollIndicator= {false}
+                  style={{overflow: 'visible'}}>
+
                     <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
-                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: hp('3%')}]}>© a.network.</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: (isOldPhone() || isTablet()) ? moderateScale(-50) : moderateScale(60)}]}>© a.network.</Text></TouchableOpacity>
+                  </ScrollView>
+
                   </Animated.View>
                   <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
                       <LottieView
