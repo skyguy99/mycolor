@@ -14,6 +14,8 @@ import LottieView from "lottie-react-native";
 import Svg, { G, Path } from "react-native-svg";
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import { ScaledSheet } from 'react-native-size-matters';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 import * as Device from 'expo-device';
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
@@ -236,7 +238,7 @@ function storeUserInfo(username, industry, role, color) {
 const getDevice = async () => {
 
   console.log('***************');
-    console.log('DEVICE NAME: '+Device.modelName);
+    console.log('DEVICE NAME: \n'+Device.modelName);
 
     const deviceType = await Device.getDeviceTypeAsync();
     console.log('IS TABLET:');
@@ -668,7 +670,7 @@ const KeyIsAColor = (key) => {
     return <AppLoading />;
   } else {
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   shadow1: elevationShadowStyle(5),
   shadow2: elevationShadowStyle(10),
   shadow3: elevationShadowStyle(20),
@@ -688,7 +690,7 @@ const styles = StyleSheet.create({
   },
   contentContainer:
   {
-    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible', marginTop: -hp('2%')
+    flex: 1, justifyContent: 'center', width: wp('101%'), overflow: 'visible', marginTop: '-30@mvs0.8'
   },
   scrollContainer: {
     flex: 1,
@@ -700,7 +702,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: hp('2.35%'),
+    fontSize: '20@ms',
     textAlign: 'center'
   },
   bodyText: {
@@ -726,14 +728,16 @@ const styles = StyleSheet.create({
       overflow: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
     },
     creditsBtn: {
-      width: wp('20%'),
-      height: wp('17%'),
+      // width: wp('20%'),
+      // height: wp('17%'),
+      width: '70@ms',
+      height: '70@ms',
       flex: 1,
       justifyContent: 'flex-start',
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
-       marginTop: -hp('2%')
+       marginTop: '-23@ms'
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -860,6 +864,11 @@ const styles = StyleSheet.create({
         marginBottom: hp('4%'),
         marginTop: hp('0%'),
       },
+      inlineRightArrow:
+      {
+        width: '20@ms0.5',
+        height: '20@ms0.5'
+      },
       colorChar1:
       {
         position: 'absolute',
@@ -907,7 +916,7 @@ function getColorComboTextFormatted(colorItem)
           <Image style = {{width: wp('101%'), height: wp('100%'), position: 'absolute', marginTop: hp('60%')}} source={colorItem.image} />
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
-          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
+          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}> {getResultColorItem(colorItem.header1)[0].title} and {getResultColorItem(colorItem.header2)[0].title}</Text>
           <Text key = {25} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(0, colorItem.bodyBlurb.length/2)} {'\n'}{'\n'}</Text>
           <Text key = {24} style = {styles.pullQuote}>{colorItem.pullQuote}{'\n'}{'\n'}</Text>
@@ -938,7 +947,7 @@ function getResultColorFormatted(color)
       <Text style = {styles.topBold}>Take Again</Text>
       </TouchableOpacity>
 
-          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('2%')}]}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} />{getResultColorItem(color)[0].title}</Text>
+          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('2%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} />{getResultColorItem(color)[0].title}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(color)[0].attributes}</Text>
           <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(color)[0].extraversion*100}% </Text>
           <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
@@ -954,7 +963,7 @@ function getResultColorFormatted(color)
           <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
           <Text key = {9} >{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
-          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}{'\n'} </Text>
+          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}{'\n'} </Text>
           <Text key = {25} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb2} </Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
@@ -991,7 +1000,7 @@ function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
           <Image style = {{width: wp('100%'), height: wp('100%'), position: 'absolute', marginTop: hp('60%')}} source={getResultColorItem(color)[0].image} />
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
-          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].title}</Text>
+          <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].title}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(color)[0].attributes}</Text>
           <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(color)[0].extraversion*100}% </Text>
           <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
@@ -1007,7 +1016,7 @@ function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
           <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
           <Text key = {9} >{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
-          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}{'\n'} </Text>
+          <Text key = {21} style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].pullQuote} {'\n'}{'\n'} </Text>
           <Text key = {25} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb2} </Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
@@ -1348,7 +1357,7 @@ const SvgComponent = (props) => {
     />
     </View>
 
-      <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash2-txt.png')} />
+      <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash.png')} />
       <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 9, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
           inputRange: [0, 30, 60, 90, 120, 150, 180],
           outputRange: [
@@ -1545,7 +1554,7 @@ const SvgComponent = (props) => {
                               </Animated.View>
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
-                                  <Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
+                                  <Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
 
 
@@ -1564,16 +1573,16 @@ const SvgComponent = (props) => {
                                           loop={true}
                                           autoPlay={true}
                                         />
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                         {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Matt Bretz</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Matt Bretz</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}> {"\n"} Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {{width: wp('5%'), height: wp('5%')}} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
