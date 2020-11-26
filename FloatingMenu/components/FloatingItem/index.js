@@ -7,7 +7,7 @@ import {
   Animated,
   ActivityIndicator,
 } from "react-native";
-
+import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 import {
   applyButtonWidth,
   applyButtonInnerWidthFirst,
@@ -127,7 +127,7 @@ class FloatingItem extends React.PureComponent {
             <Animated.View
               style={[
                 globalStyles.buttonInner,
-                applyButtonInnerWidthFirst(innerWidth*1.1),
+                applyButtonInnerWidthFirst(innerWidth*1.2),
                 {
                   //THIS CONTROLS SPLIT COLOR
                   backgroundColor:
@@ -151,7 +151,7 @@ class FloatingItem extends React.PureComponent {
               style={[
 
                 globalStyles.buttonInner,
-                applyButtonInnerWidthSecond(innerWidth*1.1),
+                applyButtonInnerWidthSecond(innerWidth*1.2),
                 { backgroundColor },
               ]}
             >

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-
+import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { Colors } from '../constants';
 
 const globalStyles = StyleSheet.create({
@@ -45,7 +45,7 @@ const globalStyles = StyleSheet.create({
     // borderColor: Colors.primaryColor,
     backgroundColor: '#fff',
     borderWidth: 0,
-    marginTop: 14,
+    marginTop: moderateScale(20), //CHANGE THIS FOR BUTTON SPACING
     elevation: 5,
     shadowOffset: { width: 0, height: 0.5 * 20 },
     shadowOpacity: 0.2,
@@ -61,8 +61,6 @@ const globalStyles = StyleSheet.create({
   },
 
   buttonInner: {
-    // width: Design.innerWidth,
-    // height: Design.innerWidth,
     // borderRadius: Design.innerWidth * 0.5,
     padding: 9,
     flexDirection: 'column',

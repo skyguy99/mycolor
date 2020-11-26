@@ -109,7 +109,7 @@ export default function App() {
   const colorMenuItems = [
     { label: '', header: 'orange', color: '#fca500', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: 'The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: require('./assets/orangechar.png')},
 
-    { label: '', header: 'blue', color: '#0081d1', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: 'The Director', bodyBlurb: 'You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all.', pullQuote: 'Blues tend to be rule-following, dependable, long-enduring, and tenacious.', bodyBlurb2: 'You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', image: require('./assets/bluechar.png')},
+    { label: '', header: 'blue', color: '#0081d1', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: 'The Director', bodyBlurb: 'You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all.', pullQuote: 'Blues tend to be rule-following, dependable, long-enduring, and tenacious.', bodyBlurb2: 'You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', image: require('./assets/splash2.png')},
 
     { label: '', header: 'green', color: '#6fa229', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.75, openness: 0.7, agreeableness: 0.95, integrity: 0.4, stability: 0.95, conscientiousness: 0.5, title: 'The Peacemaker', bodyBlurb: 'As a Green, you are known for your chill vibes, and your body is rarely consumed with anxiety. Chores, work, and even exercise is easier when you are well rested and relaxed. Your life is centered around achieving maximum comfort, whether it’s investing in luxuries like massage chairs and water beds or meditating and productively removing stress from your body.', pullQuote: 'You prefer when issues resolve themselves or require minimal input and stress on your part.', bodyBlurb2: 'Accommodation is where you thrive—allowing others to achieve their peace without interrupting yours. Your chillness and cool, calm, collected way of composing yourself is attractive to a lot of people, but also means that you don’t take some things seriously that deserve uninterrupted attention.', image: require('./assets/greenchar.png')},
 
@@ -827,6 +827,7 @@ const styles = ScaledSheet.create({
       quizContent: {
         justifyContent: 'center',
         overflow: 'visible',
+        marginTop: '30@ms'
       },
       dropDown: {
         position: 'absolute',
@@ -1308,7 +1309,7 @@ InlineImage.propTypes = Image.propTypes;
                                       <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                                 <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
                                                     <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                                      <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -4}} source={require('./assets/arrowLeft.png')} />
+                                                      <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: isTablet() ? -hp('1.3%') : -hp('0.5%')}} source={require('./assets/arrowLeft.png')} />
                                                       <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>{showResult ? 'Take Again' : 'Back'}</Text>
                                                     </View>
                                                 </TouchableOpacity>
@@ -1384,7 +1385,7 @@ InlineImage.propTypes = Image.propTypes;
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
 
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
-
+                                 <Animated.Image style = {{width: moderateScale(360), height: moderateScale(360), marginTop: verticalScale(40)}} source={require('./assets/colorviz.png')} />
                               </Animated.View>
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
