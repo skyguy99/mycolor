@@ -260,7 +260,7 @@ const KeyIsAColor = (key) => {
   const toggleHeader = () => {
     if (headerMenu._value > moderateScale(120)) {
       Animated.spring(headerMenu, {
-        toValue: moderateScale(60),
+        toValue: moderateScale(70),
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -276,7 +276,7 @@ const KeyIsAColor = (key) => {
       setHeaderMenuOptionsVisible(true);
       setoptionsVisible(true);
       Animated.spring(headerMenu, {
-        toValue: KeyIsAColor(currentKey.toLowerCase()) ? (isTablet() ?  moderateScale(220) : moderateScale(240)) : (isTablet() ? moderateScale(190) : moderateScale(200)),
+        toValue: KeyIsAColor(currentKey.toLowerCase()) ? (isTablet() ?  moderateScale(220) : moderateScale(243)) : (isTablet() ? moderateScale(190) : moderateScale(203)),
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -289,6 +289,22 @@ const KeyIsAColor = (key) => {
       }).start();
     }
   };
+
+  const closeHeader = () => {
+    Animated.spring(headerMenu, {
+      toValue: moderateScale(70),
+      bounciness: 0.5,
+      useNativeDriver: false,
+      speed: 0.2
+    }).start(toggleHeaderMenu(false));
+    Animated.timing(spinValue, {
+      toValue: 0,
+      duration: 100,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();
+  }
+
 
 //SELECT DROPDOWN
   const handleValueSelect = (value) => {
@@ -1173,7 +1189,7 @@ InlineImage.propTypes = Image.propTypes;
       </View>
     </Animated.View>
     </View>
-    <View pointerEvents='none' style={styles.arrow}>
+    <TouchableOpacity onPress={toggleHeader} pointerEvents='none' style={styles.arrow}>
     <Animated.Image
       style={{
         width: wp("8%"),
@@ -1182,7 +1198,7 @@ InlineImage.propTypes = Image.propTypes;
       }}
       source={require("./assets/arrow.png")}
     />
-    </View>
+    </TouchableOpacity>
 
       <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash.png')} />
       <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 9, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
