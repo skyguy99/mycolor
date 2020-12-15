@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
 import Constants from 'expo-constants';
+import MaskedView from '@react-native-masked-view/masked-view';
 import * as Linking from 'expo-linking';
 import FloatingMenu from './FloatingMenu/components/FloatingMenu';
 import * as Progress from 'expo-progress';
@@ -934,6 +935,31 @@ function getColorComboTextFormatted(colorItem)
   {
     return ([
       <View key = {0} pointerEvents='none' style = {{display: 'flex', backgroundColor: getResultColorItem(colorItem.header2)[0].color, position: 'absolute', height: hp('100%'), width: wp('101%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden', transform: [{ translateX: wp('0%')}]}} >
+      <MaskedView
+        style={{ flex: 1, flexDirection: 'column', width: wp('100%'), alignSelf: 'center' }}
+        maskElement={
+          <View
+            style={{
+              // Transparent background because mask is based off alpha channel.
+              backgroundColor: 'transparent',
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 5000,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 60,
+                color: 'black',
+                fontWeight: 'bold',
+              }}
+            >
+              Basic Mask
+            </Text>
+          </View>
+        }
+      >
         <Video
           source={{ uri: colorItem.image }}
           rate={1.0}
@@ -943,6 +969,7 @@ function getColorComboTextFormatted(colorItem)
           isLooping
           style={styles.mainResultImage}
         />
+        </MaskedView>
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
