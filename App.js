@@ -910,8 +910,8 @@ const styles = ScaledSheet.create({
         position: 'absolute',
         width: wp('39%'),
         height: wp('39%'),
-        marginTop: moderateScale(301),
-        marginLeft: moderateScale(152),
+        marginTop: isTablet() ? moderateScale(209) : moderateScale(306),
+        marginLeft: isTablet() ? moderateScale(267) : moderateScale(157),
         zIndex: -2
       },
       colorChar3:
@@ -1442,7 +1442,7 @@ InlineImage.propTypes = Image.propTypes;
                                     resizeMode="contain"
                                     shouldPlay
                                     isLooping
-                                    style={{ width: wp('39%'), height: wp('39%'), marginTop: -hp('0%')}}
+                                    style={{ width: moderateScale(120), height: moderateScale(120)}}
                                   />
                               </View>
                                   <Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
