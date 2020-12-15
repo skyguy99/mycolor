@@ -803,7 +803,7 @@ const styles = ScaledSheet.create({
         width: wp('100%'),
         height: '280@ms0.6',
         position: 'absolute',
-        marginTop: isOldPhone() ? '430@mvs' : '490@mvs',
+        marginTop: isOldPhone() ? '430@mvs' : isTablet() ? '540@mvs' : '490@mvs',
         alignSelf: 'center'
 
       },
@@ -908,8 +908,6 @@ const styles = ScaledSheet.create({
       colorChar2:
       {
         position: 'absolute',
-        width: wp('39%'),
-        height: wp('39%'),
         marginTop: isTablet() ? moderateScale(209) : moderateScale(306),
         marginLeft: isTablet() ? moderateScale(267) : moderateScale(157),
         zIndex: -2
@@ -917,16 +915,16 @@ const styles = ScaledSheet.create({
       colorChar3:
       {
         position: 'absolute',
-        marginTop: moderateScale(585),
+        marginTop: isTablet() ? moderateScale(456) : moderateScale(600),
         zIndex: -2,
-        marginLeft: moderateScale(175)
+        marginLeft: isTablet() ? moderateScale(213) : moderateScale(180)
       },
       colorChar4:
       {
         position: 'absolute',
-        marginTop: moderateScale(50),
+        marginTop: isTablet() ? moderateScale(-15) : moderateScale(40),
         zIndex: -2,
-        marginLeft: moderateScale(150)
+        marginLeft: isTablet() ? moderateScale(215) : moderateScale(125)
       },
 });
 
@@ -1468,7 +1466,7 @@ InlineImage.propTypes = Image.propTypes;
                                           resizeMode="contain"
                                           shouldPlay
                                           isLooping
-                                          style={{ width: wp('36%'), height: wp('36%')}}
+                                          style={{ width: moderateScale(120), height: moderateScale(120)}}
                                         />
                                     </View>
                                     <View style={styles.colorChar4} >
@@ -1479,7 +1477,7 @@ InlineImage.propTypes = Image.propTypes;
                                           resizeMode="contain"
                                           shouldPlay
                                           isLooping
-                                          style={{ width: wp('50%'), height: wp('50%')}}
+                                          style={{ width: moderateScale(230), height: moderateScale(230)}}
                                         />
                                     </View>
 
