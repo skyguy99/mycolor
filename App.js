@@ -909,9 +909,22 @@ const styles = ScaledSheet.create({
         position: 'absolute',
         width: wp('39%'),
         height: wp('39%'),
-        marginTop: currentKey == 'myCOLOR' ? hp('30%') : hp('29%'),
-        marginLeft: wp('-4%'),
-        zIndex: 5
+        alignSelf: 'center',
+        zIndex: -2
+      },
+      colorChar3:
+      {
+        position: 'absolute',
+        alignSelf:'center',
+        marginTop: hp('70%'),
+        zIndex: -2
+      },
+      colorChar4:
+      {
+        position: 'absolute',
+        alignSelf:'center',
+        marginTop: hp('0%'),
+        zIndex: -2
       },
 });
 
@@ -1420,13 +1433,24 @@ InlineImage.propTypes = Image.propTypes;
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
                               <View style={styles.colorChar1} >
                                   <Video
-                                    source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/colorviz.mp4' }}
+                                    source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/yellow-char.mp4' }}
                                     rate={1.0}
                                     isMuted={true}
-                                    resizeMode="cover"
+                                    resizeMode="contain"
                                     shouldPlay
                                     isLooping
-                                    style={{ width: moderateScale(350), height: moderateScale(350),backgroundColor: 'blue' }}
+                                    style={{ width: wp('50%'), height: wp('50%'), marginTop: -hp('20%')}}
+                                  />
+                              </View>
+                              <View style={styles.colorChar2} >
+                                  <Video
+                                    source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/blue-char.mp4' }}
+                                    rate={1.0}
+                                    isMuted={true}
+                                    resizeMode="contain"
+                                    shouldPlay
+                                    isLooping
+                                    style={{ width: wp('55%'), height: wp('55%'), marginTop: -hp('0%')}}
                                   />
                               </View>
                                   <Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
@@ -1439,9 +1463,34 @@ InlineImage.propTypes = Image.propTypes;
 
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
+
                                 <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
                                     “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
                                     </Text>
+
+                                    <View style={styles.colorChar3} >
+                                        <Video
+                                          source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/yellow-char.mp4' }}
+                                          rate={1.0}
+                                          isMuted={true}
+                                          resizeMode="contain"
+                                          shouldPlay
+                                          isLooping
+                                          style={{ width: wp('50%'), height: wp('50%')}}
+                                        />
+                                    </View>
+                                    <View style={styles.colorChar4} >
+                                        <Video
+                                          source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/red-char.mp4' }}
+                                          rate={1.0}
+                                          isMuted={true}
+                                          resizeMode="contain"
+                                          shouldPlay
+                                          isLooping
+                                          style={{ width: wp('50%'), height: wp('50%')}}
+                                        />
+                                    </View>
+
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
