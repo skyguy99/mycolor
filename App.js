@@ -901,31 +901,32 @@ const styles = ScaledSheet.create({
       colorChar1:
       {
         position: 'absolute',
-        alignSelf:'center',
-        marginTop: hp('0%'),
-        zIndex: -2
+        marginTop: moderateScale(40),
+        zIndex: -2,
+        marginLeft: moderateScale(-80)
       },
       colorChar2:
       {
         position: 'absolute',
         width: wp('39%'),
         height: wp('39%'),
-        alignSelf: 'center',
+        marginTop: moderateScale(301),
+        marginLeft: moderateScale(152),
         zIndex: -2
       },
       colorChar3:
       {
         position: 'absolute',
-        alignSelf:'center',
-        marginTop: hp('70%'),
-        zIndex: -2
+        marginTop: moderateScale(585),
+        zIndex: -2,
+        marginLeft: moderateScale(175)
       },
       colorChar4:
       {
         position: 'absolute',
-        alignSelf:'center',
-        marginTop: hp('0%'),
-        zIndex: -2
+        marginTop: moderateScale(50),
+        zIndex: -2,
+        marginLeft: moderateScale(150)
       },
 });
 
@@ -935,31 +936,6 @@ function getColorComboTextFormatted(colorItem)
   {
     return ([
       <View key = {0} pointerEvents='none' style = {{display: 'flex', backgroundColor: getResultColorItem(colorItem.header2)[0].color, position: 'absolute', height: hp('100%'), width: wp('101%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden', transform: [{ translateX: wp('0%')}]}} >
-      <MaskedView
-        style={{ flex: 1, flexDirection: 'column', width: wp('100%'), alignSelf: 'center' }}
-        maskElement={
-          <View
-            style={{
-              // Transparent background because mask is based off alpha channel.
-              backgroundColor: 'transparent',
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 5000,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 60,
-                color: 'black',
-                fontWeight: 'bold',
-              }}
-            >
-              Basic Mask
-            </Text>
-          </View>
-        }
-      >
         <Video
           source={{ uri: colorItem.image }}
           rate={1.0}
@@ -969,7 +945,6 @@ function getColorComboTextFormatted(colorItem)
           isLooping
           style={styles.mainResultImage}
         />
-        </MaskedView>
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
@@ -1447,7 +1422,7 @@ InlineImage.propTypes = Image.propTypes;
 
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
                                 <Video
-                                  source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/colorviz.mp4' }}
+                                  source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/colorviz3.mp4' }}
                                   rate={1.0}
                                   isMuted={true}
                                   resizeMode="cover"
@@ -1458,17 +1433,7 @@ InlineImage.propTypes = Image.propTypes;
                               </Animated.View>
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
-                              <View style={styles.colorChar1} >
-                                  <Video
-                                    source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/yellow-char.mp4' }}
-                                    rate={1.0}
-                                    isMuted={true}
-                                    resizeMode="contain"
-                                    shouldPlay
-                                    isLooping
-                                    style={{ width: wp('50%'), height: wp('50%'), marginTop: -hp('20%')}}
-                                  />
-                              </View>
+
                               <View style={styles.colorChar2} >
                                   <Video
                                     source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/blue-char.mp4' }}
@@ -1477,7 +1442,7 @@ InlineImage.propTypes = Image.propTypes;
                                     resizeMode="contain"
                                     shouldPlay
                                     isLooping
-                                    style={{ width: wp('55%'), height: wp('55%'), marginTop: -hp('0%')}}
+                                    style={{ width: wp('39%'), height: wp('39%'), marginTop: -hp('0%')}}
                                   />
                               </View>
                                   <Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> What's the color of your personality? What's your vibe?{'\n'}</Text>
@@ -1503,7 +1468,7 @@ InlineImage.propTypes = Image.propTypes;
                                           resizeMode="contain"
                                           shouldPlay
                                           isLooping
-                                          style={{ width: wp('50%'), height: wp('50%')}}
+                                          style={{ width: wp('36%'), height: wp('36%')}}
                                         />
                                     </View>
                                     <View style={styles.colorChar4} >
