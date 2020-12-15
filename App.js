@@ -799,7 +799,7 @@ const styles = ScaledSheet.create({
         marginBottom: hp('7%')
       },
       mainResultImage: {
-        width: '280@ms0.6',
+        width: wp('100%'),
         height: '280@ms0.6',
         position: 'absolute',
         marginTop: isOldPhone() ? '430@mvs' : '490@mvs',
