@@ -75,6 +75,7 @@ export default function App() {
   const [secondColor, setSecondColor] = React.useState('');
 
   const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
+  const [splashScale, setSplashScale] = React.useState(new Animated.Value(0));
   const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
   const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('200%')));
   const [main3dOffsetY, setmain3dOffsetY] = React.useState(new Animated.Value(hp('11%')));
@@ -553,11 +554,18 @@ function splitBlurbAtSentences(str)
     const interval = setInterval(() => {
 
       Animated.sequence([
+          Animated.spring(splashScale, {
+            toValue: 1,
+            bounciness: 4,
+            useNativeDriver: false,
+            speed: 2
+          }),
+          Animated.delay(4400),
           Animated.spring(splashOffsetY, {
     				toValue: hp('100%'),
     				bounciness: 1,
     				useNativeDriver: false,
-            speed: 1.4
+            speed: 5
     			}),
           Animated.delay(1000), //was 3500
           Animated.parallel([
@@ -583,7 +591,7 @@ function splitBlurbAtSentences(str)
       ]).start();
 
 
-  }, 2000); //WAS 4200
+  }, 0); //WAS 4400
     return () => clearInterval(interval);
   }, []);
 
@@ -755,6 +763,13 @@ const styles = ScaledSheet.create({
         height: hp('100%'),
         width: wp('100%'),
         zIndex: 10,
+      },
+  splashTxt: {
+        ...StyleSheet.absoluteFillObject,
+        resizeMode: "cover",
+        height: hp('100%'),
+        width: wp('100%'),
+        zIndex: 11,
       },
   scrollView: {
       paddingLeft: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
@@ -1232,21 +1247,8 @@ InlineImage.propTypes = Image.propTypes;
     />
     </TouchableOpacity>
 
-      <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splash.png')} />
-      <Animated.View pointerEvents={"none"} style = {[styles.splash, {zIndex: 9, transform: [{translateY: splashOffsetY }], backgroundColor: backgroundColor.interpolate({
-          inputRange: [0, 30, 60, 90, 120, 150, 180],
-          outputRange: [
-            '#d12b51',
-            '#0081d1',
-            '#6fa229',
-            '#939598',
-            '#fca500',
-            '#b15de6',
-            '#d12b51'
-          ],
-        }),}]}>
-      </Animated.View>
-
+      <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splashnew.png')} />
+      <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { transform: [{scaleY: splashScale }, {scaleX: splashScale }, {translateY: splashOffsetY }]} ]} source={require('./assets/splash.png')} />
       <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
 
