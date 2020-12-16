@@ -1169,6 +1169,10 @@ InlineImage.propTypes = Image.propTypes;
 //VIEW ELEMENTS ------------------------------------------------------
   return (
     <View style={[styles.container]}>
+
+    <Animated.Image pointerEvents={"none"} style={[styles.splash, { opacity: splashOpacity }]} source={require('./assets/splashnew.png')} />
+    <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
+
       <StatusBar barStyle="dark-content" />
     <View style={styles.dropDown}>
     <Animated.View
@@ -1256,8 +1260,6 @@ InlineImage.propTypes = Image.propTypes;
     />
     </TouchableOpacity>
 
-      <Animated.Image pointerEvents={"none"} style={[styles.splash, { opacity: splashOpacity }]} source={require('./assets/splashnew.png')} />
-      <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
       <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
 
