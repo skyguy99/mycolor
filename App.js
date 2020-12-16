@@ -74,7 +74,7 @@ export default function App() {
   const [currentColor, setCurrentColor] = React.useState('#fca500');
   const [secondColor, setSecondColor] = React.useState('');
 
-  const [splashOffsetY, setSplashOffsetY] = React.useState(new Animated.Value(0));
+  const [splashOpacity, setSplashOpacity] = React.useState(new Animated.Value(1));
   const [splashScale, setSplashScale] = React.useState(new Animated.Value(0));
   const [creditsOffsetX, setCreditsOffsetX] = React.useState(new Animated.Value(wp('100%')));
   const [containerOffsetY, setContainerOffsetY] = React.useState(new Animated.Value(hp('200%')));
@@ -551,24 +551,34 @@ function splitBlurbAtSentences(str)
 
 //ANIMATIONS IN
   useEffect(() => {
+
+    Animated.sequence([
+    	Animated.delay(1000),
+      Animated.spring(splashScale, {
+        toValue: 1,
+        bounciness: 4,
+        useNativeDriver: false,
+        speed: 2
+      })
+    ]).start()
+
     const interval = setInterval(() => {
 
       Animated.sequence([
-          Animated.spring(splashScale, {
-            toValue: 1,
-            bounciness: 4,
-            useNativeDriver: false,
-            speed: 2
-          }),
-          Animated.delay(4400),
-          Animated.spring(splashOffsetY, {
-    				toValue: hp('100%'),
-    				bounciness: 1,
-    				useNativeDriver: false,
-            speed: 5
-    			}),
-          Animated.delay(1000), //was 3500
+
           Animated.parallel([
+            Animated.spring(splashScale, {
+              toValue: 0,
+              bounciness: 4,
+              useNativeDriver: false,
+              speed: 2
+            }),
+            Animated.spring(splashOpacity, {
+              toValue: 0,
+              bounciness: 2,
+              useNativeDriver: false,
+              speed: 3
+            }),
             Animated.spring(main3dOffsetY, {
               toValue: hp('-2%'),
               bounciness: 5,
@@ -590,8 +600,7 @@ function splitBlurbAtSentences(str)
         ]),
       ]).start();
 
-
-  }, 0); //WAS 4400
+  }, 4400); //WAS 4400
     return () => clearInterval(interval);
   }, []);
 
@@ -1036,10 +1045,10 @@ function getResultColorFormatted(color)
   }
 }
 
+//Console calls
+
 console.disableYellowBox = true;
 console.warn = () => {};
-
-//OLD COLORWHEEL:     <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
 
 function noColorYet()
 {
@@ -1247,8 +1256,8 @@ InlineImage.propTypes = Image.propTypes;
     />
     </TouchableOpacity>
 
-      <Animated.Image pointerEvents={"none"} style={[styles.splash, { transform: [{translateY: splashOffsetY }]} ]} source={require('./assets/splashnew.png')} />
-      <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { transform: [{scaleY: splashScale }, {scaleX: splashScale }, {translateY: splashOffsetY }]} ]} source={require('./assets/splash.png')} />
+      <Animated.Image pointerEvents={"none"} style={[styles.splash, { opacity: splashOpacity }]} source={require('./assets/splashnew.png')} />
+      <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
       <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
 
