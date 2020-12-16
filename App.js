@@ -106,7 +106,6 @@ export default function App() {
   const [lottieProgress, setLottieProgress] = React.useState(new Animated.Value(0.5));
 
   const SliderWidth = Dimensions.get('screen').width;
-  const colorWheelArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   const colorMenuItems = [
     { label: '', header: 'orange', color: '#f3ac07', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: 'The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/-yellow.mp4'},
@@ -236,6 +235,20 @@ function storeUserInfo(username, industry, role, color) {
 
 const KeyIsAColor = (key) => {
   return (colorMenuItems.filter((item) => item.header.toLowerCase() === key.toLowerCase()).length > 0) || key == 'combo';
+}
+
+function splitBlurbAtSentences(str)
+{
+  var arr = str.split('.');
+  var splitDex = Math.floor(arr.length/2);
+
+  //First half: arr.slice(0, splitDex-1).join('.')+'.'
+
+  //Second half: arr.slice(splitDex+1, arr.length).join('.')
+
+  // Pull quote in middle: arr[splitDex]
+
+  return {firstHalf: arr.slice(0, splitDex-1).join('.')+'.', pullQuote: arr[splitDex].substring(1)+'.', secondHalf: arr.slice(splitDex+1, arr.length).join('.').substring(1)};
 }
 
   function elevationShadowStyle(elevation) {
@@ -947,9 +960,9 @@ function getColorComboTextFormatted(colorItem)
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%'), marginTop: moderateScale(4)}]}> {getResultColorItem(colorItem.header1)[0].title} and {getResultColorItem(colorItem.header2)[0].title}</Text>
-          <Text key = {25} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(0, colorItem.bodyBlurb.length/2)} {'\n'}</Text>
-          <Text key = {24} style = {styles.pullQuote}>{colorItem.pullQuote}{'\n'}</Text>
-            <Text key = {20} style = {styles.bodyText}>{colorItem.bodyBlurb.substring(colorItem.bodyBlurb.length/2, colorItem.bodyBlurb.length)} {'\n'}</Text>
+          <Text key = {25} style = {styles.bodyText}>{splitBlurbAtSentences(colorItem.bodyBlurb).firstHalf} {'\n'}</Text>
+          <Text key = {25} style = {styles.pullQuote}>{splitBlurbAtSentences(colorItem.bodyBlurb).pullQuote} {'\n'}</Text>
+          <Text key = {25} style = {styles.bodyText}>{splitBlurbAtSentences(colorItem.bodyBlurb).secondHalf} {'\n'}</Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
     ]);
@@ -1009,6 +1022,7 @@ function getResultColorFormatted(color)
 }
 
 console.disableYellowBox = true;
+console.warn = () => {};
 
 //OLD COLORWHEEL:     <Animated.Image style = {{width: wp('120%'), height: wp('120%')}} source={require('./assets/colorwheel.png')} />
 
@@ -1161,17 +1175,17 @@ InlineImage.propTypes = Image.propTypes;
               style={[
                 styles.headerText,
                 styles.shadow1,
-                { marginTop: 15 },
+                { marginTop: 15},
               ]}
             >
               {(currentKey != 'Combo') ? currentKey : Capitalize(currentColorCombo.header1)+'/'+Capitalize(currentColorCombo.header2)}
             </Text>
           )}
           {!optionsVisible && !optionsHeaderVisible && (
-            <View style={{ width: moderateScale(120) }} />
+            <View style={{ width: moderateScale(160) }} />
           )}
           {optionsVisible && (
-            <View style={{ width: moderateScale(120) }}>
+            <View style={{ width: moderateScale(160) }}>
               <Text
                 style={[
                   styles.headerText,
