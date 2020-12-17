@@ -18,7 +18,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.ayzenberg.mycolor",
+      "bundleIdentifier": "biz.TroubleMaker.TicTacToe",
       "buildNumber": "1.0.0",
       "supportsTablet": true
     },
