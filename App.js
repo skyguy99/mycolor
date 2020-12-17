@@ -55,6 +55,8 @@ export default function App() {
   const [didSetUsername, setDidSetUsername] = React.useState(false);
   const [userColor, setUserColor] = useState('');
 
+  const [ready, setReady] = React.useState(false);
+
   //quiz vars
   const [progress, setProgress] = useState(new Animated.Value(0));
   const [resultProgress, setResultProgress] = useState(0);
@@ -201,6 +203,10 @@ export default function App() {
 
 });
 
+useEffect(()=>{
+     if (fontsLoaded) setTimeout(()=>{setReady(true);},2000);
+   },[fontsLoaded]);
+
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBkzGLgvzrvTIa6a6zOx-IIIZJetUwNllE",
@@ -269,7 +275,7 @@ function splitBlurbAtSentences(str)
         setHeaderMenuOptionsVisible(value);
         setoptionsHeaderVisible(true);
         setoptionsVisible(value);
-      }, 500);
+      }, 400); //was 500
     }
   };
 
@@ -541,12 +547,6 @@ function splitBlurbAtSentences(str)
       Linking.openURL(link);
     }
   }
-
-  React.useEffect(() => {
-    if (backgroundColor._value === 0) {
-      startBackgroundColorAnimation();
-    }
-  }, [backgroundColor, startBackgroundColorAnimation]);
 
 
 //ANIMATIONS IN

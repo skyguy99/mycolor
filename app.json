@@ -4,11 +4,12 @@
     "slug": "mycolorapp_v2",
     "version": "1.0.0",
     "orientation": "portrait",
+    "primaryColor" : "#ffffff",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splashnew.png",
       "resizeMode": "cover",
-      "backgroundColor": "#D03350"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,7 +18,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.ayzenberg.mycolor",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.ayzenberg.mycolor",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
