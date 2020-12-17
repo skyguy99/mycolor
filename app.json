@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mycolorapp_v2",
-    "slug": "mycolorapp_v2",
+    "name": "myCOLOR",
+    "slug": "myCOLOR",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor" : "#ffffff",
@@ -18,7 +18,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "biz.TroubleMaker.TicTacToe",
+      "bundleIdentifier": "com.skyyguy1999.MyColorApp",
       "buildNumber": "1.0.0",
       "supportsTablet": true
     },
