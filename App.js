@@ -13,13 +13,14 @@ import FloatingMenu from './FloatingMenu/components/FloatingMenu';
 import * as Progress from 'expo-progress';
 import LottieView from "lottie-react-native";
 import Svg, { G, Path } from "react-native-svg";
+import { LinearGradient } from 'expo-linear-gradient';
 import { Kohana } from 'react-native-textinput-effects';
 import { Video } from 'expo-av';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 import * as Device from 'expo-device';
 import { Button, Menu, Divider, Provider, RadioButton } from 'react-native-paper';
-import { StyleSheet, Text, View, Image, ImageBackground, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, BackgroundContainer, Share, Animated, Easing, StatusBar, FlatList, SafeAreaView, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -971,15 +972,40 @@ function getColorComboTextFormatted(colorItem)
   {
     return ([
       <View key = {0} pointerEvents='none' style = {{display: 'flex', backgroundColor: getResultColorItem(colorItem.header2)[0].color, position: 'absolute', height: hp('100%'), width: wp('101%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden', transform: [{ translateX: wp('0%')}]}} >
-        <Video
-          source={{ uri: colorItem.image }}
-          rate={1.0}
-          isMuted={true}
-          resizeMode="cover"
-          shouldPlay
-          isLooping
-          style={styles.mainResultImage}
-        />
+
+      <MaskedView
+          style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
+          maskElement={
+            <View
+              style={{
+                // Transparent background because mask is based off alpha channel.
+                backgroundColor: 'transparent',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+            <LinearGradient
+                // Background Linear Gradient
+                colors={['transparent', 'black']}
+                start={[0.5, 0.25]}
+                end={[0.5, .4]}
+                style={{width: wp('100%'), height: hp('57%')}}
+              />
+            </View>
+          }
+        >
+          {/* Shows behind the mask, you can put anything here, such as an image */}
+          <Video
+            source={{ uri: colorItem.image }}
+            rate={1.0}
+            isMuted={true}
+            resizeMode="contain"
+            shouldPlay
+            isLooping
+            style={{ width: wp('100%'), height: hp('57%')}}
+          />
+        </MaskedView>
+
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {Capitalize(colorItem.header1)} and {Capitalize(colorItem.header2)}</Text>
@@ -1005,15 +1031,38 @@ function getResultColorFormatted(color)
     return ([
 
       <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
-            <Video
-              source={{ uri: getResultColorItem(color)[0].image }}
-              rate={1.0}
-              isMuted={true}
-              resizeMode="cover"
-              shouldPlay
-              isLooping
-              style={styles.mainResultImage}
-            />
+          <MaskedView
+              style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
+              maskElement={
+                <View
+                  style={{
+                    // Transparent background because mask is based off alpha channel.
+                    backgroundColor: 'transparent',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                <LinearGradient
+                    // Background Linear Gradient
+                    colors={['transparent', 'black']}
+                    start={[0.5, 0.25]}
+                    end={[0.5, .4]}
+                    style={{width: wp('100%'), height: hp('57%')}}
+                  />
+                </View>
+              }
+            >
+              {/* Shows behind the mask, you can put anything here, such as an image */}
+              <Video
+                source={{ uri: getResultColorItem(color)[0].image }}
+                rate={1.0}
+                isMuted={true}
+                resizeMode="contain"
+                shouldPlay
+                isLooping
+                style={{ width: wp('100%'), height: hp('57%')}}
+              />
+            </MaskedView>
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
 
@@ -1072,15 +1121,40 @@ function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
     return ([
 
       <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
-          <Video
-            source={{ uri: getResultColorItem(color)[0].image }}
-            rate={1.0}
-            isMuted={true}
-            resizeMode="cover"
-            shouldPlay
-            isLooping
-            style={styles.mainResultImage}
-          />
+
+        <MaskedView
+            style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
+            maskElement={
+              <View
+                style={{
+                  // Transparent background because mask is based off alpha channel.
+                  backgroundColor: 'transparent',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+              <LinearGradient
+                  // Background Linear Gradient
+                  colors={['transparent', 'black']}
+                  start={[0.5, 0.25]}
+                  end={[0.5, .4]}
+                  style={{width: wp('100%'), height: hp('57%')}}
+                />
+              </View>
+            }
+          >
+            {/* Shows behind the mask, you can put anything here, such as an image */}
+            <Video
+              source={{ uri: getResultColorItem(color)[0].image }}
+              rate={1.0}
+              isMuted={true}
+              resizeMode="contain"
+              shouldPlay
+              isLooping
+              style={{ width: wp('100%'), height: hp('57%')}}
+            />
+          </MaskedView>
+
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('25%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> {getResultColorItem(color)[0].title}</Text>
