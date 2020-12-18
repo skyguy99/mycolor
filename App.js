@@ -283,7 +283,7 @@ function splitBlurbAtSentences(str)
   const toggleHeader = () => {
     if (headerMenu._value > moderateScale(120)) {
       Animated.spring(headerMenu, {
-        toValue: moderateScale(70),
+        toValue: moderateScale(75),
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -315,7 +315,7 @@ function splitBlurbAtSentences(str)
 
   const closeHeader = () => {
     Animated.spring(headerMenu, {
-      toValue: moderateScale(70),
+      toValue: moderateScale(75),
       bounciness: 0.5,
       useNativeDriver: false,
       speed: 0.2
@@ -1272,16 +1272,19 @@ InlineImage.propTypes = Image.propTypes;
           onPress={toggleHeader}
           style={{ flexDirection: "row", alignItems: "flex-start" }}
         >
-          {optionsHeaderVisible && (
+        {optionsHeaderVisible && (
+            <View style={{ width: moderateScale(120) }}>
             <Text
+            textBreakStrategy="highQuality"
               style={[
                 styles.headerText,
                 styles.shadow1,
-                { marginTop: 15},
+                { marginTop: 15 },
               ]}
             >
               {(currentKey != 'Combo') ? currentKey : Capitalize(currentColorCombo.header1)+'/'+Capitalize(currentColorCombo.header2)}
             </Text>
+            </View>
           )}
           {!optionsVisible && !optionsHeaderVisible && (
             <View style={{ width: moderateScale(160) }} />
@@ -1289,6 +1292,7 @@ InlineImage.propTypes = Image.propTypes;
           {optionsVisible && (
             <View style={{ width: moderateScale(160) }}>
               <Text
+              textBreakStrategy="highQuality"
                 style={[
                   styles.headerText,
                   styles.shadow1,
