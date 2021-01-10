@@ -227,18 +227,18 @@ if(!firebase.apps.length)
 }
 
 function storeUserInfo(username, industry, role, color) {
-  if (username != null && industry != null && role != null && color != null) { //use for errors later
-    let timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-    let push = firebase.database().ref('users').push();
-    push.set({
-      name: username,
-      industry: industry,
-      role: role,
-      color: color,
-      date: new Date().toUTCString()
-    });
-  }
+  console.log('Trying to store Firebase info');
+
+  let push = firebase.database().ref('users').push();
+  push.set({
+    name: username,
+    industry: industry,
+    role: role,
+    color: color,
+    date: new Date().toUTCString()
+  });
+
 }
 
 const KeyIsAColor = (key) => {
@@ -1248,7 +1248,7 @@ InlineImage.propTypes = Image.propTypes;
     <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
 
       <StatusBar barStyle="dark-content" />
-    <View style={styles.dropDown}>
+    <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex'}]}>
     <Animated.View
       style={
         (styles.topBar,
@@ -1333,6 +1333,7 @@ InlineImage.propTypes = Image.propTypes;
         width: wp("8%"),
         height: wp("8%"),
         transform: [{ rotate: spin }],
+        display: isCreditsOpen ? "none" : "flex",
       }}
       source={require("./assets/arrow.png")}
     />
