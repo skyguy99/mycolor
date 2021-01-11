@@ -72,6 +72,9 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isCreditsOpen, setIsCreditsOpen] = React.useState(false);
   const [isQuizOpen, setIsQuizOpen] = React.useState(false);
+  const [error1Opacity, setError1Opacity] = React.useState(0);
+  const [error2Opacity, setError2Opacity] = React.useState(0);
+  const [error3Opacity, setError3Opacity] = React.useState(0);
 
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
@@ -611,13 +614,13 @@ function showError(errorCode)
 
   if(errorCode == "username")
   {
-
+    setError1Opacity(1);
   } else if(errorCode == "industry")
   {
-
+    setError2Opacity(1);
   } else if(errorCode == "role")
   {
-
+    setError3Opacity(1);
   }
 }
 
@@ -906,6 +909,15 @@ const styles = ScaledSheet.create({
         fontSize: '18@ms',
         marginTop: verticalScale(55),
         padding: wp('14%')
+      },
+      errorPill: {
+        backgroundColor: 'white',
+        borderRadius: moderateScale(30),
+        textAlign: 'center',
+        justifyContent: 'center',
+        padding: moderateScale(14),
+        paddingHorizontal: moderateScale(20),
+
       },
       quizContainer: {
         flex: 1,
@@ -1364,6 +1376,7 @@ InlineImage.propTypes = Image.propTypes;
       </View>
     </Animated.View>
     </View>
+
     <TouchableOpacity onPress={toggleHeader} pointerEvents='none' style={[styles.arrow]}>
     <Animated.Image
       style={{
@@ -1427,7 +1440,7 @@ InlineImage.propTypes = Image.propTypes;
                                   <Kohana
                                     onChangeText={(text) => { setUsername(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%'), fontSize: 40}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40}}
                                     label={'My name'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1439,11 +1452,15 @@ InlineImage.propTypes = Image.propTypes;
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
+                                <View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {marginBottom: hp('7%'), shadowOpacity: 0.1, opacity: error1Opacity}]}>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your name.</Text>
+                                </View>
+
                                 <Text style = {styles.pullQuote}>What's your industry?</Text>
                                   <Kohana
                                     onChangeText={(text) => { setIndustry(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%')}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20}}
                                     label={'My industry'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1455,11 +1472,15 @@ InlineImage.propTypes = Image.propTypes;
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
+                                <View style = {[styles.errorPill, styles.errorPill2, styles.shadow2, {shadowOpacity: 0.1, opacity: error2Opacity, marginBottom: hp('7%')}]}>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your industry.</Text>
+                                </View>
+
                                 <Text style = {styles.pullQuote}>What do you do?</Text>
                                   <Kohana
                                     onChangeText={(text) => { setRole(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginBottom: hp('7%') }}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20 }}
                                     label={'My role'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1471,6 +1492,10 @@ InlineImage.propTypes = Image.propTypes;
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
+                                <View style = {[styles.errorPill, styles.errorPill3, styles.shadow2, {marginBottom: hp('7%'), opacity: error3Opacity, shadowOpacity: 0.1}]}>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your role.</Text>
+                                </View>
+
                             <TouchableOpacity style= {{marginTop: hp('1.5%')}} onPress = {() => handleNextPress()}>
                                 <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                   <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Start Quiz</Text>
@@ -1560,7 +1585,6 @@ InlineImage.propTypes = Image.propTypes;
                               </View>
 
                               <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
-
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
                                 <Video
                                   source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/colorviz3.mp4' }}
