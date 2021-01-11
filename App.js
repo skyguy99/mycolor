@@ -75,6 +75,7 @@ export default function App() {
   const [error1Opacity, setError1Opacity] = React.useState(0);
   const [error2Opacity, setError2Opacity] = React.useState(0);
   const [error3Opacity, setError3Opacity] = React.useState(0);
+  const [errorXPos, setErrorXPos] = React.useState(new Animated.Value(0));
 
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
@@ -608,22 +609,6 @@ function splitBlurbAtSentences(str)
     return () => clearInterval(interval);
   }, []);
 
-
-function showError(errorCode)
-{
-
-  if(errorCode == "username")
-  {
-    setError1Opacity(1);
-  } else if(errorCode == "industry")
-  {
-    setError2Opacity(1);
-  } else if(errorCode == "role")
-  {
-    setError3Opacity(1);
-  }
-}
-
 //Device checks
   const isOldPhone = () => {
 
@@ -716,19 +701,46 @@ function showError(errorCode)
       {
         setDidSetUsername(true);
       } else {
-        if(username == "")
-        {
-            showError("username");
-        }
-        if(industry == "")
-        {
-          showError("industry");
-        }
-        if(role == "")
-        {
-          showError("role");
-        }
+
+        setError1Opacity(username == "" ? 1 : 0);
+        setError2Opacity(industry == "" ? 1 : 0);
+        setError3Opacity(role == "" ? 1 : 0);
+
       }
+
+      //Wiggle!
+        Animated.sequence([
+          Animated.timing(errorXPos, {
+              toValue: wp('2%'),
+              duration: 70,
+              easing: Easing.linear,
+              useNativeDriver: false,
+            }),
+            Animated.timing(errorXPos, {
+              toValue: wp('-2%'),
+              duration: 90,
+              easing: Easing.linear,
+              useNativeDriver: false,
+            }),
+            Animated.timing(errorXPos, {
+                toValue: wp('2%'),
+                duration: 70,
+                easing: Easing.linear,
+                useNativeDriver: false,
+              }),
+              Animated.timing(errorXPos, {
+                toValue: wp('-2%'),
+                duration: 90,
+                easing: Easing.linear,
+                useNativeDriver: false,
+              }),
+            Animated.spring(errorXPos, {
+              toValue: 0,
+              bounciness: 2,
+              useNativeDriver: false,
+              speed: 1
+            }),
+        ]).start();
 
     }
 
@@ -1452,9 +1464,9 @@ InlineImage.propTypes = Image.propTypes;
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
-                                <View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {marginBottom: hp('7%'), shadowOpacity: 0.1, opacity: error1Opacity}]}>
+                                <Animated.View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {marginBottom: hp('7%'), shadowOpacity: 0.1, opacity: error1Opacity, transform: [{translateX: errorXPos}] ,}]}>
                                   <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your name.</Text>
-                                </View>
+                                </Animated.View>
 
                                 <Text style = {styles.pullQuote}>What's your industry?</Text>
                                   <Kohana
@@ -1472,9 +1484,9 @@ InlineImage.propTypes = Image.propTypes;
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
-                                <View style = {[styles.errorPill, styles.errorPill2, styles.shadow2, {shadowOpacity: 0.1, opacity: error2Opacity, marginBottom: hp('7%')}]}>
-                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your industry.</Text>
-                                </View>
+                                <Animated.View style = {[styles.errorPill, styles.errorPill2, styles.shadow2, {shadowOpacity: 0.1, opacity: error2Opacity, transform: [{translateX: errorXPos}], marginBottom: hp('7%')}]}>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter an industry.</Text>
+                                </Animated.View>
 
                                 <Text style = {styles.pullQuote}>What do you do?</Text>
                                   <Kohana
@@ -1492,9 +1504,9 @@ InlineImage.propTypes = Image.propTypes;
                                     iconContainerStyle={{ padding: 20 }}
                                     useNativeDriver
                                   />
-                                <View style = {[styles.errorPill, styles.errorPill3, styles.shadow2, {marginBottom: hp('7%'), opacity: error3Opacity, shadowOpacity: 0.1}]}>
-                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your role.</Text>
-                                </View>
+                                <Animated.View style = {[styles.errorPill, styles.errorPill3, styles.shadow2, {marginBottom: hp('7%'), opacity: error3Opacity, transform: [{translateX: errorXPos}], shadowOpacity: 0.1}]}>
+                                  <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter a role.</Text>
+                                </Animated.View>
 
                             <TouchableOpacity style= {{marginTop: hp('1.5%')}} onPress = {() => handleNextPress()}>
                                 <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
