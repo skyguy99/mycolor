@@ -343,6 +343,7 @@ function splitBlurbAtSentences(str)
     if(value == 'yourCOLOR' || value == 'myCOLOR' || value == 'Teams')
     {
         setCurrentTextKey(value);
+        wiggleAnimation(500); //for yourCOLOR error
     }
 
     if(value == 'Quiz')
@@ -468,6 +469,10 @@ function splitBlurbAtSentences(str)
   };
 
   const toggleQuiz = (open) => {
+
+    setError1Opacity(0);
+    setError2Opacity(0);
+    setError3Opacity(0);
 
     setIsQuizOpen(open);
 
@@ -694,22 +699,10 @@ function splitBlurbAtSentences(str)
       }, 100);
     };
 
-    //From intro form to actual quiz
-    const handleNextPress = () => {
-
-      if(username != "" && role != "" && industry != "")
-      {
-        setDidSetUsername(true);
-      } else {
-
-        setError1Opacity(username == "" ? 1 : 0);
-        setError2Opacity(industry == "" ? 1 : 0);
-        setError3Opacity(role == "" ? 1 : 0);
-
-      }
-
+    function wiggleAnimation(delay) {
       //Wiggle!
         Animated.sequence([
+          Animated.delay(delay),
           Animated.timing(errorXPos, {
               toValue: wp('2%'),
               duration: 70,
@@ -741,7 +734,22 @@ function splitBlurbAtSentences(str)
               speed: 1
             }),
         ]).start();
+    }
 
+    //From intro form to actual quiz
+    const handleNextPress = () => {
+
+      if(username != "" && role != "" && industry != "")
+      {
+        setDidSetUsername(true);
+      } else {
+
+        setError1Opacity(username == "" ? 1 : 0);
+        setError2Opacity(industry == "" ? 1 : 0);
+        setError3Opacity(role == "" ? 1 : 0);
+
+      }
+      wiggleAnimation(0);
     }
 
     const handleRetakePress = () => {
@@ -1165,7 +1173,18 @@ function noColorYet()
   return ([
 
     <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%')}}>
-        <Text key = {50} style={[styles.pullQuote, {textAlign: 'center'}]}>{'Hello. You dont have a color yet!\n'}</Text>
+        <Animated.View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {zIndex: 4, marginBottom: hp('30%'), shadowOpacity: 0.1, opacity: 1, transform: [{translateX: errorXPos}] ,}]}>
+          <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You don't have a color yet!</Text>
+        </Animated.View>
+        <Video
+          source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/-purple.mp4' }}
+          rate={1.0}
+          isMuted={true}
+          resizeMode="contain"
+          shouldPlay
+          isLooping
+          style={{ width: wp('85%'), height: hp('40%'), marginTop: hp('-1%'), alignSelf: 'center', zIndex: -1, position: 'absolute'}}
+        />
     </View>
   ]);
 }
