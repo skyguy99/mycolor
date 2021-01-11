@@ -223,12 +223,10 @@ const firebaseConfig = {
 if(!firebase.apps.length)
 {
   firebase.initializeApp(firebaseConfig);
-  console.log('Initialized Firebase successfully');
+  //console.log('Initialized Firebase successfully');
 }
 
 function storeUserInfo(username, industry, role, color) {
-
-  console.log('Trying to store Firebase info');
 
   let push = firebase.database().ref('users').push();
   push.set({
@@ -238,6 +236,8 @@ function storeUserInfo(username, industry, role, color) {
     color: color,
     date: new Date().toUTCString()
   });
+
+  console.log("Pushed to Firebase!");
 
 }
 
@@ -606,6 +606,21 @@ function splitBlurbAtSentences(str)
   }, []);
 
 
+function showError(errorCode)
+{
+
+  if(errorCode == "username")
+  {
+
+  } else if(errorCode == "industry")
+  {
+
+  } else if(errorCode == "role")
+  {
+
+  }
+}
+
 //Device checks
   const isOldPhone = () => {
 
@@ -691,8 +706,27 @@ function splitBlurbAtSentences(str)
       }, 100);
     };
 
+    //From intro form to actual quiz
     const handleNextPress = () => {
-      setDidSetUsername(true);
+
+      if(username != "" && role != "" && industry != "")
+      {
+        setDidSetUsername(true);
+      } else {
+        if(username == "")
+        {
+            showError("username");
+        }
+        if(industry == "")
+        {
+          showError("industry");
+        }
+        if(role == "")
+        {
+          showError("role");
+        }
+      }
+
     }
 
     const handleRetakePress = () => {
@@ -946,7 +980,7 @@ const styles = ScaledSheet.create({
       colorChar2:
       {
         position: 'absolute',
-        marginTop: isTablet() ? moderateScale(209) : moderateScale(306),
+        marginTop: isTablet() ? moderateScale(200) : moderateScale(295),
         marginLeft: isTablet() ? moderateScale(267) : moderateScale(157),
         zIndex: -2
       },
@@ -1067,7 +1101,10 @@ function getResultColorFormatted(color)
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
 
       <TouchableOpacity style= {{marginTop: hp('25%')}} onPress = {() => handleRetakePress()}>
-      <Text style = {styles.topBold}>Take Again</Text>
+          <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
+            <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -5, marginLeft: -12}} source={require('./assets/arrowLeft.png')} />
+            <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Take Again</Text>
+          </View>
       </TouchableOpacity>
 
           <Text key = {1} style={[styles.pullQuote, {marginTop: hp('2%')}]}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} />{getResultColorItem(color)[0].title}</Text>
