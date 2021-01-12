@@ -416,11 +416,13 @@ function splitBlurbAtSentences(str)
       {
             console.log('COLOR COMBO PRESS');
             setCurrentKey('Combo');
-            console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
-            if(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : currentColorCombo.header2, item.header).length > 0)
+            const primaryColor = KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'yourCOLOR' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))
+            const colorName = colorMenuItems.find(items => items.color === primaryColor).header;
+            console.log('Current: ', colorName, 'Secondary: ', item.header);
+            if(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : colorName, item.header).length > 0)
             {
-              setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : currentColorCombo.header2, item.header)[0]);
-              console.log(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : currentColorCombo.header2, item.header)[0]);
+              setCurrentColorCombo(getColorComboItemArray(colorName, item.header)[0]);
+              console.log("--=-=-==--=d-wdwdw",getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : colorName, item.header)[0]);
               global.lastColor = getResultColorItem(item.header)[0].color;
 
             }
