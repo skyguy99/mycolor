@@ -1173,17 +1173,17 @@ function noColorYet()
   return ([
 
     <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%')}}>
-        <Animated.View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {zIndex: 4, marginBottom: hp('30%'), shadowOpacity: 0.1, opacity: 1, transform: [{translateX: errorXPos}] ,}]}>
+        <Animated.View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {zIndex: 4, marginBottom: hp('29%'), shadowOpacity: 0.1, opacity: 1, transform: [{translateX: errorXPos}] ,}]}>
           <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You don't have a color yet!</Text>
         </Animated.View>
         <Video
-          source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/-purple.mp4' }}
+          source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/-404loop.mp4' }}
           rate={1.0}
           isMuted={true}
           resizeMode="contain"
           shouldPlay
           isLooping
-          style={{ width: wp('85%'), height: hp('40%'), marginTop: hp('-1%'), alignSelf: 'center', zIndex: -1, position: 'absolute'}}
+          style={{ width: wp('67%'), height: hp('40%'), marginTop: hp('1%'), alignSelf: 'center', zIndex: -1, position: 'absolute'}}
         />
     </View>
   ]);
