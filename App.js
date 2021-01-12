@@ -417,10 +417,10 @@ function splitBlurbAtSentences(str)
             console.log('COLOR COMBO PRESS');
             setCurrentKey('Combo');
             console.log('Current: ', currentKey.toLowerCase(), 'Secondary: ', item.header);
-            if(getColorComboItemArray(currentKey.toLowerCase(), item.header).length > 0)
+            if(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : currentColorCombo.header2, item.header).length > 0)
             {
-              setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
-              console.log(getColorComboItemArray(currentKey.toLowerCase(), item.header)[0]);
+              setCurrentColorCombo(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : currentColorCombo.header2, item.header)[0]);
+              console.log(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : currentColorCombo.header2, item.header)[0]);
               global.lastColor = getResultColorItem(item.header)[0].color;
 
             }

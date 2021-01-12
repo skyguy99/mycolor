@@ -19,7 +19,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.skyyguy1999.MyColorApp",
-      "buildNumber": "1.1.0",
+      "buildNumber": "1.2.0",
       "supportsTablet": true
     },
     "android": {
