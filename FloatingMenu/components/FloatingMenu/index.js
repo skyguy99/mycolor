@@ -419,8 +419,8 @@ class FloatingMenu extends React.PureComponent {
             <Animated.Image
               style={{
                 display: primaryColor == "#ffffff" ? "flex" : "none",
-                width: this.buttonSizeAnimated,
-                height: this.buttonSizeAnimated,
+                width: new Animated.Value(Design.buttonWidth * 1.1),
+                height: new Animated.Value(Design.buttonWidth * 1.1),
                 marginTop: 14,
               }}
               source={require("../../../assets/rainbowcircle.png")}
