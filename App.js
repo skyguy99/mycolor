@@ -161,7 +161,7 @@ export default function App() {
   var bodyTexts = {
     'myCOLOR': {body: 'We’ve updated the myCOLOR personality quiz to be more accurate and effective. With the addition of twelve new questions, the quiz results can better determine your personality type and how you can improve your work and social interactions with others. By encouraging your friends and colleagues to take the myCOLOR personality quiz, you’ll be able to leverage your personality’s specific color traits and theirs to strengthen your relationships through better communication and understanding.\n\nUsing our Soulmates.AI technology, our chief scientific advisor, Dr. J. Galen Buckwalter, created a fun quiz that lets you discover the color of your personality, which we call myCOLOR. Learning about your color will give you insights into yourself as well as how you can interact more effectively with others, from family and friends to co-workers and other teammates.\n\nPeople are often surprised to find the color revealed by the quiz is different than the one they assume defines their personality. See if the color you receive reveals new information about your personality by taking the quiz below.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Take the Quiz'},
 
-    'yourCOLOR': {body: '', topBold: !didSetUsername ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `Hello.\n You don't have a color yet!`, buttonLink: '', buttonTitle: !didSetUsername ? 'Take the Quiz' : 'Share'},
+    'Results': {body: '', topBold: !didSetUsername ? `Hi ${username}.\nYour color is ${userColor}. Cheers! \n` : `Hello.\n You don't have a color yet!`, buttonLink: '', buttonTitle: !didSetUsername ? 'Take the Quiz' : 'Share'},
 
     'Quiz': {body: '', topBold: '', buttonLink: '', buttonTitle: ''},
 
@@ -198,7 +198,8 @@ export default function App() {
     AsyncStorage.getItem('userColor')
       .then((item) => {
            if (item) {
-             // dont override otherwise
+             //This is called every time page reloads
+             //console.log('COLOR WAS SAVED: '+item);
              if(userColor == '')
              {
                setUserColor(item);
@@ -344,10 +345,10 @@ function splitBlurbAtSentences(str)
     }
     global.lastColor = "transparent";
 
-    if(value == 'yourCOLOR' || value == 'myCOLOR' || value == 'Teams')
+    if(value == 'Results' || value == 'myCOLOR' || value == 'Teams')
     {
         setCurrentTextKey(value);
-        wiggleAnimation(500); //for yourCOLOR error
+        wiggleAnimation(500); //for Results error
     }
 
     if(value == 'Quiz')
@@ -420,7 +421,7 @@ function splitBlurbAtSentences(str)
       {
             console.log('COLOR COMBO PRESS');
             setCurrentKey('Combo');
-            const primaryColor = KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'yourCOLOR' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))
+            const primaryColor = KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'Results' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))
             const colorName = colorMenuItems.find(items => items.color === primaryColor).header;
             console.log('Current: ', colorName, 'Secondary: ', item.header);
             if(getColorComboItemArray(currentKey.toLowerCase() !== "combo" ? currentKey.toLowerCase() : colorName, item.header).length > 0)
@@ -694,7 +695,7 @@ function splitBlurbAtSentences(str)
           storeUserInfo(username, industry, role, colorResult); //Firebase
       }
 
-      AsyncStorage.setItem('userColor', userColor);
+      AsyncStorage.setItem('userColor', colorResult);
 
       setTimeout(() => {
         if (quizQuestions.length > currentQuestionIndex + 1) {
@@ -845,13 +846,11 @@ const styles = ScaledSheet.create({
         zIndex: 11,
       },
   scrollView: {
-      paddingLeft: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
-      paddingRight: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
-      overflow: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
+      paddingLeft: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      paddingRight: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      overflow: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
     },
     creditsBtn: {
-      // width: wp('20%'),
-      // height: wp('17%'),
       width: '70@ms',
       height: '70@ms',
       flex: 1,
@@ -859,7 +858,7 @@ const styles = ScaledSheet.create({
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
-       marginTop: '-23@ms'
+      marginTop: '-23@ms'
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -956,6 +955,14 @@ const styles = ScaledSheet.create({
         justifyContent: 'center',
         overflow: 'visible',
         marginTop: '30@ms'
+      },
+      topCoverBar: {
+        width: wp('100%'),
+        height: hp('15%'),
+        backgroundColor: 'white',
+        position: 'absolute',
+        zIndex: 1,
+        opacity: 0
       },
       dropDown: {
         position: 'absolute',
@@ -1103,7 +1110,7 @@ function getResultColorFormatted(color)
   {
     return ([
 
-      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
+      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'Results' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
           <MaskedView
               style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
               maskElement={
@@ -1196,7 +1203,7 @@ function noColorYet()
   ]);
 }
 
-function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
+function getColorTextFormatted(color) //SHOWN FOR Results
 {
 
   if (color == 'combo')
@@ -1207,7 +1214,7 @@ function getColorTextFormatted(color) //SHOWN FOR YOURCOLOR
   {
     return ([
 
-      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'yourCOLOR' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
+      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'Results' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
 
         <MaskedView
             style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
@@ -1335,6 +1342,7 @@ InlineImage.propTypes = Image.propTypes;
     <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
 
       <StatusBar barStyle="dark-content" />
+      <View pointerEvents='none' style={styles.topCoverBar}></View>
     <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex'}]}>
     <Animated.View
       style={
@@ -1443,7 +1451,7 @@ InlineImage.propTypes = Image.propTypes;
                   <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
                       <LottieView
                             ref={LottieRef}
-                            style={styles.shadow1}
+                            style={[styles.shadow1]}
                             source={require('./assets/hamburger.json')}
                             loop={false}
                             progress={lottieProgress}
@@ -1456,7 +1464,7 @@ InlineImage.propTypes = Image.propTypes;
                             isOpen={isMenuOpen}
                             position={"top-right"}
                             borderColor={'white'}
-                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'yourCOLOR' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
+                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'Results' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
                             buttonWidth={wp('10%')}
                             borderWidth={0}
                             onMenuToggle={handleMenuToggle}
@@ -1611,7 +1619,7 @@ InlineImage.propTypes = Image.propTypes;
                               style={styles.scrollView}>
 
 
-                              <View style = {{display: (currentKey == 'yourCOLOR') ? 'flex' : 'none'}}>
+                              <View style = {{display: (currentKey == 'Results') ? 'flex' : 'none'}}>
                               {userColor != '' ? getColorTextFormatted(userColor) : noColorYet()}
                               </View>
 
@@ -1700,7 +1708,7 @@ InlineImage.propTypes = Image.propTypes;
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
-                                      if(currentKey == 'myCOLOR' || (!didSetUsername && currentKey == 'yourCOLOR'))
+                                      if(currentKey == 'myCOLOR' || (!didSetUsername && currentKey == 'Results'))
                                       {
                                         toggleQuiz(true);
                                         setCurrentKey('Quiz');
@@ -1715,7 +1723,7 @@ InlineImage.propTypes = Image.propTypes;
                                       else if(colorMenuItems.filter((item) => item.header === currentTextKey).length > 0) //1 color (not me)
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `This is you if the color of your personality is ${currentTextKey}`);
-                                      } else if (currentKey == 'yourCOLOR') //my color (last time taken under my name)
+                                      } else if (currentKey == 'Results') //my color (last time taken under my name)
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
