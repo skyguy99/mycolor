@@ -337,7 +337,11 @@ function splitBlurbAtSentences(str)
   const handleValueSelect = (value) => {
 
     //console.log('Selecting '+value);
-    setCurrentKey(value);
+
+    if(value != 'Connect')
+    {
+        setCurrentKey(value);
+    }
     global.lastColor = "transparent";
 
     if(value == 'yourCOLOR' || value == 'myCOLOR' || value == 'Teams')
@@ -879,7 +883,7 @@ const styles = ScaledSheet.create({
       answer: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        paddingTop: hp('3%'),
+        paddingTop: hp('4.2%'),
       },
       resultText: {
         fontFamily: 'CircularStd-Book',
@@ -987,7 +991,8 @@ const styles = ScaledSheet.create({
         fontFamily: 'CircularStd-BlackItalic',
         color: 'black',
         fontSize: '25@ms',
-        textAlign: 'left'
+        textAlign: 'left',
+        letterSpacing: -0.5,
       },
       colorWheel:
       {
@@ -1431,7 +1436,7 @@ InlineImage.propTypes = Image.propTypes;
                   style={{overflow: 'visible'}}>
 
                     <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
-                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: (isOldPhone() || isTablet()) ? moderateScale(-50) : moderateScale(60)}]}>© a.network.</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: (isOldPhone() || isTablet()) ? moderateScale(-50) : moderateScale(60)}]}>© a.network</Text></TouchableOpacity>
                   </ScrollView>
 
                   </Animated.View>
@@ -1535,6 +1540,7 @@ InlineImage.propTypes = Image.propTypes;
                                   <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -1, transform: [{ rotate: '180deg'}]}} source={require('./assets/arrowLeft.png')} />
                                 </View>
                             </TouchableOpacity>
+                            <View style = {{height: hp('40%')}}></View>
                           </View>
                           <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: didSetUsername ? 'flex' : 'none' }]}>
                                     <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
@@ -1572,7 +1578,7 @@ InlineImage.propTypes = Image.propTypes;
                                               onPress={() => handleOptionPress(answer.id, index)}>
                                               <View style={{flexDirection:"row",alignItems:'center'}}>
                                                   <View style={{flex:9}}>
-                                                      <Text style = {styles.bodyText}>{answer.value}</Text>
+                                                      <Text style = {[styles.bodyText, {letterSpacing: -0.3, lineHeight: verticalScale(17)}]}>{answer.value}</Text>
                                                   </View>
                                                   <View style={{flex:1, paddingLeft: wp('2%')}}>
                                                       <RadioButton.Android
@@ -1701,7 +1707,7 @@ InlineImage.propTypes = Image.propTypes;
                                         //buttonPress(bodyTexts[currentKey]?.buttonLink, false, '');
                                       } else if(currentKey == 'Teams')
                                       {
-                                        buttonPress(bodyTexts[currentKey]?.buttonLink, true, 'Check out myCOLOR Teams');
+                                        openLink('https://thecolorofmypersonality.com/');
                                       } else if (currentKey == 'Combo')
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `This is what happens when you put a ${currentColorCombo.header1} with a ${currentColorCombo.header2}`);
