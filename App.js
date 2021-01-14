@@ -793,7 +793,7 @@ const styles = ScaledSheet.create({
   button: {
     borderRadius: '10@ms',
     backgroundColor: 'white',
-    padding: 20,
+    padding: moderateScale(20),
     marginBottom: isTablet() ? '40@ms' : '0@ms' //always need to have @ if one does
   },
   container: {
@@ -942,6 +942,7 @@ const styles = ScaledSheet.create({
         justifyContent: 'center',
         padding: moderateScale(14),
         paddingHorizontal: moderateScale(20),
+        marginTop: isTablet() ? hp('2.5%') : 0
 
       },
       quizContainer: {
@@ -1008,8 +1009,8 @@ const styles = ScaledSheet.create({
         alignItems: 'center',
         textAlign: 'center',
         overflow: 'visible',
-        marginBottom: hp('4%'),
-        marginTop: hp('-2%'),
+        marginBottom: isTablet() ? hp('12%') : hp('4%'),
+        marginTop: isTablet() ? hp('2%') : hp('-2%'),
       },
       inlineRightArrow:
       {
@@ -1026,8 +1027,8 @@ const styles = ScaledSheet.create({
       colorChar2:
       {
         position: 'absolute',
-        marginTop: isTablet() ? moderateScale(200) : moderateScale(295),
-        marginLeft: isTablet() ? moderateScale(267) : moderateScale(157),
+        marginTop: isTablet() ? moderateScale(-75) : moderateScale(21),
+        marginLeft: isTablet() ? moderateScale(295) : moderateScale(183),
         zIndex: -2
       },
       colorChar3:
@@ -1035,12 +1036,13 @@ const styles = ScaledSheet.create({
         position: 'absolute',
         marginTop: isTablet() ? moderateScale(456) : moderateScale(580),
         zIndex: -2,
-        marginLeft: isTablet() ? moderateScale(213) : moderateScale(180)
+        marginLeft: isTablet() ? moderateScale(213) : moderateScale(180),
+        display: 'none'
       },
       colorChar4:
       {
         position: 'absolute',
-        marginTop: isTablet() ? moderateScale(-15) : moderateScale(40),
+        marginTop: isTablet() ? moderateScale(15) : moderateScale(35),
         zIndex: -2,
         marginLeft: isTablet() ? moderateScale(215) : moderateScale(125)
       },
@@ -1407,7 +1409,7 @@ InlineImage.propTypes = Image.propTypes;
                         style={[
                           styles.headerText,
                           styles.shadow1,
-                          { marginBottom: 10 },
+                          { marginBottom: moderateScale(10) },
                         ]}
                       >
                         {val}
@@ -1426,8 +1428,8 @@ InlineImage.propTypes = Image.propTypes;
     <TouchableOpacity onPress={toggleHeader} pointerEvents='none' style={[styles.arrow]}>
     <Animated.Image
       style={{
-        width: wp("8%"),
-        height: wp("8%"),
+        width: isTablet() ? wp('7%') : wp("8%"),
+        height: isTablet() ? wp('7%') : wp("8%"),
         transform: [{ rotate: spin }],
         display: isCreditsOpen ? "none" : "flex",
       }}
@@ -1486,7 +1488,7 @@ InlineImage.propTypes = Image.propTypes;
                                   <Kohana
                                     onChangeText={(text) => { setUsername(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My name'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1506,7 +1508,7 @@ InlineImage.propTypes = Image.propTypes;
                                   <Kohana
                                     onChangeText={(text) => { setIndustry(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My industry'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1526,7 +1528,7 @@ InlineImage.propTypes = Image.propTypes;
                                   <Kohana
                                     onChangeText={(text) => { setRole(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20 }}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginTop: isTablet() ? verticalScale(5) : 0 }}
                                     label={'My role'}
                                     iconClass={MaterialsIcon}
                                     iconName={''}
@@ -1545,7 +1547,7 @@ InlineImage.propTypes = Image.propTypes;
                             <TouchableOpacity style= {{marginTop: hp('1.5%')}} onPress = {() => handleNextPress()}>
                                 <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                   <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Start Quiz</Text>
-                                  <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: -1, transform: [{ rotate: '180deg'}]}} source={require('./assets/arrowLeft.png')} />
+                                  <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: isTablet() ? verticalScale(-7) : verticalScale(-1), transform: [{ rotate: '180deg'}]}} source={require('./assets/arrowLeft.png')} />
                                 </View>
                             </TouchableOpacity>
                             <View style = {{height: hp('40%')}}></View>
@@ -1558,7 +1560,7 @@ InlineImage.propTypes = Image.propTypes;
                                       <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                                 <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
                                                     <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
-                                                      <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: isTablet() ? -hp('1.3%') : -hp('0.5%')}} source={require('./assets/arrowLeft.png')} />
+                                                      <Image style = {{width: isTablet() ? wp('7%') : wp('8%'), height: isTablet() ? wp('7%') : wp('8%'), marginTop: isTablet() ? -hp('1.1%') : -hp('0.5%')}} source={require('./assets/arrowLeft.png')} />
                                                       <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>{showResult ? 'Take Again' : 'Back'}</Text>
                                                     </View>
                                                 </TouchableOpacity>
@@ -1702,7 +1704,7 @@ InlineImage.propTypes = Image.propTypes;
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}> <InlineImage style = {[{width: wp('9%'), height: wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/matt.png')} />   Matt Bretz</Text></TouchableOpacity>
 
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}> {"\n"} Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}> {"\n"}Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together. ”
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: wp('9%'), height: wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/gary.png')} />  Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
