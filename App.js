@@ -1009,7 +1009,7 @@ const styles = ScaledSheet.create({
         textAlign: 'center',
         overflow: 'visible',
         marginBottom: hp('4%'),
-        marginTop: hp('0%'),
+        marginTop: hp('-2%'),
       },
       inlineRightArrow:
       {
@@ -1666,11 +1666,7 @@ InlineImage.propTypes = Image.propTypes;
                               </View>
 
 
-                                <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none'}}>
-
-                                <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                                    “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”{"\n"}
-                                    </Text>
+                                <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none', marginBottom: hp('5%')}}>
 
                                     <View style={styles.colorChar3} >
                                         <Video
@@ -1695,16 +1691,20 @@ InlineImage.propTypes = Image.propTypes;
                                         />
                                     </View>
 
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Chris Younger</Text></TouchableOpacity>
-
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}>
-                                        {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.” {"\n"}
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10) }]}>
+                                        “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Matt Bretz</Text></TouchableOpacity>
 
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic'}]}> {"\n"} Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”{"\n"}
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: wp('9%'), height: wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/chris.png')} />  Chris Younger</Text></TouchableOpacity>
+
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}>
+                                        {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.”
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {styles.pullQuote}><InlineImage style = {styles.inlineRightArrow} source={require('./assets/arrowright.png')} /> Gary Goodman{"\n"}</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}> <InlineImage style = {[{width: wp('9%'), height: wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/matt.png')} />   Matt Bretz</Text></TouchableOpacity>
+
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}> {"\n"} Together we are stronger. 1+1 = 4. Our strengths and weaknesses compliment one another. Impenetrable force together. ”
+                                        </Text>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: wp('9%'), height: wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/gary.png')} />  Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
