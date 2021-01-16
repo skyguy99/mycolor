@@ -112,6 +112,7 @@ class FloatingItem extends React.PureComponent {
               ? [{ translateX: 0 }, { translateY }, { rotate }, { scale }]
               : [],
             borderColor,
+            backgroundColor: "transparent"
           },
         ]}
       >

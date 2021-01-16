@@ -101,6 +101,8 @@ export default function App() {
   const [currentTextKey, setCurrentTextKey] = React.useState('myCOLOR');
   const [currentColorCombo, setCurrentColorCombo] = React.useState(null);
 
+  const [topCoverOpacity, setTopCoverOpacity] = React.useState(0);
+
   const [headerMenu, setHeaderMenu] = React.useState(new Animated.Value(90));
   const [
     headerMenuOptionsVisible,
@@ -363,7 +365,7 @@ function splitBlurbAtSentences(str)
     }
 
     Animated.spring(headerMenu, {
-      toValue: 60,
+      toValue: 75,
       bounciness: 0.5,
       useNativeDriver: false,
       speed: 0.2
@@ -858,7 +860,8 @@ const styles = ScaledSheet.create({
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
-      marginTop: '-23@ms'
+      marginTop: '-8@ms',
+      alignSelf: "flex-start"
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -1333,6 +1336,14 @@ const InlineImage = (props) => {
   );
 };
 
+const handleScroll = (event) => {
+  if(event.nativeEvent.contentOffset.y > 250) {
+    setTopCoverOpacity(1)
+  } else {
+    setTopCoverOpacity(0)
+  }
+ }
+
 // "Inherit" prop types from Image
 InlineImage.propTypes = Image.propTypes;
 
@@ -1344,7 +1355,30 @@ InlineImage.propTypes = Image.propTypes;
     <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
 
       <StatusBar barStyle="dark-content" />
-      <View pointerEvents='none' style={styles.topCoverBar}></View>
+      <View pointerEvents='none' style={[styles.topCoverBar, { opacity: topCoverOpacity }]}></View>
+      <TouchableOpacity style={styles.creditsBtn} onPress={toggleCredits}>
+        <LottieView
+          ref={LottieRef}
+          style={[styles.shadow1]}
+          source={require('./assets/hamburger.json')}
+          loop={false}
+          progress={lottieProgress}
+        />
+      </TouchableOpacity>
+
+      <FloatingMenu
+        items={colorMenuItems}
+        isOpen={isMenuOpen}
+        position={"top-right"}
+        borderColor={'white'}
+        primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'Results' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
+        buttonWidth={wp('10%')}
+        borderWidth={0}
+        onMenuToggle={handleMenuToggle}
+        onItemPress={handleItemPress}
+        dimmerStyle={{ opacity: 0 }}
+      />
+
     <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex'}]}>
     <Animated.View
       style={
@@ -1450,29 +1484,7 @@ InlineImage.propTypes = Image.propTypes;
                   </ScrollView>
 
                   </Animated.View>
-                  <TouchableOpacity style = {styles.creditsBtn} onPress={toggleCredits}>
-                      <LottieView
-                            ref={LottieRef}
-                            style={[styles.shadow1]}
-                            source={require('./assets/hamburger.json')}
-                            loop={false}
-                            progress={lottieProgress}
-                          />
-                  </TouchableOpacity>
                   <Animated.View style={[styles.contentContainer, { transform: [{translateX: containerOffsetX }]} ]}>
-
-                        <FloatingMenu
-                            items={colorMenuItems}
-                            isOpen={isMenuOpen}
-                            position={"top-right"}
-                            borderColor={'white'}
-                            primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'Results' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
-                            buttonWidth={wp('10%')}
-                            borderWidth={0}
-                            onMenuToggle={handleMenuToggle}
-                            onItemPress={handleItemPress}
-                            dimmerStyle={{opacity: 0}}
-                          />
 
                           <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }], overflow: 'visible',} ]}>
 
@@ -1618,7 +1630,9 @@ InlineImage.propTypes = Image.propTypes;
                               <ScrollView
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
-                              style={styles.scrollView}>
+                              style={styles.scrollView}
+                              scrollEventThrottle={16}
+                              onScroll={handleScroll}>
 
 
                               <View style = {{display: (currentKey == 'Results') ? 'flex' : 'none'}}>
