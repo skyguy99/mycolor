@@ -1377,6 +1377,7 @@ InlineImage.propTypes = Image.propTypes;
         onMenuToggle={handleMenuToggle}
         onItemPress={handleItemPress}
         dimmerStyle={{ opacity: 0 }}
+        isTablet={isTablet()}
       />
 
     <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex'}]}>

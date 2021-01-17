@@ -255,6 +255,7 @@ class FloatingMenu extends React.PureComponent {
       borderColor,
       iconColor,
       primaryColor,
+      isTablet,
     } = this.props;
     const { items, itemsDown, dimmerActive } = this.state;
 
@@ -292,6 +293,7 @@ class FloatingMenu extends React.PureComponent {
               this.itemPressAnimations[index]
             )}
             isInLongPress={global.isinLongPress}
+            isTablet={isTablet}
           />
         );
       }

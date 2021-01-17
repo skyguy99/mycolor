@@ -39,6 +39,7 @@ class FloatingItem extends React.PureComponent {
       onPress,
       isInLongPress,
       selectedColor,
+      isTablet
     } = this.props;
     const { label, labelStyle, isPending, isDisabled } = item;
 
@@ -105,15 +106,16 @@ class FloatingItem extends React.PureComponent {
         key={`item-${index}`}
         style={[
           globalStyles.buttonOuter,
-          applyButtonWidth(buttonWidth*0.98),
+          applyButtonWidth(buttonWidth * 0.98),
           {
             opacity,
             transform: fanAnimation
               ? [{ translateX: 0 }, { translateY }, { rotate }, { scale }]
               : [],
             borderColor,
-            backgroundColor: "transparent"
+            backgroundColor: "transparent",
           },
+          isTablet && { marginTop: moderateScale(10) }
         ]}
       >
         <View style={[isDisabled && globalStyles.disabled]}>
