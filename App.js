@@ -74,6 +74,8 @@ export default function App() {
   const [error2Opacity, setError2Opacity] = React.useState(0);
   const [error3Opacity, setError3Opacity] = React.useState(0);
   const [errorXPos, setErrorXPos] = React.useState(new Animated.Value(0));
+  const [messageXPos, setMessageXPos] = React.useState(new Animated.Value(wp('-110%')));
+  const [didLongPress, setDidLongPress] =  React.useState(false);
 
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
@@ -116,7 +118,7 @@ export default function App() {
   const SliderWidth = Dimensions.get('screen').width;
 
   const colorMenuItems = [
-    { label: '', header: 'orange', color: '#f3ac07', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: '🌟 The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-yellow.mp4'},
+    { label: '', header: 'orange', color: '#f3ac07', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: '🌟 The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-yellow_2.mp4'},
 
     { label: '', header: 'blue', color: '#0b89cc', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: '📘 The Director', bodyBlurb: 'You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all.', pullQuote: 'Blues tend to be rule-following, dependable, long-enduring, and tenacious.', bodyBlurb2: 'You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-blue.mp4'},
 
@@ -339,9 +341,9 @@ function splitBlurbAtSentences(str)
 
 //SELECT DROPDOWN
   const handleValueSelect = (value) => {
+    messageInAnimation(0, false);
 
-    //console.log('Selecting '+value);
-
+    setTopCoverOpacity(0);
     if(value != 'Connect')
     {
         setCurrentKey(value);
@@ -419,6 +421,15 @@ function splitBlurbAtSentences(str)
       toggleQuiz(false);
 
       global.lastColor = "transparent";
+
+      if(!global.isinLongPress && !didLongPress)
+      {
+        messageInAnimation(0, true);
+      } else if(!didLongPress)
+      {
+        setDidLongPress(true);
+        messageInAnimation(0, false);
+      }
 
       if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()))
       {
@@ -670,6 +681,7 @@ function splitBlurbAtSentences(str)
       }, 100);
     }
 
+    //RESULT OF QUIZ
     const handleOptionPress = (id, index) => {
       setSelectedAnswer(id);
       const answer = convertIndexToAnswer(currentQuestionIndex + 1, index + 1);
@@ -690,6 +702,7 @@ function splitBlurbAtSentences(str)
           : '';
       setResultColor(colorResult);
       setUserColor(colorResult);
+      setTopCoverOpacity(0);
 
       if(colorResult != '')
       {
@@ -742,6 +755,19 @@ function splitBlurbAtSentences(str)
               speed: 1
             }),
         ]).start();
+    }
+
+    function messageInAnimation(delay, isIn)
+    {
+      Animated.sequence([
+        Animated.delay(delay),
+          Animated.spring(messageXPos, {
+            toValue: isIn ? (isTablet() ? wp('15%') : wp('-3%')) : wp('-110%'),
+            bounciness: 2,
+            useNativeDriver: false,
+            speed: 1
+          }),
+      ]).start();
     }
 
     //From intro form to actual quiz
@@ -859,7 +885,7 @@ const styles = ScaledSheet.create({
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
-      marginTop: '-8@ms',
+      marginTop: '4@ms',
       alignSelf: "flex-start"
     },
     quizParagraph: {
@@ -945,6 +971,19 @@ const styles = ScaledSheet.create({
         padding: moderateScale(14),
         paddingHorizontal: moderateScale(20),
         marginTop: isTablet() ? hp('2.5%') : 0
+
+      },
+      messagePill: {
+        backgroundColor: 'white',
+        borderRadius: moderateScale(30),
+        textAlign: 'center',
+        justifyContent: 'center',
+        padding: moderateScale(14),
+        paddingHorizontal: moderateScale(20),
+        zIndex: 4,
+        borderTopRightRadius: moderateScale(10),
+        position: 'absolute',
+        marginTop: hp('15%'),
 
       },
       quizContainer: {
@@ -1053,7 +1092,7 @@ const styles = ScaledSheet.create({
       colorChar4:
       {
         position: 'absolute',
-        marginTop: isTablet() ? moderateScale(15) : moderateScale(35),
+        marginTop: isTablet() ? moderateScale(15) : moderateScale(44),
         zIndex: -2,
         marginLeft: isTablet() ? moderateScale(215) : moderateScale(125)
       },
@@ -1199,12 +1238,12 @@ function noColorYet()
 {
   return ([
 
-    <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%')}}>
+    <View key={0} style = {{paddingLeft: wp('12%'), paddingRight: wp('12%')}}>
         <Animated.View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {zIndex: 4, marginBottom: hp('29%'), shadowOpacity: 0.1, opacity: 1, transform: [{translateX: errorXPos}] ,}]}>
           <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You don't have a color yet!</Text>
         </Animated.View>
         <Video
-          source={{ uri: 'https://mycolor.s3.us-east-2.amazonaws.com/-404loop.mp4' }}
+          source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/myCOLOR+videos+optimized/-404loop.mp4' }}
           rate={1.0}
           isMuted={true}
           resizeMode="contain"
@@ -1345,11 +1384,19 @@ const InlineImage = (props) => {
 };
 
 const handleScroll = (event) => {
-  if(event.nativeEvent.contentOffset.y > 250) {
-    setTopCoverOpacity(1)
+
+  if(currentKey != "Quiz" || showResult)
+  {
+    if(event.nativeEvent.contentOffset.y > 250) {
+      setTopCoverOpacity(1)
+    } else {
+      setTopCoverOpacity(0)
+    }
   } else {
-    setTopCoverOpacity(0)
+    setTopCoverOpacity(1)
   }
+
+  //console.log(event.nativeEvent.contentOffset.y > 60);
  }
 
 // "Inherit" prop types from Image
@@ -1373,6 +1420,10 @@ InlineImage.propTypes = Image.propTypes;
           progress={lottieProgress}
         />
       </TouchableOpacity>
+
+      <Animated.View style = {[styles.messagePill, styles.shadow2, {shadowOpacity: 0.1, opacity: 1, transform: [{translateX: messageXPos}] ,}]}>
+        <Text style = {[styles.bodyText, {textAlign: 'center'}]}>Long press for color combinations.</Text>
+      </Animated.View>
 
       <FloatingMenu
         items={colorMenuItems}
@@ -1496,13 +1547,15 @@ InlineImage.propTypes = Image.propTypes;
                   <Animated.View style={[styles.contentContainer, { transform: [{translateX: containerOffsetX }]} ]}>
 
                         <Animated.View style={[styles.quizContainer, { transform: [{translateX: quizOffsetX }], overflow: 'visible',} ]}>
-                        <View pointerEvents='none' style={[styles.topCoverBarQuiz, { opacity: 1 }]}></View>
+                        <View pointerEvents='none' style={[styles.topCoverBarQuiz, { opacity: topCoverOpacity }]}></View>
 
                       <SafeAreaView style={{flex: 1, overflow: 'visible'}}>
 
                           <ScrollView
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
+                          scrollEventThrottle={16}
+                          onScroll={handleScroll}
                           style={{zIndex: -3, overflow: 'visible', marginTop: moderateScale(130)}}>
 
                           <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('-5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
@@ -1513,8 +1566,8 @@ InlineImage.propTypes = Image.propTypes;
                                     style={{ backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My name'}
                                     iconClass={MaterialsIcon}
-                                    iconName={''}
-                                    iconColor={'#f4d29a'}
+                                    iconName={'dns'}
+                                    iconColor={'#ffffff'}
                                     inputPadding={0}
                                     labelStyle={{ color: '#EAEAEA' }}
                                     inputStyle={{ color: 'black'}}
@@ -1533,8 +1586,8 @@ InlineImage.propTypes = Image.propTypes;
                                     style={{ backgroundColor: '#ffffff', marginLeft: -20, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My industry'}
                                     iconClass={MaterialsIcon}
-                                    iconName={''}
-                                    iconColor={'#f4d29a'}
+                                    iconName={'dns'}
+                                    iconColor={'#ffffff'}
                                     inputPadding={0}
                                     labelStyle={{ color: '#EAEAEA' }}
                                     inputStyle={{ color: 'black'}}
@@ -1553,8 +1606,8 @@ InlineImage.propTypes = Image.propTypes;
                                     style={{ backgroundColor: '#ffffff', marginLeft: -20, marginTop: isTablet() ? verticalScale(5) : 0 }}
                                     label={'My role'}
                                     iconClass={MaterialsIcon}
-                                    iconName={''}
-                                    iconColor={'#f4d29a'}
+                                    iconName={'dns'}
+                                    iconColor={'#ffffff'}
                                     inputPadding={0}
                                     labelStyle={{ color: '#EAEAEA' }}
                                     inputStyle={{ color: 'black'}}
@@ -1713,24 +1766,24 @@ InlineImage.propTypes = Image.propTypes;
                                           resizeMode="contain"
                                           shouldPlay
                                           isLooping
-                                          style={{ width: moderateScale(230), height: moderateScale(230)}}
+                                          style={{ width: moderateScale(210), height: moderateScale(210)}}
                                         />
                                     </View>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10) }]}>
-                                        “Building teams inclusive of all personalities find themselves creating transformative experiences  - that is the power behind myCOLOR.”
+                                        “Building teams inclusive of all personalities that find themselves creating transformative experiences  - that is the power behind myCOLOR.”
                                         </Text>
 
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/chris.png')} />  Chris Younger</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}]} source={require('./assets/chris.png')} />  Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}>
-                                        {"\n"}"The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of “adequate to the challenge.”
+                                        {"\n"} “The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of ’adequate to the challenge.’”
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}> <InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/matt.png')} />   Matt Bretz</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}> <InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}]} source={require('./assets/matt.png')} />   Matt Bretz</Text></TouchableOpacity>
 
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}> {"\n"}Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together. ”
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}> {"\n"}“Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together.”
                                         </Text>
-                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}, styles.shadow2]} source={require('./assets/gary.png')} />  Gary Goodman{"\n"}</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/gary-goodman/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}]} source={require('./assets/gary.png')} />  Gary Goodman{"\n"}</Text></TouchableOpacity>
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
