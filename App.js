@@ -293,7 +293,7 @@ function splitBlurbAtSentences(str)
   const toggleHeader = () => {
     if (headerMenu._value > moderateScale(120)) {
       Animated.spring(headerMenu, {
-        toValue: moderateScale(75),
+        toValue: moderateScale(80), //This value controls top bar clipping
         bounciness: 0.5,
         useNativeDriver: false,
         speed: 0.2
@@ -368,7 +368,7 @@ function splitBlurbAtSentences(str)
     }
 
     Animated.spring(headerMenu, {
-      toValue: 75,
+      toValue: moderateScale(80), //This value controls top bar clipping
       bounciness: 0.5,
       useNativeDriver: false,
       speed: 0.2
@@ -395,8 +395,7 @@ function splitBlurbAtSentences(str)
   const handleMenuToggle = isMenuOpen =>
   {
     setIsMenuOpen(isMenuOpen);
-
-    if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()))
+    if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()) && currentKey !== 'Quiz' && !showResult)
     {
         if(!isMenuOpen && KeyIsAColor(currentKey))
         {
@@ -1092,7 +1091,7 @@ const styles = ScaledSheet.create({
       colorChar4:
       {
         position: 'absolute',
-        marginTop: isTablet() ? moderateScale(15) : moderateScale(44),
+        marginTop: isTablet() ? moderateScale(25) : moderateScale(55),
         zIndex: -2,
         marginLeft: isTablet() ? moderateScale(215) : moderateScale(125)
       },
@@ -1319,7 +1318,7 @@ function getColorTextFormatted(color) //SHOWN FOR Results
           <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
           <Text key = {9} >{'\n'}{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
-          <Text key = {21} style = {styles.pullQuote}>{getResultColorItem(color)[0].pullQuote} {'\n'}</Text>
+          <Text key = {21} style = {styles.pullQuote}>🔍 {getResultColorItem(color)[0].pullQuote} {'\n'}</Text>
           <Text key = {25} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb2} </Text>
           <Text key = {22} >{'\n'}</Text>
       </View>
@@ -1437,6 +1436,9 @@ InlineImage.propTypes = Image.propTypes;
         onItemPress={handleItemPress}
         dimmerStyle={{ opacity: 0 }}
         isTablet={isTablet()}
+        messageInAnimation={messageInAnimation}
+        isQuizResultShown={currentKey === 'Quiz' && showResult}
+        isResultShowing={currentKey === 'Results'}
       />
 
     <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex'}]}>
@@ -1777,7 +1779,7 @@ InlineImage.propTypes = Image.propTypes;
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/chris-younger/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}]} source={require('./assets/chris.png')} />  Chris Younger</Text></TouchableOpacity>
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(10), marginTop: moderateScale(35)}]}>
-                                        {"\n"} “The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of ’adequate to the challenge.’”
+                                        {"\n"} “The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of ‘adequate to the challenge.’”
                                         </Text>
                                     <TouchableOpacity onPress = {() => { openLink('https://www.ayzenberg.com/our-team/matt-bretz/')}}><Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black'}]}> <InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(8)}],}]} source={require('./assets/matt.png')} />   Matt Bretz</Text></TouchableOpacity>
 

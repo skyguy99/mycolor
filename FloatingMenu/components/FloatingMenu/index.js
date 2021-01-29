@@ -158,12 +158,15 @@ class FloatingMenu extends React.PureComponent {
   };
 
   handleLongMenuPress = () => {
-    const { isOpen, onMenuToggle } = this.props;
+    const { isOpen, onMenuToggle, messageInAnimation, isQuizResultShown, isResultShowing } = this.props;
 
     onMenuToggle(true);
-    global.isinLongPress = true;
+    messageInAnimation(0, false);
+    if(!isQuizResultShown && !isResultShowing) {
+      global.isinLongPress = true;
+    }
 
-    console.log("long menu press ", global.isinLongPress);
+    //console.log("long menu press ", global.isinLongPress);
   };
 
   toggleMenu = (isOpen) => {
@@ -259,6 +262,7 @@ class FloatingMenu extends React.PureComponent {
     } = this.props;
     const { items, itemsDown, dimmerActive } = this.state;
 
+    //console.log("isInLongPress", global.isinLongPress)
     if (!dimmerActive) return null;
 
     return items.map((item, index) => {
