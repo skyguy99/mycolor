@@ -157,14 +157,15 @@ class FloatingMenu extends React.PureComponent {
     global.isinLongPress = false;
   };
 
+//UNCOMMENT THIS FOR SPLIT COLOR PRESS
   handleLongMenuPress = () => {
-    const { isOpen, onMenuToggle, messageInAnimation, isQuizResultShown, isResultShowing } = this.props;
-
-    onMenuToggle(true);
-    messageInAnimation(0, false);
-    if(!isQuizResultShown && !isResultShowing) {
-      global.isinLongPress = true;
-    }
+    // const { isOpen, onMenuToggle, messageInAnimation, isQuizResultShown, isResultShowing } = this.props;
+    //
+    // onMenuToggle(true);
+    // messageInAnimation(0, false);
+    // if(!isQuizResultShown && !isResultShowing) {
+    //   global.isinLongPress = true;
+    // }
 
     //console.log("long menu press ", global.isinLongPress);
   };
@@ -259,6 +260,7 @@ class FloatingMenu extends React.PureComponent {
       iconColor,
       primaryColor,
       isTablet,
+      comboCircleImage
     } = this.props;
     const { items, itemsDown, dimmerActive } = this.state;
 
@@ -314,6 +316,8 @@ class FloatingMenu extends React.PureComponent {
       primaryColor,
       buttonWidth,
       innerWidth,
+      comboCircleImage,
+      currentKey //add new floating menu vars here
     } = this.props;
     const { menuButtonDown, dimmerActive } = this.state;
 
@@ -424,13 +428,23 @@ class FloatingMenu extends React.PureComponent {
           >
             <Animated.Image
               style={{
-                display: primaryColor == "#ffffff" ? "flex" : "none",
+                display: (primaryColor == "#ffffff" && currentKey != 'Combo') ? "flex" : "none",
                 width: new Animated.Value(Design.buttonWidth * 1.1),
                 height: new Animated.Value(Design.buttonWidth * 1.1),
                 marginTop: 14,
               }}
               source={require("../../../assets/rainbowcircle.png")}
             ></Animated.Image>
+            <Animated.Image
+              style={{
+                display: (comboCircleImage != '' && currentKey == 'Combo') ? "flex" : "none",
+                width: new Animated.Value(Design.buttonWidth * 1.1),
+                height: new Animated.Value(Design.buttonWidth * 1.1),
+                marginTop: 14,
+              }}
+              source={comboCircleImage}
+            ></Animated.Image>
+
             {content}
           </Animated.View>
         </TouchableOpacity>

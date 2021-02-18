@@ -149,24 +149,6 @@ class FloatingItem extends React.PureComponent {
               />
               {content}
             </Animated.View>
-
-            <Animated.View
-              style={[
-
-                globalStyles.buttonInner,
-                applyButtonInnerWidthSecond(innerWidth*1.2),
-                { backgroundColor },
-              ]}
-            >
-              <View
-                style={{
-                  display: isInLongPress ? "flex" : "none",
-                  backgroundColor: "transparent",
-                  width: 10,
-                }}
-              />
-              {content}
-            </Animated.View>
           </TouchableOpacity>
         </View>
       </Animated.View>

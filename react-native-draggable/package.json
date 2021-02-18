@@ -1,0 +1,82 @@
+{
+  "_from": "react-native-draggable",
+  "_id": "react-native-draggable@3.3.0",
+  "_inBundle": false,
+  "_integrity": "sha512-aU20CaKBmzXrwE9eTJZ+GDOr52mXLchg5Vydbx5rz8nYXlN+ppHIoTPgyXduyWNwpZ/DR6tyFtMwdgUHpuN6oA==",
+  "_location": "/react-native-draggable",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-draggable",
+    "name": "react-native-draggable",
+    "escapedName": "react-native-draggable",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-draggable/-/react-native-draggable-3.3.0.tgz",
+  "_shasum": "6f07c3ad4cff018bf0455fc48dbfe5f0af9b72cd",
+  "_spec": "react-native-draggable",
+  "_where": "/Users/skylarthomas/Desktop/Client Work/Ayzenberg /Dev/myColorApp",
+  "author": {
+    "name": "tongyy"
+  },
+  "bugs": {
+    "url": "https://github.com/tongyy/react-native-draggable/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "prop-types": "^15.7.2"
+  },
+  "deprecated": false,
+  "description": "draggable",
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-flow-strip-types": "^7.9.0",
+    "@react-native-community/eslint-config": "1.0.0",
+    "@types/react": "^16.9.34",
+    "@types/react-native": "^0.62.2",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-react": "^7.19.0",
+    "jest": "^25.3.0",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "react": "16.11.0",
+    "react-native": "^0.62.2",
+    "react-test-renderer": "^16.11.0",
+    "typescript": "^3.8.3"
+  },
+  "homepage": "https://github.com/tongyy/react-native-draggable#readme",
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/"
+    ]
+  },
+  "keywords": [
+    "react-native",
+    "draggable",
+    "drag",
+    "drop"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "react-native-draggable",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tongyy/react-native-draggable.git"
+  },
+  "scripts": {
+    "lint": "eslint Draggable.js --fix",
+    "test": "jest"
+  },
+  "types": "index.d.ts",
+  "version": "3.3.0"
+}

@@ -18,10 +18,9 @@ export const applyButtonWidth = (width = Design.buttonWidth) => ({
 });
 
 export const applyButtonInnerWidthFirst = (width = Design.buttonWidth) => ({
-  width: width / 2,
+  width: width,
   height: width,
-  borderTopLeftRadius: width * 0.5,
-  borderBottomLeftRadius: width * 0.5,
+  borderRadius: width,
 });
 
 export const applyButtonInnerWidthSecond = (width = Design.buttonWidth) => ({
