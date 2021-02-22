@@ -55,11 +55,11 @@ export default function Draggable(props) {
   // The Animated object housing our xy value so that we can spring back
   const pan = React.useRef(new Animated.ValueXY());
   // Always set to xy value of pan, would like to remove
-  const offsetFromStart = React.useRef({x: 0, y: 0});
+  const offsetFromStart = React.useRef(new Animated.ValueXY());
   // Width/Height of Draggable (renderSize is arbitrary if children are passed in)
-  const childSize = React.useRef({x: renderSize, y: renderSize});
+  const childSize = React.useRef(new Animated.ValueXY({x: renderSize, y: renderSize}));
   // Top/Left/Right/Bottom location on screen from start of most recent touch
-  const startBounds = React.useRef();
+  const startBounds = React.useRef(new Animated.ValueXY());
   // Whether we're currently dragging or not
   const isDragging = React.useRef(false);
 
@@ -178,7 +178,7 @@ export default function Draggable(props) {
     return {
       position: 'absolute',
       top: 0,
-      left: 0,
+      transform: {translateX : 0},
       width: Window.width,
       height: Window.height,
     };
@@ -187,7 +187,7 @@ export default function Draggable(props) {
   const dragItemCss = React.useMemo(() => {
     const style = {
       top: y,
-      left: x,
+      transform: {translateX : x},
       elevation: z,
       zIndex: z,
     };

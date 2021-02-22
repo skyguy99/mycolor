@@ -19,6 +19,7 @@ import {
   StyleProp,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 function clamp(number: number, min: number, max: number) {
@@ -91,11 +92,11 @@ export default function Draggable(props: IProps) {
   // The Animated object housing our xy value so that we can spring back
   const pan = React.useRef(new Animated.ValueXY());
   // Always set to xy value of pan, would like to remove
-  const offsetFromStart = React.useRef({x: 0, y: 0});
+  const offsetFromStart = React.useRef(new Animated.ValueXY());
   // Width/Height of Draggable (renderSize is arbitrary if children are passed in)
-  const childSize = React.useRef({x: renderSize, y: renderSize});
+  const childSize = React.useRef(new Animated.ValueXY({x: renderSize, y: renderSize}));
   // Top/Left/Right/Bottom location on screen from start of most recent touch
-  const startBounds = React.useRef({top: 0, bottom: 0, left: 0, right: 0});
+  const startBounds = React.useRef(new Animated.Value({top: 0, bottom: 0, left: 0, right: 0}));
   // Whether we're currently dragging or not
   const isDragging = React.useRef(false);
 
@@ -118,6 +119,13 @@ export default function Draggable(props: IProps) {
     },
     [disabled],
   );
+
+//Skylar test
+  const changeXY = (newX, newY) => {
+    offsetFromStart = new Animated.ValueXY({x: 3, y: 3});
+    console.log("changing x y");
+    //offsetFromStart.setValue({x: newX, y: newY});
+  }
 
   const reversePosition = React.useCallback(() => {
     Animated.spring(pan.current, {
@@ -223,6 +231,7 @@ export default function Draggable(props: IProps) {
     const style: StyleProp<ViewStyle> = {
       top: y,
       left: x,
+      transform: [{translateX: 0}], //TEST - was x
       elevation: z,
       zIndex: z,
     };
@@ -234,7 +243,7 @@ export default function Draggable(props: IProps) {
     }
     if(hasBorder) {
       style.borderColor = 'white';
-      style.borderWidth = 3.5;
+      style.borderWidth = moderateScale(3.5);
     }
 
     if (children) {

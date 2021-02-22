@@ -1745,8 +1745,8 @@ InlineImage.propTypes = Image.propTypes;
                             </SafeAreaView>
                           </Animated.View>
                           <ImageBackground style = {{width: wp('100%'), height: hp('40%'), zIndex: 13, marginLeft: moderateScale(2), marginTop: moderateScale(-5), display: currentKey == 'Teams' ? 'flex' : 'none'}} source={require('./assets/rainbowgradient.png')} >
-                            <Draggable x={wp('50%')-wp('7.5%')} y={hp('20%')} renderSize={wp('15.5%')} hasBorder={true} renderColor={'#d21a58'} renderText={''} isCircle shouldReverse onDragRelease={() => {ToggleComboColor();}} onDrag={DraggableOnDrag} onPressIn={() => {setDidDrag1(true);}} />
-                            <Draggable x={wp('50%')-wp('7.5%')} y={hp('30%')} renderSize={wp('15.5%')} hasBorder={true} renderColor={'#d21a58'} renderText={''} isCircle shouldReverse onDragRelease={() => {ToggleComboColor();}} onDrag={DraggableOnDrag} onPressIn={() => {setDidDrag2(true);}} />
+                            <Draggable x={wp('50%')-wp('7.5%')} y={hp('20%')} renderSize={isTablet() ? wp('12%') : wp('15.5%')} hasBorder={true} renderColor={'#00000000'} renderText={''} isCircle shouldReverse onDragRelease={() => {ToggleComboColor();}} onDrag={DraggableOnDrag} onPressIn={() => {setDidDrag1(true);}} />
+                            <Draggable x={wp('50%')-wp('7.5%')} y={hp('30%')} renderSize={isTablet() ? wp('12%') : wp('15.5%')} hasBorder={true} renderColor={'#00000000'} renderText={''} isCircle shouldReverse onDragRelease={() => {ToggleComboColor();}} onDrag={DraggableOnDrag} onPressIn={() => {setDidDrag2(true);}} />
                           </ImageBackground>
 
                           <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
@@ -1808,19 +1808,50 @@ InlineImage.propTypes = Image.propTypes;
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none', marginBottom: hp('5%'), marginTop: hp('4%')}}>
                                     <Text key = {2} style={[styles.pullQuote, styles.shadow2 ]}>🎲 Pick Your Team</Text>
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8)}]}>
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-Book', marginBottom: moderateScale(9)}]}>
+                                        {"\n"}Drag the circles to select you and your teammate’s color. This tool will provide insight into how you two can join forces.
+                                        </Text>
+                                        <Video
+                                          source={{ uri: 'https://mycolor.s3.us-east-2.amazonaws.com/red-char.mp4' }}
+                                          rate={1.0}
+                                          isMuted={true}
+                                          resizeMode="contain"
+                                          shouldPlay
+                                          isLooping
+                                          style={{ width: wp('30%'), height: wp('30%'), alignSelf: 'center'}}
+                                        />
+
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(20), marginTop: -moderateScale(10)}]}>
                                         {"\n"} “The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of ‘adequate to the challenge.’”
                                         </Text>
-                                    <Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black', fontSize: '15.5@ms'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(19)}],}]} source={require('./assets/matt.png')} />   Matt Bretz <Text>{'\n'}            Executive Creative Director</Text></Text>
 
-                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8), marginTop: moderateScale(35) }]}>
+                                        <Video
+                                          source={{ uri: 'https://mycolor.s3.us-east-2.amazonaws.com/yellow-char.mp4' }}
+                                          rate={1.0}
+                                          isMuted={true}
+                                          resizeMode="contain"
+                                          shouldPlay
+                                          isLooping
+                                          style={{ width: wp('28%'), height: wp('28%'), alignSelf: 'center'}}
+                                        />
+
+                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(2), marginTop: moderateScale(15) }]}>
                                             “Building teams inclusive of all personalities that find themselves creating transformative experiences  - that is the power behind myCOLOR.”
                                             </Text>
 
-                                        <Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black', fontSize: '15.5@ms'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(19)}],}]} source={require('./assets/chris.png')} />   Chris Younger <Text>{'\n'}            President</Text></Text>
-                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8), marginTop: moderateScale(35)}]}> {"\n"}“Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together.”
+                                            <Video
+                                              source={{ uri: 'https://mycolor.s3.us-east-2.amazonaws.com/blue-char.mp4' }}
+                                              rate={1.0}
+                                              isMuted={true}
+                                              resizeMode="contain"
+                                              shouldPlay
+                                              isLooping
+                                              style={{ width: wp('30%'), height: wp('30%'), alignSelf: 'center'}}
+                                            />
+
+                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8), marginTop: moderateScale(-5)}]}> {"\n"}“Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together.”
                                             </Text>
-                                        <Text style = {[styles.bodyText, styles.shadow3, {fontFamily: 'CircularStd-Black', fontSize: '15.5@ms'}]}><InlineImage style = {[{width: isTablet() ? wp('7%') : wp('9%'), height: isTablet() ? wp('7%') : wp('9%'), borderRadius: 100, transform: [{translateX: wp('0%')}, {translateY: moderateScale(19)}],}]} source={require('./assets/gary.png')} />   Gary Goodman <Text>{'\n'}            Chief Creative Officer</Text></Text>
+
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
