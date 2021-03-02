@@ -2,7 +2,6 @@
  *	* https://github.com/tongyy/react-native-draggable
  *
  */
-//EDIT THIS FILE FOR CHANGES
 
 import React from 'react';
 import {
@@ -19,8 +18,8 @@ import {
   StyleProp,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheet';
+import { s, vs, ms, mvs, scale, verticalScale, moderateScale, ScaledSheet } from 'react-native-size-matters';
 
 function clamp(number: number, min: number, max: number) {
   return Math.max(min, Math.min(number, max));
@@ -31,9 +30,9 @@ interface IProps {
     renderText?: string;
     isCircle?: boolean;
     renderSize?: number;
+    hasBorder?: boolean;
     imageSource?: number;
     renderColor?: string;
-    hasBorder?: boolean;
     /**** */
     children?: React.ReactNode;
     shouldReverse?: boolean;
@@ -63,9 +62,9 @@ export default function Draggable(props: IProps) {
   const {
     renderText,
     isCircle,
-    hasBorder,
     renderSize,
     imageSource,
+    hasBorder,
     renderColor,
     children,
     shouldReverse,
@@ -92,15 +91,13 @@ export default function Draggable(props: IProps) {
   // The Animated object housing our xy value so that we can spring back
   const pan = React.useRef(new Animated.ValueXY());
   // Always set to xy value of pan, would like to remove
-  const offsetFromStart = React.useRef(new Animated.ValueXY());
+  const offsetFromStart = React.useRef({x: 0, y: 0});
   // Width/Height of Draggable (renderSize is arbitrary if children are passed in)
-  const childSize = React.useRef(new Animated.ValueXY({x: renderSize, y: renderSize}));
+  const childSize = React.useRef({x: renderSize, y: renderSize});
   // Top/Left/Right/Bottom location on screen from start of most recent touch
-  const startBounds = React.useRef(new Animated.Value({top: 0, bottom: 0, left: 0, right: 0}));
+  const startBounds = React.useRef({top: 0, bottom: 0, left: 0, right: 0});
   // Whether we're currently dragging or not
   const isDragging = React.useRef(false);
-
-  const scale = React.useRef(new Animated.Value(1));
 
   const getBounds = React.useCallback(() => {
     const left = x + offsetFromStart.current.x;
@@ -119,13 +116,6 @@ export default function Draggable(props: IProps) {
     },
     [disabled],
   );
-
-//Skylar test
-  const changeXY = (newX, newY) => {
-    offsetFromStart = new Animated.ValueXY({x: 3, y: 3});
-    console.log("changing x y");
-    //offsetFromStart.setValue({x: newX, y: newY});
-  }
 
   const reversePosition = React.useCallback(() => {
     Animated.spring(pan.current, {
@@ -155,7 +145,7 @@ export default function Draggable(props: IProps) {
       startBounds.current = getBounds();
       isDragging.current = true;
       if (!shouldReverse) {
-        pan.current.setOffset(offsetFromStart.current); //change this value later to closest color point
+        pan.current.setOffset(offsetFromStart.current);
         pan.current.setValue({x: 0, y: 0});
       }
     },
@@ -231,13 +221,13 @@ export default function Draggable(props: IProps) {
     const style: StyleProp<ViewStyle> = {
       top: y,
       left: x,
-      transform: [{translateX: 0}], //TEST - was x
       elevation: z,
       zIndex: z,
     };
     if (renderColor) {
       style.backgroundColor = renderColor;
     }
+
     if (isCircle) {
       style.borderRadius = renderSize;
     }
@@ -257,11 +247,6 @@ export default function Draggable(props: IProps) {
       justifyContent: 'center',
       width: renderSize,
       height: renderSize,
-      transform: [{scaleX: 1}, {scaleY: 1}],
-      shadowColor: 'black',
-      shadowOffset: { width: 0, height: 0.5 * 20 },
-      shadowOpacity: 0.1,
-      shadowRadius: 0.8 * 20,
     };
   }, [children, isCircle, renderColor, renderSize, x, y, z]);
 
@@ -315,7 +300,7 @@ export default function Draggable(props: IProps) {
   }, [maxX, maxY, minX, minY]);
 
   return (
-    <Animated.View pointerEvents="box-none" style={positionCss}>
+    <View pointerEvents="box-none" style={positionCss}>
       {debug && getDebugView()}
       <Animated.View
         pointerEvents="box-none"
@@ -334,7 +319,7 @@ export default function Draggable(props: IProps) {
           {touchableContent}
         </TouchableOpacity>
       </Animated.View>
-    </Animated.View>
+    </View>
   );
 }
 

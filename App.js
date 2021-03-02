@@ -81,8 +81,16 @@ export default function App() {
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
 
+  const [dragFirstX, setDragFirstX] = React.useState(wp('50%')-wp('7.5%'));
+  const [dragFirstY, setDragFirstY] = React.useState(hp('20%'));
+  const [dragSecondX, setDragSecondX] = React.useState(wp('50%')-wp('7.5%'));
+  const [dragSecondY, setDragSecondY] = React.useState(hp('30%'));
+
   const [firstColor, setFirstColor] = React.useState('');
   const [secondColor, setSecondColor] = React.useState('');
+  var color1 = '';
+  var color2 = '';
+
   const [didDrag1, setDidDrag1] = React.useState(false);
   const [didDrag2, setDidDrag2] = React.useState(false);
 
@@ -138,31 +146,31 @@ export default function App() {
   ];
 
   var colorComboMenuItems = [
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/bluegrey.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'blue', header2: 'grey', shareLink: '', bodyBlurb: 'Although honesty is important to both of you, how you understand it is very different. Blues relate honesty closely to work ethic and clarity, where Greys see clearly the hypocrisies and contradictions in life, and feel the only honest response is to point them out. Blues want to get things done, and do the best with what they’ve got. Greys see a lot of gray. Greys, remember that Blues love organization and control: bolster them, congratulate them on their successes. Blues, remember that Greys may see ambiguity where you see clarity. Explain yourself conversationally, and be humble. A little bit of acknowledgement will go a long way toward getting a Grey on board.', pullQuote: 'Explain yourself conversationally, and be humble.', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/blueyellow.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'blue', header2: 'orange', shareLink: '', bodyBlurb: 'Blues and Oranges are both givers, although in different ways. Blues give themselves wholeheartedly to work; you can count on them to stay late and to care about doing the smallest things right. Oranges give themselves to people, anticipating their needs, saying just the right thing to put people at ease. Although you are both givers, you may not recognize this about each other because of the different ways that you express it. Learn how to give and receive gifts in the other person’s style. You may not always notice that you are being given a gift when it’s not on your wavelength.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/bluepurple.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'blue', header2: 'purple', shareLink: '', bodyBlurb: 'Chances are that Purples and Blues find beauty and meaning in distinctly divergent ways. With your strengths combined, Purples and Blues may create functional beauty. A Blue may bring the detailed, orderly perfectionism needed to launch something fantastic. A Purple may bring an unexpected work-around to a tough problem, or a seemingly odd idea that with a Blue’s rational perspective may lead to a workable solution. Pause to solicit ideas from each other, and affirm each others strengths. Often the natural human instinct is to feel frustration when confronted with difference seek to cultivate joy in the diversity between you.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/bluered.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'blue', header2: 'crimson', shareLink: '', bodyBlurb: 'You’re both committed and hard-working which makes you the most boring color combination of all time; laughing at yourselves will help with this. Incidentally, you are also probably the most productive color combination of all time. While you’re wonderfully efficient, your duo probably isn’t the source of crazy, new ideas. To a Crimson, Blue may seem bogged down by precision and rules. On the other hand, a Crimson may seem reckless and imprudent to a Blue. Although this might be frustrating, you certainly complement each other. Chances are that together you’ll be far more fruitful than you would be with any other color.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/-bluegreen.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'blue', header2: 'green', shareLink: '', bodyBlurb: 'Green and Blue may just be the lowest stress color combination of them all: a low-key Green attitude that doesn’t make a mountain out of a molehill and with detail-oriented Blue thinking that keeps on top of things. However, there is potential for seriously conflicting priorities. Blues may sometimes see Greens as not pulling their weight; Greens may see Blues as stressing out over every little thing. Both of you communicate nonverbally, and will be tempted to respond to the other’s behavior by intensifying your own; Greens becoming ever more flagrantly chill, and Blues ever more aggressively diligent. So communicate! Allow your differences to complement each other instead of exacerbate the problem.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/bluegrey.mp4', circleImage: require('./assets/circles/circle_bluegrey.png'), header1: 'blue', header2: 'grey', shareLink: '', bodyBlurb: 'Although honesty is important to both of you, how you understand it is very different. Blues relate honesty closely to work ethic and clarity, where Greys see clearly the hypocrisies and contradictions in life, and feel the only honest response is to point them out. Blues want to get things done, and do the best with what they’ve got. Greys see a lot of gray. Greys, remember that Blues love organization and control: bolster them, congratulate them on their successes. Blues, remember that Greys may see ambiguity where you see clarity. Explain yourself conversationally, and be humble. A little bit of acknowledgement will go a long way toward getting a Grey on board.', pullQuote: 'Explain yourself conversationally, and be humble.', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/blueyellow.mp4', circleImage: require('./assets/circles/circle_blueorange.png'), header1: 'blue', header2: 'orange', shareLink: '', bodyBlurb: 'Blues and Oranges are both givers, although in different ways. Blues give themselves wholeheartedly to work; you can count on them to stay late and to care about doing the smallest things right. Oranges give themselves to people, anticipating their needs, saying just the right thing to put people at ease. Although you are both givers, you may not recognize this about each other because of the different ways that you express it. Learn how to give and receive gifts in the other person’s style. You may not always notice that you are being given a gift when it’s not on your wavelength.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/bluepurple.mp4', circleImage: require('./assets/circles/circle_bluepurple.png'), header1: 'blue', header2: 'purple', shareLink: '', bodyBlurb: 'Chances are that Purples and Blues find beauty and meaning in distinctly divergent ways. With your strengths combined, Purples and Blues may create functional beauty. A Blue may bring the detailed, orderly perfectionism needed to launch something fantastic. A Purple may bring an unexpected work-around to a tough problem, or a seemingly odd idea that with a Blue’s rational perspective may lead to a workable solution. Pause to solicit ideas from each other, and affirm each others strengths. Often the natural human instinct is to feel frustration when confronted with difference seek to cultivate joy in the diversity between you.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/bluered.mp4', circleImage: require('./assets/circles/circle_bluered.png'), header1: 'blue', header2: 'crimson', shareLink: '', bodyBlurb: 'You’re both committed and hard-working which makes you the most boring color combination of all time; laughing at yourselves will help with this. Incidentally, you are also probably the most productive color combination of all time. While you’re wonderfully efficient, your duo probably isn’t the source of crazy, new ideas. To a Crimson, Blue may seem bogged down by precision and rules. On the other hand, a Crimson may seem reckless and imprudent to a Blue. Although this might be frustrating, you certainly complement each other. Chances are that together you’ll be far more fruitful than you would be with any other color.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/-bluegreen.mp4', circleImage: require('./assets/circles/circle_bluegreen.png'), header1: 'blue', header2: 'green', shareLink: '', bodyBlurb: 'Green and Blue may just be the lowest stress color combination of them all: a low-key Green attitude that doesn’t make a mountain out of a molehill and with detail-oriented Blue thinking that keeps on top of things. However, there is potential for seriously conflicting priorities. Blues may sometimes see Greens as not pulling their weight; Greens may see Blues as stressing out over every little thing. Both of you communicate nonverbally, and will be tempted to respond to the other’s behavior by intensifying your own; Greens becoming ever more flagrantly chill, and Blues ever more aggressively diligent. So communicate! Allow your differences to complement each other instead of exacerbate the problem.', pullQuote: '', bodyBlurb2: ''},
 
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowgreen.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'green', header2: 'orange', shareLink: '', bodyBlurb: 'Green and Orange are not the best duo to move a project forward aggressively. You are both perfectly happy dwelling in the comfort zone. If you start to feel stuck, you may try bringing other personality types into the mix. As a team, you both help with team cohesion and harmony. Oranges, you see the positive side to any personality. By sharing this with the team, you may help change negative attitudes. You are also unafraid of disagreement; you see it as a natural expression of personality difference. While you don’t enjoy unhealthy or overly aggressive conflict, you find healthy conflict to be positive and growth-oriented.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greenpurple.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'green', header2: 'purple', shareLink: '', bodyBlurb: 'Purples and Greens most likely get along perfectly well. If you can accept each other’s attitudes as genuine, Purple and Green make for a relaxed, conflict-free team. It may be hard to solicit ideas from a Green, particularly when there is a difference of opinion in the room. Chances are the Green would foremost like to see resolution, even if it comes at the expense of the product, and there may even be times when the preservation of work relationships is the most important thing. Purples, with their non-threatening quirkiness, may be able to help Greens engage in contentious work, and see that creative tension can come with enormous benefits.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greenred.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'green', header2: 'crimson', shareLink: '', bodyBlurb: 'The brash go-getter and the stress-free chillaxer may not have a lot in common aesthetically and can find themselves taken aback and irked by each other at times. That’s okay, and may even be positive if you’re committed to making it work! Greens, try not to sacrifice honesty for the sake of cohesion; positive conflict equals growth. Lean into a healthy disagreement. Try allowing yourself to be swept up by Crimson’s ambition and vision. Crimsons, be aware when you are amping up your energy levels to compensate for the Greens around you. Be aware that Greens avoid conflict, and may reflexively voice agreement without true commitment, simply to keep the peace.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greengrey.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'green', header2: 'grey', shareLink: '', bodyBlurb: 'Greens see strength in stability. Greys see strength in pushing through facade to a more “real” relationship. If you can understand where the other is coming from, you can get into a solid friendship. Greys may need to try less talk, more walk in terms of being the good they want to see. Greens should realize a well-placed critique can break the ice, with humor and without anxiety. Greys may be able to bring a Green into a new situation by showing them that risk can be mysterious, even beautiful. Greens, you may be able to help a Grey open up, by modeling peaceful honesty.', pullQuote: 'If you can understand where the other is coming from, you can get into a solid friendship.', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowgreen.mp4', circleImage: require('./assets/circles/circle_greenorange.png'), header1: 'green', header2: 'orange', shareLink: '', bodyBlurb: 'Green and Orange are not the best duo to move a project forward aggressively. You are both perfectly happy dwelling in the comfort zone. If you start to feel stuck, you may try bringing other personality types into the mix. As a team, you both help with team cohesion and harmony. Oranges, you see the positive side to any personality. By sharing this with the team, you may help change negative attitudes. You are also unafraid of disagreement; you see it as a natural expression of personality difference. While you don’t enjoy unhealthy or overly aggressive conflict, you find healthy conflict to be positive and growth-oriented.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greenpurple.mp4', circleImage: require('./assets/circles/circle_purplegreen.png'), header1: 'green', header2: 'purple', shareLink: '', bodyBlurb: 'Purples and Greens most likely get along perfectly well. If you can accept each other’s attitudes as genuine, Purple and Green make for a relaxed, conflict-free team. It may be hard to solicit ideas from a Green, particularly when there is a difference of opinion in the room. Chances are the Green would foremost like to see resolution, even if it comes at the expense of the product, and there may even be times when the preservation of work relationships is the most important thing. Purples, with their non-threatening quirkiness, may be able to help Greens engage in contentious work, and see that creative tension can come with enormous benefits.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greenred.mp4', circleImage: require('./assets/circles/circle_redgreen.png'), header1: 'green', header2: 'crimson', shareLink: '', bodyBlurb: 'The brash go-getter and the stress-free chillaxer may not have a lot in common aesthetically and can find themselves taken aback and irked by each other at times. That’s okay, and may even be positive if you’re committed to making it work! Greens, try not to sacrifice honesty for the sake of cohesion; positive conflict equals growth. Lean into a healthy disagreement. Try allowing yourself to be swept up by Crimson’s ambition and vision. Crimsons, be aware when you are amping up your energy levels to compensate for the Greens around you. Be aware that Greens avoid conflict, and may reflexively voice agreement without true commitment, simply to keep the peace.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greengrey.mp4', circleImage: require('./assets/circles/circle_greygreen.png'), header1: 'green', header2: 'grey', shareLink: '', bodyBlurb: 'Greens see strength in stability. Greys see strength in pushing through facade to a more “real” relationship. If you can understand where the other is coming from, you can get into a solid friendship. Greys may need to try less talk, more walk in terms of being the good they want to see. Greens should realize a well-placed critique can break the ice, with humor and without anxiety. Greys may be able to bring a Green into a new situation by showing them that risk can be mysterious, even beautiful. Greens, you may be able to help a Grey open up, by modeling peaceful honesty.', pullQuote: 'If you can understand where the other is coming from, you can get into a solid friendship.', bodyBlurb2: ''},
 
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greengreen.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'green', header2: 'green', shareLink: '', bodyBlurb: 'The chances that you two, as Greens, will erupt into conflict hovers somewhere between zero and minus zero. But that doesn’t mean you will be the most productive pair, either. The first issue that may harm your productivity is the fact you both prefer stability, so change (even productive change) can upset the status quo. A little-known fact about Greens is that under their very calm exteriors are some very strong opinions. And just because you are both Greens does not mean you have the same opinions on everything. While eruptions rarely occur, conflicts do not automatically resolve themselves. So don’t assume things are always great with each other. Keep checking in and keep support levels high.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/blueblue.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'blue', header2: 'blue', bodyBlurb: 'Theoretically, two Blues working together should be an ideal pair. How could two dependable and organized folks not work together to improve the outcomes of both? Well, a part of being Blue is also having a distinct preference for calling the shots and we all know what happens when we have more than one chef in the kitchen. Sometimes you may find that it is best to agree to have different areas where you can each explore your own ideas. But that is certainly not the typical outcome, and with some compromises and cooperation you can both apply your incredible abilities to work together for everyone’s advantage.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greygrey.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'grey', header2: 'grey', shareLink: '', bodyBlurb: 'Who hates each other more: two punks who love different bands, or a blue-haired social justice warrior stuck in a room with an internet troll? When you buck the establishment, its hard to get along with other anti-establishment types unless their interests align exactly with your own. Fortunately, the antidote is also your strong suit: self-deprecating humor and snarky comments. Admit the flaws in your own crusade, and hopefully theyll admit the flaws in theirs too and you can have a good laugh about the hopelessness of it all. Then move on and get some freakin work done. Shoulder to shoulder you will quickly find that the other person brings sharp clarity and new perspectives that can really push the project forward and expand your own understanding.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/redred.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'crimson', header2: 'crimson', shareLink: '', bodyBlurb: 'This same-color pair often enjoys a spectacular outcome when working together. The energy, passion and adventurousness of two Crimsons combine to produce results above and beyond what either could have done alone. But there are also times when aspects of Crimsons may clash. The desire to lead, to be in the spotlight, to be recognized as unique, and other Crimson traits can make it difficult to work together toward a common goal. The sooner Crimsons recognize their common traits, the easier it is to build workarounds to make sure your similarities do not clash. Create separate areas where you can both shine, find ways to share the spotlight, or take turns being out in front. It will take considerable effort, but always strive to mesh your incredible drives and passions and find ways to pull together.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/purplepurple.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'purple', header2: 'purple', shareLink: '', bodyBlurb: 'If days were only longer, Purples could find ways to work so much more effectively together. There never seems to be enough time to describe all the ideas that fill every Purple’s mind. Even when working in close proximity, a Purple often prefers to have more time focusing on the task at hand without the presence of another. The key is to find the areas where you both The key is to find the areas where you both excel and give each other recognition and support for your individual strengths. It may also take some volitional effort by both of you to make sure productivity doesn’t lose out to the desire to brainstorm. However, when you provide mutual support and both help each other stay focused on productivity, chances are you will be an exceptional pair of colleagues.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/orangeorange.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'orange', header2: 'orange', shareLink: '', bodyBlurb: 'When a Orange joins forces with another Orange, an enjoyable association is bound to result. Oranges bring joy and optimism to everyone and know exactly when to help and when to step back. The only real problem for two Oranges is that neither of you may be comfortable taking the lead because you both enjoy being helpful. Of course, one of you may know the work environment so well that you may enjoy taking the lead even if it is not your natural style. Regardless, given your mutual desire to make the world a better place every day, you are sure to find ways mesh together to get the job done.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greengreen.mp4', circleImage: require('./assets/circles/circle_green.png'), header1: 'green', header2: 'green', shareLink: '', bodyBlurb: 'The chances that you two, as Greens, will erupt into conflict hovers somewhere between zero and minus zero. But that doesn’t mean you will be the most productive pair, either. The first issue that may harm your productivity is the fact you both prefer stability, so change (even productive change) can upset the status quo. A little-known fact about Greens is that under their very calm exteriors are some very strong opinions. And just because you are both Greens does not mean you have the same opinions on everything. While eruptions rarely occur, conflicts do not automatically resolve themselves. So don’t assume things are always great with each other. Keep checking in and keep support levels high.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/blueblue.mp4', circleImage: require('./assets/circles/circle_blue.png'), header1: 'blue', header2: 'blue', bodyBlurb: 'Theoretically, two Blues working together should be an ideal pair. How could two dependable and organized folks not work together to improve the outcomes of both? Well, a part of being Blue is also having a distinct preference for calling the shots and we all know what happens when we have more than one chef in the kitchen. Sometimes you may find that it is best to agree to have different areas where you can each explore your own ideas. But that is certainly not the typical outcome, and with some compromises and cooperation you can both apply your incredible abilities to work together for everyone’s advantage.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greygrey.mp4', circleImage: require('./assets/circles/circle_grey.png'), header1: 'grey', header2: 'grey', shareLink: '', bodyBlurb: 'Who hates each other more: two punks who love different bands, or a blue-haired social justice warrior stuck in a room with an internet troll? When you buck the establishment, its hard to get along with other anti-establishment types unless their interests align exactly with your own. Fortunately, the antidote is also your strong suit: self-deprecating humor and snarky comments. Admit the flaws in your own crusade, and hopefully theyll admit the flaws in theirs too and you can have a good laugh about the hopelessness of it all. Then move on and get some freakin work done. Shoulder to shoulder you will quickly find that the other person brings sharp clarity and new perspectives that can really push the project forward and expand your own understanding.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/redred.mp4', circleImage: require('./assets/circles/circle_red.png'), header1: 'crimson', header2: 'crimson', shareLink: '', bodyBlurb: 'This same-color pair often enjoys a spectacular outcome when working together. The energy, passion and adventurousness of two Crimsons combine to produce results above and beyond what either could have done alone. But there are also times when aspects of Crimsons may clash. The desire to lead, to be in the spotlight, to be recognized as unique, and other Crimson traits can make it difficult to work together toward a common goal. The sooner Crimsons recognize their common traits, the easier it is to build workarounds to make sure your similarities do not clash. Create separate areas where you can both shine, find ways to share the spotlight, or take turns being out in front. It will take considerable effort, but always strive to mesh your incredible drives and passions and find ways to pull together.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/purplepurple.mp4', circleImage: require('./assets/circles/circle_purple.png'), header1: 'purple', header2: 'purple', shareLink: '', bodyBlurb: 'If days were only longer, Purples could find ways to work so much more effectively together. There never seems to be enough time to describe all the ideas that fill every Purple’s mind. Even when working in close proximity, a Purple often prefers to have more time focusing on the task at hand without the presence of another. The key is to find the areas where you both The key is to find the areas where you both excel and give each other recognition and support for your individual strengths. It may also take some volitional effort by both of you to make sure productivity doesn’t lose out to the desire to brainstorm. However, when you provide mutual support and both help each other stay focused on productivity, chances are you will be an exceptional pair of colleagues.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/orangeorange.mp4', circleImage: require('./assets/circles/circle_orange.png'), header1: 'orange', header2: 'orange', shareLink: '', bodyBlurb: 'When a Orange joins forces with another Orange, an enjoyable association is bound to result. Oranges bring joy and optimism to everyone and know exactly when to help and when to step back. The only real problem for two Oranges is that neither of you may be comfortable taking the lead because you both enjoy being helpful. Of course, one of you may know the work environment so well that you may enjoy taking the lead even if it is not your natural style. Regardless, given your mutual desire to make the world a better place every day, you are sure to find ways mesh together to get the job done.', pullQuote: '', bodyBlurb2: ''},
 
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greyred.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'grey', header2: 'crimson', shareLink: '', bodyBlurb: 'You both approach social interactions with a bold courage, although the emotional impulse which drives your courage is quite different. With this in mind, Crimsons, be aware that not all social behavior is to be taken literally. Although it doesn’t feel efficient, try engaging a Grey in a short caper before getting down to business; tell a story, say something intentionally mysterious just for fun. This will help you build rapport with a Grey. Greys, examine the motivations behind your behavior and ask yourself if there are better ways to accomplish your goals. Mystery is certainly an awesome hat to have in your closet, but hopefully you’re not using it just to annoy.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowgrey.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'grey', header2: 'orange', shareLink: '', bodyBlurb: 'Greys and Oranges both want to improve relationships. Oranges may put themselves out there in risky and vulnerable ways, and may get hurt by a Grey, especially if a Grey uses the opportunity to crack a joke. Oranges, realize that a snarky joke is sometimes intended to be friendly when it is used to start rapport. A Grey will likely be overjoyed if you snark back. In reality, emotional closeness and cutting through the nonsense are both necessary for building close relationships. With this in mind, you may start to enjoy each other’s company.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greypurple.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'grey', header2: 'purple', shareLink: '', bodyBlurb: 'Greys and Purples are likely to share personality traits and maybe even interests and may even be amused and inspired by each other. However, although Greys and Purples tend to appreciate one another, there is always potential for conflict or misunderstanding. Greys may intentionally say something obtuse, and Purples have been known to wax poetic, especially when they have just discovered a new artist or author. Greys, remember that it takes a lot of courage to put yourself out there. Until you have risked as much as the Purple has, don’t dare speak to them in a way that’s going to make them hold back. Ease up on the brutal side of your brutal honesty.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greyred.mp4', circleImage: require('./assets/circles/circle_redgrey.png'), header1: 'grey', header2: 'crimson', shareLink: '', bodyBlurb: 'You both approach social interactions with a bold courage, although the emotional impulse which drives your courage is quite different. With this in mind, Crimsons, be aware that not all social behavior is to be taken literally. Although it doesn’t feel efficient, try engaging a Grey in a short caper before getting down to business; tell a story, say something intentionally mysterious just for fun. This will help you build rapport with a Grey. Greys, examine the motivations behind your behavior and ask yourself if there are better ways to accomplish your goals. Mystery is certainly an awesome hat to have in your closet, but hopefully you’re not using it just to annoy.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowgrey.mp4', circleImage: require('./assets/circles/circle_greyorange.png'), header1: 'grey', header2: 'orange', shareLink: '', bodyBlurb: 'Greys and Oranges both want to improve relationships. Oranges may put themselves out there in risky and vulnerable ways, and may get hurt by a Grey, especially if a Grey uses the opportunity to crack a joke. Oranges, realize that a snarky joke is sometimes intended to be friendly when it is used to start rapport. A Grey will likely be overjoyed if you snark back. In reality, emotional closeness and cutting through the nonsense are both necessary for building close relationships. With this in mind, you may start to enjoy each other’s company.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greypurple.mp4', circleImage: require('./assets/circles/circle_purplegrey.png'), header1: 'grey', header2: 'purple', shareLink: '', bodyBlurb: 'Greys and Purples are likely to share personality traits and maybe even interests and may even be amused and inspired by each other. However, although Greys and Purples tend to appreciate one another, there is always potential for conflict or misunderstanding. Greys may intentionally say something obtuse, and Purples have been known to wax poetic, especially when they have just discovered a new artist or author. Greys, remember that it takes a lot of courage to put yourself out there. Until you have risked as much as the Purple has, don’t dare speak to them in a way that’s going to make them hold back. Ease up on the brutal side of your brutal honesty.', pullQuote: '', bodyBlurb2: ''},
 
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowred.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'crimson', header2: 'orange', shareLink: '', bodyBlurb: 'Crimson and Orange may be at different ends of the introvert-extrovert spectrum. It can be a lot of fun to hang out, as long as you know this about each other. Orange, if you need an advocate or ally, try reaching out to a Crimson. Crimson will gladly take the spotlight at a meeting, while Orange may feel more comfortable talking one-on-one afterwards. Crimson, be aware of the Oranges in the room, and ask them to speak up, or pause before speaking to give others a chance. And Orange, if you have a great idea, try blurting it out before you can second guess yourself.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowpurple.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'orange', header2: 'purple', shareLink: '', bodyBlurb: 'Purples and Oranges will tend to communicate well with each other; Oranges try to be great listeners, and Purples are expressive; well, at least when they have something original to share. Purples may enjoy hanging out with someone who laughs at their odd remarks (it takes creative energy to come up with new things to say!), and lobs a joke of their own back. Purples and Oranges might not be the best duo to get things accomplished quickly and efficiently. Oranges promote team cohesion and morale, and Purples generate new ideas and solve problems. So you may find it helpful to bring a Blue or Crimson on the team to manage and drive outcomes.', pullQuote: '', bodyBlurb2: ''},
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/redpurple.mp4', circleImage: require('./assets/circle_bluegrey.png'), header1: 'crimson', header2: 'purple', shareLink: '', bodyBlurb: 'There’s potential for fantastic collaboration between a Crimson and Purple. Purple brings the creative, outside-of-the-box inspiration; Crimson brings the ambitious, enterprising charge toward the finish line. Together this may be a recipe for innovation. Purple on its own may never get past thinking and designing, but Crimson loves a new idea, takes it, and leads the charge. A word of caution: a team of only Crimson and Purple may do wise to bring on a pragmatist. You may benefit from a voice of practicality--someone to research, test, and plan.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowred.mp4', circleImage: require('./assets/circles/circle_redorange.png'), header1: 'crimson', header2: 'orange', shareLink: '', bodyBlurb: 'Crimson and Orange may be at different ends of the introvert-extrovert spectrum. It can be a lot of fun to hang out, as long as you know this about each other. Orange, if you need an advocate or ally, try reaching out to a Crimson. Crimson will gladly take the spotlight at a meeting, while Orange may feel more comfortable talking one-on-one afterwards. Crimson, be aware of the Oranges in the room, and ask them to speak up, or pause before speaking to give others a chance. And Orange, if you have a great idea, try blurting it out before you can second guess yourself.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowpurple.mp4', circleImage: require('./assets/circles/circle_purpleorange.png'), header1: 'orange', header2: 'purple', shareLink: '', bodyBlurb: 'Purples and Oranges will tend to communicate well with each other; Oranges try to be great listeners, and Purples are expressive; well, at least when they have something original to share. Purples may enjoy hanging out with someone who laughs at their odd remarks (it takes creative energy to come up with new things to say!), and lobs a joke of their own back. Purples and Oranges might not be the best duo to get things accomplished quickly and efficiently. Oranges promote team cohesion and morale, and Purples generate new ideas and solve problems. So you may find it helpful to bring a Blue or Crimson on the team to manage and drive outcomes.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/redpurple.mp4', circleImage: require('./assets/circles/circle_purplered.png'), header1: 'crimson', header2: 'purple', shareLink: '', bodyBlurb: 'There’s potential for fantastic collaboration between a Crimson and Purple. Purple brings the creative, outside-of-the-box inspiration; Crimson brings the ambitious, enterprising charge toward the finish line. Together this may be a recipe for innovation. Purple on its own may never get past thinking and designing, but Crimson loves a new idea, takes it, and leads the charge. A word of caution: a team of only Crimson and Purple may do wise to bring on a pragmatist. You may benefit from a voice of practicality--someone to research, test, and plan.', pullQuote: '', bodyBlurb2: ''},
   ];
 
   var bodyTexts = {
@@ -809,24 +817,84 @@ function splitBlurbAtSentences(str)
       }, 100);
     };
 
-
-    const DraggableOnDrag = (draggable) => {
-      setFirstColor('grey'); //temp - must happen well before or delay the ui change
-      setSecondColor('blue');
-      //console.log('dragging');
+    const determineDraggableColor = (x,y) => {
+      if(x > wp('0%') && x < wp('40%')) //1st third
+      {
+        if(y > hp('12%') && y < hp('29%'))
+        {
+            return 'green';
+        } else {
+            return 'orange';
+        }
+      } else if (x > wp('40%') && x < wp('62%')) { //2nd third
+        if(y >= hp('12%') && y < hp('22%'))
+        {
+            return 'blue';
+        } else if (y > hp('22%') && y < hp('30%'))
+        {
+            return 'grey';
+        }
+        else {
+            return 'orange';
+        }
+      } else { //3rd third
+        if(y > hp('12%') && y < hp('29%'))
+        {
+            return 'purple';
+        } else {
+            return 'crimson';
+        }
+      }
     }
 
-    const ToggleComboColor = () => {
-      if(didDrag1 && didDrag2)
-      {
+    const ToggleComboColor2 = (event, gestureState) => {
+
+      color2 = determineDraggableColor(gestureState.moveX, gestureState.moveY);
+      console.log('Second: ', color2);
+      // setCurrentColorCombo(
+      //   getColorComboItemArray(color1, color2)[0]
+      // );
+      //
+      if (didDrag1 && didDrag2 && color1 != '' && color2 != '') {
+        //setCurrentKey("Combo");
+        console.log(color1 + " | "+color2);
+        setCurrentColorCombo(
+          getColorComboItemArray(color1, color2)[0]
+        );
+        setCurrentKey("Combo");
         setDidDrag1(false);
         setDidDrag2(false);
-
-        //Toggle color combo
-        setCurrentKey('Combo');
-        setCurrentColorCombo(getColorComboItemArray(firstColor, secondColor)[0]);
-
       }
+
+    }
+
+    const ToggleComboColor1 = (event, gestureState) => {
+
+      color1 = determineDraggableColor(gestureState.moveX, gestureState.moveY);
+      console.log('First: ', color1);
+
+      //console.log(color1 + " | "+color2);
+      // setCurrentColorCombo(
+      //   getColorComboItemArray(color1, color2)[0]
+      // );
+      //
+      // if (didDrag1 && didDrag2) {
+      //   //setCurrentKey("Combo");
+      //   console.log(currentColorCombo);
+      //   setDidDrag1(false);
+      //   setDidDrag2(false);
+      // }
+      if (didDrag1 && didDrag2 && color1 != '' && color2 != '') {
+
+        console.log(color1 + " | "+color2);
+        setCurrentColorCombo(
+          getColorComboItemArray(color1, color2)[0]
+        );
+        setCurrentKey("Combo");
+        setDidDrag1(false);
+        setDidDrag2(false);
+      }
+
     }
 
     function getResultColorItem(color) {
@@ -879,12 +947,12 @@ const styles = ScaledSheet.create({
   bodyText: {
     fontFamily: 'CircularStd-Book',
     color: 'black',
-    fontSize: '18@ms',
+    fontSize: isTablet() ? '15@ms' : '18@ms',
   },
   topBold: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: '18@ms',
+    fontSize: isTablet() ? '14@ms' : '18@ms',
   },
   splash: {
         ...StyleSheet.absoluteFillObject,
@@ -913,7 +981,7 @@ const styles = ScaledSheet.create({
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
-      marginTop: '4@ms',
+      marginTop: isTablet() ? moderateScale(-5) : moderateScale(5),
       alignSelf: "flex-start",
       display: (currentKey != 'Teams' && currentKey != 'Combo') ? 'flex' : 'none'
     },
@@ -923,7 +991,7 @@ const styles = ScaledSheet.create({
       transform: [{translateX: wp('14%')}, {translateY: hp('7.3%')}],
       position: 'absolute',
       zIndex: 5,
-      marginTop: '4@ms',
+      marginTop: isTablet() ? -moderateScale(2) : moderateScale(5),
       alignSelf: "flex-start",
       display: currentKey == 'Combo' ? 'flex' : 'none',
       overflow: 'visible'
@@ -1089,7 +1157,7 @@ const styles = ScaledSheet.create({
       pullQuote: {
         fontFamily: 'CircularStd-BlackItalic',
         color: 'black',
-        fontSize: '25@ms',
+        fontSize: isTablet() ? '21@ms' : '25@ms',
         textAlign: 'left',
         letterSpacing: -0.5,
       },
@@ -1144,27 +1212,28 @@ function getColorComboTextFormatted(colorItem)
   if(colorItem != null)
   {
     return ([
-      <View key = {0} pointerEvents='none' style = {{display: 'flex', backgroundColor: getResultColorItem(colorItem.header2)[0].color, position: 'absolute', height: hp('100%'), width: wp('101%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden', transform: [{ translateX: wp('0%')}]}} >
+      <View key = {0} pointerEvents='none' style = {{display: 'flex', backgroundColor: 'transparent', position: 'absolute', height: hp('100%'), width: wp('101%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden', transform: [{ translateX: wp('0%')}]}} >
+      <LinearGradient
+          // Background Linear Gradient
+          colors={[getResultColorItem(colorItem.header1)[0].color, getResultColorItem(colorItem.header2)[0].color]}
+          start={[0, 0.5]}
+          end={[0.8, 0.5]}
+          style={{width: wp('101%'), height: hp('200%'), zIndex: 0, position: 'absolute', marginTop: hp('25%')}}
+        />
 
       <MaskedView
-          style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
+          style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%'), position: 'absolute'}}
           maskElement={
-            <View
-              style={{
-                // Transparent background because mask is based off alpha channel.
-                backgroundColor: 'transparent',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-            <LinearGradient
-                // Background Linear Gradient
-                colors={['transparent', 'black']}
-                start={[0.5, 0.25]}
-                end={[0.5, .4]}
-                style={{width: wp('100%'), height: hp('57%')}}
-              />
-            </View>
+              <View
+                style={{
+                  // Transparent background because mask is based off alpha channel.
+                  backgroundColor: 'transparent',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Image style= {{width: wp('100%'), height: isTablet() ? hp('87%') : hp('60%'), marginTop: isTablet() ? hp('-8%') : hp('3%')}} source={require('./assets/gradientmask.png')} />
+              </View>
           }
         >
           {/* Shows behind the mask, you can put anything here, such as an image */}
@@ -1175,7 +1244,7 @@ function getColorComboTextFormatted(colorItem)
             resizeMode="contain"
             shouldPlay
             isLooping
-            style={{ width: wp('100%'), height: hp('57%')}}
+            style={{ display: 'flex', width: wp('100%'), height: isTablet() ? hp('45%') : hp('57%'), marginTop: isTablet() ? hp('5%') : 0, zIndex: 4}}
           />
         </MaskedView>
 
@@ -1324,13 +1393,7 @@ function getColorTextFormatted(color) //SHOWN FOR Results
                   alignItems: 'center'
                 }}
               >
-              <LinearGradient
-                  // Background Linear Gradient
-                  colors={['transparent', 'black']}
-                  start={[0.5, 0.25]}
-                  end={[0.5, .4]}
-                  style={{width: wp('100%'), height: hp('57%')}}
-                />
+                <Image style= {{width: wp('100%'), height: isTablet() ? hp('83%') : hp('60%'), marginTop: isTablet() ? hp('-3%') : hp('3%')}} source={require('./assets/gradientmask.png')} />
               </View>
             }
           >
@@ -1342,7 +1405,7 @@ function getColorTextFormatted(color) //SHOWN FOR Results
               resizeMode="contain"
               shouldPlay
               isLooping
-              style={{ width: wp('100%'), height: hp('57%')}}
+              style={{ width: wp('100%'), height: isTablet() ? hp('38%') : hp('57%'), marginTop: isTablet() ? hp('10%') : 0}} //57 for iphone
             />
           </MaskedView>
 
@@ -1470,7 +1533,7 @@ InlineImage.propTypes = Image.propTypes;
         />
       </TouchableOpacity>
       <TouchableOpacity style={styles.backArrowBtn} onPress={() => setCurrentKey('Teams')}>
-        <Image style={{width: wp('7@ms'), height: wp('7@ms')}} source={require('./assets/backarrow.png')} />
+        <Image style={{width: moderateScale(26), height: moderateScale(26)}} source={require('./assets/backarrow.png')} />
       </TouchableOpacity>
 
       <Animated.View style = {[styles.messagePill, styles.shadow2, {shadowOpacity: 0.1, opacity: 1, transform: [{translateX: messageXPos}] ,}]}>
@@ -1492,7 +1555,7 @@ InlineImage.propTypes = Image.propTypes;
         messageInAnimation={messageInAnimation}
         isQuizResultShown={currentKey === 'Quiz' && showResult}
         isResultShowing={currentKey === 'Results'}
-        comboCircleImage={getColorComboItemArray('blue', 'grey')[0].circleImage}
+        comboCircleImage={currentColorCombo != null ? currentColorCombo.circleImage : require('./assets/rainbowcircle.png')}
         currentKey={currentKey}
       />}
 
@@ -1744,9 +1807,10 @@ InlineImage.propTypes = Image.propTypes;
                             </ScrollView>
                             </SafeAreaView>
                           </Animated.View>
+
                           <ImageBackground style = {{width: wp('100%'), height: hp('40%'), zIndex: 13, marginLeft: moderateScale(2), marginTop: moderateScale(-5), display: currentKey == 'Teams' ? 'flex' : 'none'}} source={require('./assets/rainbowgradient.png')} >
-                            <Draggable x={wp('50%')-wp('7.5%')} y={hp('20%')} renderSize={isTablet() ? wp('12%') : wp('15.5%')} hasBorder={true} renderColor={'#00000000'} renderText={''} isCircle shouldReverse onDragRelease={() => {ToggleComboColor();}} onDrag={DraggableOnDrag} onPressIn={() => {setDidDrag1(true);}} />
-                            <Draggable x={wp('50%')-wp('7.5%')} y={hp('30%')} renderSize={isTablet() ? wp('12%') : wp('15.5%')} hasBorder={true} renderColor={'#00000000'} renderText={''} isCircle shouldReverse onDragRelease={() => {ToggleComboColor();}} onDrag={DraggableOnDrag} onPressIn={() => {setDidDrag2(true);}} />
+                            <Draggable x={wp('40%')-(wp('16.5%')/2)} y={wp('45%')} renderSize={isTablet() ? wp('12%') : wp('16.5%')} hasBorder={true} renderColor={'#00000000'} minX={wp('0%')} maxX={wp('100%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor1(event, gestureState)} onPressIn={() => {setDidDrag1(true);}} />
+                            <Draggable x={wp('60%')-(wp('16.5%')/2)} y={wp('45%')} renderSize={isTablet() ? wp('12%') : wp('16.5%')} hasBorder={true} renderColor={'#00000000'} minX={wp('0%')} maxX={wp('100%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor2(event, gestureState)} onPressIn={() => {setDidDrag2(true);}} />
                           </ImageBackground>
 
                           <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
@@ -1818,7 +1882,7 @@ InlineImage.propTypes = Image.propTypes;
                                           resizeMode="contain"
                                           shouldPlay
                                           isLooping
-                                          style={{ width: wp('30%'), height: wp('30%'), alignSelf: 'center'}}
+                                          style={{ width: isTablet() ? wp('20%') : wp('30%'), height: isTablet() ? wp('20%') : wp('30%'), alignSelf: 'center'}}
                                         />
 
                                     <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(20), marginTop: -moderateScale(10)}]}>
@@ -1832,7 +1896,7 @@ InlineImage.propTypes = Image.propTypes;
                                           resizeMode="contain"
                                           shouldPlay
                                           isLooping
-                                          style={{ width: wp('28%'), height: wp('28%'), alignSelf: 'center'}}
+                                          style={{ width: isTablet() ? wp('19%') : wp('28%'), height: isTablet() ? wp('19%') : wp('28%'), alignSelf: 'center'}}
                                         />
 
                                         <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(2), marginTop: moderateScale(15) }]}>
@@ -1846,7 +1910,7 @@ InlineImage.propTypes = Image.propTypes;
                                               resizeMode="contain"
                                               shouldPlay
                                               isLooping
-                                              style={{ width: wp('30%'), height: wp('30%'), alignSelf: 'center'}}
+                                              style={{ width: isTablet() ? wp('20%') : wp('30%'), height: isTablet() ? wp('20%') : wp('30%'), alignSelf: 'center'}}
                                             />
 
                                         <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8), marginTop: moderateScale(-5)}]}> {"\n"}“Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together.”
