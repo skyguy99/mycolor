@@ -78,6 +78,10 @@ export default function App() {
   const [messageXPos, setMessageXPos] = React.useState(new Animated.Value(wp('-110%')));
   const [didLongPress, setDidLongPress] =  React.useState(false);
 
+  const [animatedFontScale, setAnimatedFontScale] = React.useState(new Animated.Value(1));
+  const [animatedFontScale2, setAnimatedFontScale2] = React.useState(new Animated.Value(1.04));
+  const [didStartFontScaleLoop, setDidStartFontScaleLoop] =  React.useState(false);
+
   const [isSelectingSecondColor, setIsSelectingSecondColor] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState('#fca500');
 
@@ -85,6 +89,7 @@ export default function App() {
   const [dragFirstY, setDragFirstY] = React.useState(hp('20%'));
   const [dragSecondX, setDragSecondX] = React.useState(wp('50%')-wp('7.5%'));
   const [dragSecondY, setDragSecondY] = React.useState(hp('30%'));
+  const [cameFromTeams, setCameFromTeams] = React.useState(false);
 
   const [firstColor, setFirstColor] = React.useState('');
   const [secondColor, setSecondColor] = React.useState('');
@@ -168,7 +173,7 @@ export default function App() {
     {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowgrey.mp4', circleImage: require('./assets/circles/circle_greyorange.png'), header1: 'grey', header2: 'orange', shareLink: '', bodyBlurb: 'Greys and Oranges both want to improve relationships. Oranges may put themselves out there in risky and vulnerable ways, and may get hurt by a Grey, especially if a Grey uses the opportunity to crack a joke. Oranges, realize that a snarky joke is sometimes intended to be friendly when it is used to start rapport. A Grey will likely be overjoyed if you snark back. In reality, emotional closeness and cutting through the nonsense are both necessary for building close relationships. With this in mind, you may start to enjoy each other’s company.', pullQuote: '', bodyBlurb2: ''},
     {image: 'https://mycolor.s3.us-east-2.amazonaws.com/greypurple.mp4', circleImage: require('./assets/circles/circle_purplegrey.png'), header1: 'grey', header2: 'purple', shareLink: '', bodyBlurb: 'Greys and Purples are likely to share personality traits and maybe even interests and may even be amused and inspired by each other. However, although Greys and Purples tend to appreciate one another, there is always potential for conflict or misunderstanding. Greys may intentionally say something obtuse, and Purples have been known to wax poetic, especially when they have just discovered a new artist or author. Greys, remember that it takes a lot of courage to put yourself out there. Until you have risked as much as the Purple has, don’t dare speak to them in a way that’s going to make them hold back. Ease up on the brutal side of your brutal honesty.', pullQuote: '', bodyBlurb2: ''},
 
-    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowred.mp4', circleImage: require('./assets/circles/circle_redorange.png'), header1: 'crimson', header2: 'orange', shareLink: '', bodyBlurb: 'Crimson and Orange may be at different ends of the introvert-extrovert spectrum. It can be a lot of fun to hang out, as long as you know this about each other. Orange, if you need an advocate or ally, try reaching out to a Crimson. Crimson will gladly take the spotlight at a meeting, while Orange may feel more comfortable talking one-on-one afterwards. Crimson, be aware of the Oranges in the room, and ask them to speak up, or pause before speaking to give others a chance. And Orange, if you have a great idea, try blurting it out before you can second guess yourself.', pullQuote: '', bodyBlurb2: ''},
+    {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowred.mp4', circleImage: require('./assets/circles/circle_redorange.png'), header1: 'orange', header2: 'crimson', shareLink: '', bodyBlurb: 'Crimson and Orange may be at different ends of the introvert-extrovert spectrum. It can be a lot of fun to hang out, as long as you know this about each other. Orange, if you need an advocate or ally, try reaching out to a Crimson. Crimson will gladly take the spotlight at a meeting, while Orange may feel more comfortable talking one-on-one afterwards. Crimson, be aware of the Oranges in the room, and ask them to speak up, or pause before speaking to give others a chance. And Orange, if you have a great idea, try blurting it out before you can second guess yourself.', pullQuote: '', bodyBlurb2: ''},
     {image: 'https://mycolor.s3.us-east-2.amazonaws.com/yellowpurple.mp4', circleImage: require('./assets/circles/circle_purpleorange.png'), header1: 'orange', header2: 'purple', shareLink: '', bodyBlurb: 'Purples and Oranges will tend to communicate well with each other; Oranges try to be great listeners, and Purples are expressive; well, at least when they have something original to share. Purples may enjoy hanging out with someone who laughs at their odd remarks (it takes creative energy to come up with new things to say!), and lobs a joke of their own back. Purples and Oranges might not be the best duo to get things accomplished quickly and efficiently. Oranges promote team cohesion and morale, and Purples generate new ideas and solve problems. So you may find it helpful to bring a Blue or Crimson on the team to manage and drive outcomes.', pullQuote: '', bodyBlurb2: ''},
     {image: 'https://mycolor.s3.us-east-2.amazonaws.com/redpurple.mp4', circleImage: require('./assets/circles/circle_purplered.png'), header1: 'crimson', header2: 'purple', shareLink: '', bodyBlurb: 'There’s potential for fantastic collaboration between a Crimson and Purple. Purple brings the creative, outside-of-the-box inspiration; Crimson brings the ambitious, enterprising charge toward the finish line. Together this may be a recipe for innovation. Purple on its own may never get past thinking and designing, but Crimson loves a new idea, takes it, and leads the charge. A word of caution: a team of only Crimson and Purple may do wise to bring on a pragmatist. You may benefit from a voice of practicality--someone to research, test, and plan.', pullQuote: '', bodyBlurb2: ''},
   ];
@@ -786,6 +791,38 @@ function splitBlurbAtSentences(str)
       ]).start();
     }
 
+    function scaleTextAnimation()
+    {
+      if(!didStartFontScaleLoop)
+      {
+        setDidStartFontScaleLoop(true);
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(animatedFontScale, {
+              toValue: 1.04,
+              duration: 250
+            }),
+            Animated.timing(animatedFontScale, {
+              toValue: 1,
+              duration: 250
+            })
+          ])
+        ).start();
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(animatedFontScale2, {
+              toValue: 1,
+              duration: 250
+            }),
+            Animated.timing(animatedFontScale2, {
+              toValue: 1.04,
+              duration: 250
+            })
+          ])
+        ).start();
+      }
+    }
+
     //From intro form to actual quiz
     const handleNextPress = () => {
 
@@ -983,7 +1020,7 @@ const styles = ScaledSheet.create({
       zIndex: 5,
       marginTop: isTablet() ? moderateScale(-5) : moderateScale(5),
       alignSelf: "flex-start",
-      display: (currentKey != 'Teams' && currentKey != 'Combo') ? 'flex' : 'none'
+      display: (currentKey != 'Teams' && currentKey != 'Combo' && !cameFromTeams) ? 'flex' : 'none'
     },
     backArrowBtn: {
       flex: 1,
@@ -993,7 +1030,7 @@ const styles = ScaledSheet.create({
       zIndex: 5,
       marginTop: isTablet() ? -moderateScale(2) : moderateScale(5),
       alignSelf: "flex-start",
-      display: currentKey == 'Combo' ? 'flex' : 'none',
+      display: currentKey == 'Combo' || cameFromTeams ? 'flex' : 'none',
       overflow: 'visible'
     },
     quizParagraph: {
@@ -1186,7 +1223,7 @@ const styles = ScaledSheet.create({
       colorChar2:
       {
         position: 'absolute',
-        marginTop: isTablet() ? moderateScale(-75) : moderateScale(21),
+        marginTop: isTablet() ? moderateScale(-39) : moderateScale(21),
         marginLeft: isTablet() ? moderateScale(295) : moderateScale(183),
         zIndex: -2
       },
@@ -1209,6 +1246,7 @@ const styles = ScaledSheet.create({
 
 function getColorComboTextFormatted(colorItem)
 {
+  scaleTextAnimation();
   if(colorItem != null)
   {
     return ([
@@ -1250,11 +1288,11 @@ function getColorComboTextFormatted(colorItem)
 
       </View>,
       <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
-          <TouchableOpacity onPress = {() => ToggleColorItem(getResultColorItem(colorItem.header1)[0].color, colorItem.header1)}>
-            <Text key = {2} style={[styles.pullQuote, styles.shadow2, {marginTop: hp('25%')}]}> {getResultColorItem(colorItem.header1)[0].title} &</Text>
+          <TouchableOpacity onPress = {() => { ToggleColorItem(getResultColorItem(colorItem.header1)[0].color, colorItem.header1); setCameFromTeams(true); } }>
+            <Animated.Text key = {2} style={[styles.pullQuote, styles.shadow2, {marginTop: hp('25%'), transform: [{scaleX: animatedFontScale}, {scaleY: animatedFontScale}]}]}> {getResultColorItem(colorItem.header1)[0].title} &</Animated.Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress = {() => ToggleColorItem(getResultColorItem(colorItem.header2)[0].color, colorItem.header2)}>
-            <Text key = {3} style={[styles.pullQuote, styles.shadow2, {marginBottom: hp('2.5%')}]}> {getResultColorItem(colorItem.header2)[0].title}</Text>
+          <TouchableOpacity onPress = {() => { ToggleColorItem(getResultColorItem(colorItem.header2)[0].color, colorItem.header2); setCameFromTeams(true); } }>
+            <Animated.Text key = {3} style={[styles.pullQuote, styles.shadow2, {marginBottom: hp('2.5%'), transform: [{scaleX: animatedFontScale2}, {scaleY: animatedFontScale2}]}]}> {getResultColorItem(colorItem.header2)[0].title}</Animated.Text>
           </TouchableOpacity>
           <Text key = {25} style = {styles.bodyText}>{splitBlurbAtSentences(colorItem.bodyBlurb).firstHalf} {'\n'}</Text>
           <Text key = {25} style = {styles.pullQuote}>🔧  {splitBlurbAtSentences(colorItem.bodyBlurb).pullQuote} {'\n'}</Text>
@@ -1511,6 +1549,16 @@ const handleScroll = (event) => {
   //console.log(event.nativeEvent.contentOffset.y > 60);
  }
 
+ const handleBackArrowPress = () => {
+   if(currentKey == 'Combo')
+   {
+     setCurrentKey('Teams');
+   } else {
+     setCurrentKey('Combo');
+   }
+   setCameFromTeams(false);
+ }
+
 // "Inherit" prop types from Image
 InlineImage.propTypes = Image.propTypes;
 
@@ -1532,7 +1580,7 @@ InlineImage.propTypes = Image.propTypes;
           progress={lottieProgress}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.backArrowBtn} onPress={() => setCurrentKey('Teams')}>
+      <TouchableOpacity style={styles.backArrowBtn} onPress={() => handleBackArrowPress() }>
         <Image style={{width: moderateScale(26), height: moderateScale(26)}} source={require('./assets/backarrow.png')} />
       </TouchableOpacity>
 
@@ -1808,9 +1856,9 @@ InlineImage.propTypes = Image.propTypes;
                             </SafeAreaView>
                           </Animated.View>
 
-                          <ImageBackground style = {{width: wp('100%'), height: hp('40%'), zIndex: 13, marginLeft: moderateScale(2), marginTop: moderateScale(-5), display: currentKey == 'Teams' ? 'flex' : 'none'}} source={require('./assets/rainbowgradient.png')} >
-                            <Draggable x={wp('40%')-(wp('16.5%')/2)} y={wp('45%')} renderSize={isTablet() ? wp('12%') : wp('16.5%')} hasBorder={true} renderColor={'#00000000'} minX={wp('0%')} maxX={wp('100%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor1(event, gestureState)} onPressIn={() => {setDidDrag1(true);}} />
-                            <Draggable x={wp('60%')-(wp('16.5%')/2)} y={wp('45%')} renderSize={isTablet() ? wp('12%') : wp('16.5%')} hasBorder={true} renderColor={'#00000000'} minX={wp('0%')} maxX={wp('100%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor2(event, gestureState)} onPressIn={() => {setDidDrag2(true);}} />
+                          <ImageBackground imageStyle = {{resizeMode: 'stretch'}} style = {{width: wp('100%'), height: hp('40%'), zIndex: 13, marginLeft: moderateScale(2), marginTop: moderateScale(-5), display: currentKey == 'Teams' ? 'flex' : 'none'}} source={require('./assets/rainbowgradient.png')} >
+                            <Draggable x={wp('40%')-(wp('16.5%')/2)} y={isTablet() ? wp('30%') : wp('45%')} renderSize={isTablet() ? wp('12%') : wp('16.5%')} hasBorder={true} renderColor={'#00000000'} minX={wp('0%')} maxX={wp('100%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor1(event, gestureState)} onPressIn={() => {setDidDrag1(true);}} />
+                            <Draggable x={wp('60%')-(wp('16.5%')/2)} y={isTablet() ? wp('30%') : wp('45%')} renderSize={isTablet() ? wp('12%') : wp('16.5%')} hasBorder={true} renderColor={'#00000000'} minX={wp('0%')} maxX={wp('100%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor2(event, gestureState)} onPressIn={() => {setDidDrag2(true);}} />
                           </ImageBackground>
 
                           <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
@@ -1851,7 +1899,22 @@ InlineImage.propTypes = Image.propTypes;
 
                               <Animated.View style={{ transform: [{translateY: containerOffsetY }]}}>
 
-                              <View style={styles.colorChar2} >
+                              <MaskedView
+                                  style={styles.colorChar2}
+                                  maskElement={
+                                      <View
+                                        style={{
+                                          // Transparent background because mask is based off alpha channel.
+                                          backgroundColor: 'transparent',
+                                          justifyContent: 'center',
+                                          alignItems: 'center'
+                                        }}
+                                      >
+                                        <Image style= {{resizeMode: 'stretch', width: isTablet() ? wp('39%') : wp('100%'), height: isTablet() ? wp('35%') : hp('55%'), marginTop: isTablet() ? hp('-6%') : hp('-7%')}} source={require('./assets/gradientmask.png')} />
+                                      </View>
+                                  }
+                                >
+                                  {/* Shows behind the mask, you can put anything here, such as an image */}
                                   <Video
                                     source={{ uri: 'https://skylar-mycolor.s3-us-west-1.amazonaws.com/blue-char.mp4' }}
                                     rate={1.0}
@@ -1861,7 +1924,7 @@ InlineImage.propTypes = Image.propTypes;
                                     isLooping
                                     style={{ width: moderateScale(120), height: moderateScale(120)}}
                                   />
-                              </View>
+                                </MaskedView>
                                   <Text style = {styles.pullQuote}> 🚀 What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
 
