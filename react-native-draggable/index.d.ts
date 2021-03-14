@@ -3,7 +3,7 @@
  *
  */
 import React from 'react';
-import { GestureResponderEvent, PanResponderGestureState } from 'react-native';
+import { Animated ,GestureResponderEvent, PanResponderGestureState } from 'react-native';
 export interface IDraggableProps {
     /**** props that should probably be removed in favor of "children" */
     renderText?: string;
@@ -34,6 +34,7 @@ export interface IDraggableProps {
     minY?: number;
     maxX?: number;
     maxY?: number;
+    animatesRenderSize?: Animated.Value;
 }
 declare function Draggable(props: IDraggableProps): JSX.Element;
 Draggable.defaultProps = {

@@ -56,6 +56,7 @@ interface IProps {
     minY?: number;
     maxX?: number;
     maxY?: number;
+    animatesRenderSize?: Animated.Value;
   };
 
 export default function Draggable(props: IProps) {
@@ -86,6 +87,7 @@ export default function Draggable(props: IProps) {
     minY,
     maxX,
     maxY,
+    animatesRenderSize,
   } = props;
 
   // The Animated object housing our xy value so that we can spring back
@@ -245,10 +247,10 @@ export default function Draggable(props: IProps) {
     return {
       ...style,
       justifyContent: 'center',
-      width: renderSize,
-      height: renderSize,
+      width: animatesRenderSize,
+      height: animatesRenderSize,
     };
-  }, [children, isCircle, renderColor, renderSize, x, y, z]);
+  }, [children, isCircle, renderColor, renderSize, x, y, z, animatesRenderSize]);
 
   const touchableContent = React.useMemo(() => {
     if (children) {
@@ -306,17 +308,18 @@ export default function Draggable(props: IProps) {
         pointerEvents="box-none"
         {...animatedViewProps}
         {...panResponder.panHandlers}
-        style={pan.current.getLayout()}>
+        style={pan.current.getLayout()}
+      >
         <TouchableOpacity
           {...touchableOpacityProps}
           onLayout={handleOnLayout}
-          style={dragItemCss}
           disabled={disabled}
           onPress={onShortPressRelease}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
-          onPressOut={handlePressOut}>
-          {touchableContent}
+          onPressOut={handlePressOut}
+        >
+          <Animated.View style={dragItemCss}>{touchableContent}</Animated.View>
         </TouchableOpacity>
       </Animated.View>
     </View>
