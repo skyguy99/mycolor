@@ -19,16 +19,13 @@
     ],
     "ios": {
       "bundleIdentifier": "com.skyyguy1999.MyColorApp",
-      "buildNumber": "1.9.0",
+      "buildNumber": "1.14.0",
       "supportsTablet": true
     },
     "android": {
       "package": "com.ayzenberg.mycolor",
-      "versionCode": 9,
+      "versionCode": 14,
       "permissions": []
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }

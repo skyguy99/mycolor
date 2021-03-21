@@ -6,7 +6,6 @@ import Draggable from './react-native-draggable';
 import 'firebase/firestore';
 import AsyncStorage from "@react-native-community/async-storage"
 import { useFonts } from '@use-expo/font';
-import { AppLoading } from 'expo';
 import MaskedView from '@react-native-masked-view/masked-view';
 import * as Linking from 'expo-linking';
 import FloatingMenu from './FloatingMenu/components/FloatingMenu';
@@ -86,6 +85,11 @@ export default function App() {
   const [didLongPress, setDidLongPress] =  React.useState(false);
 
   const [sound, setSound] = React.useState();
+  const [bgAudio, setBgAudio] = React.useState();
+
+  const [hasPlayedSound3, setHasPlayedSound3] = React.useState(false);
+  const [hasPlayedSound4, setHasPlayedSound4] = React.useState(false);
+  const [hasPlayedBackgroundAudio, setHasPlayedBackgroundAudio] = React.useState(false);
 
   const [animatedFontScale, setAnimatedFontScale] = React.useState(new Animated.Value(1));
   const [animatedFontScale2, setAnimatedFontScale2] = React.useState(new Animated.Value(1.04));
@@ -105,6 +109,9 @@ export default function App() {
 
   const [didDrag1, setDidDrag1] = React.useState(false);
   const [didDrag2, setDidDrag2] = React.useState(false);
+
+  const [sfxOn, setSfxOn] = React.useState(true);
+  const [audioOn, setAudioOn] = React.useState(true);
 
   const [splashOpacity, setSplashOpacity] = React.useState(new Animated.Value(1));
   const [splashScale, setSplashScale] = React.useState(new Animated.Value(0));
@@ -319,6 +326,9 @@ function splitBlurbAtSentences(str)
   };
 
   const toggleHeader = () => {
+    playSound(0);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     if (headerMenu._value > moderateScale(120)) {
       Animated.spring(headerMenu, {
         toValue: moderateScale(80), //This value controls top bar clipping
@@ -370,8 +380,8 @@ function splitBlurbAtSentences(str)
 //SELECT DROPDOWN
   const handleValueSelect = (value) => {
 
-    playSound();
-    Haptics.selectionAsync();
+    playSound(0);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     messageInAnimation(0, false);
 
     setTopCoverOpacity(0);
@@ -425,8 +435,8 @@ function splitBlurbAtSentences(str)
 
   const handleMenuToggle = isMenuOpen =>
   {
-    playSound(0);
-    Haptics.selectionAsync();
+    playSound(4);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsMenuOpen(isMenuOpen);
     if(global.isinLongPress && KeyIsAColor(currentKey.toLowerCase()) && currentKey !== 'Quiz' && !showResult)
     {
@@ -445,15 +455,57 @@ function splitBlurbAtSentences(str)
   }
 
   //Audio
-  async function playSound(num) {
-      //console.log('Loading Sound');
+  async function playBackgroundAudio() {
       const { sound } = await Audio.Sound.createAsync(
-         require('./assets/audio/failloud.mp3')
+         require('./assets/audio/background.mp3')
       );
-      setSound(sound);
-
-      //console.log('Playing Sound');
+      setBgAudio(sound);
       await sound.playAsync();
+      sound.setVolumeAsync(0.03);
+      sound.setIsLoopingAsync(true);
+  }
+
+  async function playSound(num) {
+
+    if(sfxOn)
+    {
+        if(num == 0)
+        {
+          const { sound } = await Audio.Sound.createAsync(
+             require('./assets/audio/tap1.mp3')
+          );
+          setSound(sound);
+          await sound.playAsync();
+
+        } else if (num == 1) {
+
+          const { sound } = await Audio.Sound.createAsync(
+             require('./assets/audio/success.mp3')
+          );
+          setSound(sound);
+          await sound.playAsync();
+
+        } else if (num == 2) {
+          const { sound } = await Audio.Sound.createAsync(
+             require('./assets/audio/error.mp3')
+          );
+          setSound(sound);
+          await sound.playAsync();
+        } else if (num == 3) {
+          const { sound } = await Audio.Sound.createAsync(
+             require('./assets/audio/whoosh.mp3')
+          );
+          setSound(sound);
+          sound.setVolumeAsync(0.09);
+          await sound.playAsync();
+        } else if (num == 4) {
+          const { sound } = await Audio.Sound.createAsync(
+             require('./assets/audio/pop.mp3')
+          );
+          setSound(sound);
+          await sound.playAsync();
+        }
+    }
 
     }
 
@@ -471,15 +523,15 @@ function splitBlurbAtSentences(str)
 
     const ToggleColorItem = (hex, color) => {
       playSound(0);
-      Haptics.selectionAsync();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       setCurrentColor(hex);
       setCurrentKey(Capitalize(color));
       setCurrentTextKey(color);
     }
 
     const handleItemPress = (item, index) => {
-      playSound(0);
-      Haptics.selectionAsync();
+      //playSound(4);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       setIsMenuOpen(false);
       toggleQuiz(false);
 
@@ -575,7 +627,7 @@ function splitBlurbAtSentences(str)
 
   const toggleCredits = () => {
     playSound(0);
-    Haptics.selectionAsync();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsCreditsOpen(!isCreditsOpen);
 
     if(currentKey == 'Quiz')
@@ -606,7 +658,7 @@ function splitBlurbAtSentences(str)
 
     const buttonPress = (link, isShare, string) => {
       playSound(0);
-      Haptics.selectionAsync();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       if(isShare) {
             onShare(link, string);
       } else {
@@ -645,6 +697,8 @@ function splitBlurbAtSentences(str)
 //ANIMATIONS IN
   useEffect(() => {
 
+//myCOLOR logo animates in
+
     Animated.sequence([
     	Animated.delay(1000),
       Animated.spring(splashScale, {
@@ -655,7 +709,34 @@ function splitBlurbAtSentences(str)
       })
     ]).start()
 
+    if(!hasPlayedSound4)
+    {
+      console.log(4);
+      setTimeout(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          playSound(4); //bubble pop
+          setHasPlayedSound4(true);
+      }, 1000);
+    }
+
+    if(!hasPlayedSound3)
+    {
+      console.log(3);
+      setTimeout(() => {
+        playSound(3); //whoosh
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        setHasPlayedSound3(true);
+      }, 4200);
+    }
+
+    if(!hasPlayedBackgroundAudio)
+    {
+      playBackgroundAudio();
+      setHasPlayedBackgroundAudio(true);
+    }
     const interval = setInterval(() => {
+
+      //Main screen animates in!
 
       Animated.sequence([
 
@@ -733,6 +814,10 @@ function splitBlurbAtSentences(str)
     };
 
     const handleBackPress = (index) => {
+
+      playSound(0);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
       console.log('back quiz');
       setTimeout(() => {
         if (index > 0) {
@@ -744,7 +829,7 @@ function splitBlurbAtSentences(str)
     //RESULT OF QUIZ
     const handleOptionPress = (id, index) => {
       playSound(0);
-      Haptics.selectionAsync();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       setSelectedAnswer(id);
       const answer = convertIndexToAnswer(currentQuestionIndex + 1, index + 1);
       const userAnswersCombined = mergeObjects(userAnswers, {
@@ -777,7 +862,7 @@ function splitBlurbAtSentences(str)
         if (quizQuestions.length > currentQuestionIndex + 1) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           playSound(1); //win
           setShowResult(true);
         }
@@ -873,10 +958,11 @@ function splitBlurbAtSentences(str)
       {
         setDidSetUsername(true);
         playSound(0);
-        Haptics.selectionAsync();
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
       } else {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        playSound(2);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         setError1Opacity(username == "" ? 1 : 0);
         setError2Opacity(industry == "" ? 1 : 0);
         setError3Opacity(role == "" ? 1 : 0);
@@ -886,6 +972,8 @@ function splitBlurbAtSentences(str)
     }
 
     const handleRetakePress = () => {
+      playSound(0);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       console.log('Retake');
 
       setSelectedAnswer('');
@@ -932,6 +1020,9 @@ function splitBlurbAtSentences(str)
 
     const ToggleComboColor2 = (event, gestureState, drag) => {
 
+      playSound(0);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
       color2 = determineDraggableColor(gestureState.moveX, gestureState.moveY);
       console.log('Second: ', color2);
 
@@ -963,8 +1054,7 @@ function splitBlurbAtSentences(str)
     }
 
     const animateRenderButtonToNormal = (button) => {
-      playSound(0);
-      Haptics.selectionAsync();
+
       if(button === "first") {
         Animated.spring(draggableSizeFirst, {
           toValue: isTablet() ? wp('12%') : wp('15.5%'),
@@ -983,8 +1073,8 @@ function splitBlurbAtSentences(str)
    }
 
     const animateRenderButton = (button) => {
-      playSound(0);
-      Haptics.selectionAsync();
+
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       if(button === "first") {
         Animated.spring(draggableSizeFirst, {
           toValue: isTablet() ? wp('14%') : wp('21%'),
@@ -1003,6 +1093,9 @@ function splitBlurbAtSentences(str)
    }
 
     const ToggleComboColor1 = (event, gestureState) => {
+
+      playSound(0);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
       color1 = determineDraggableColor(gestureState.moveX, gestureState.moveY);
       console.log('First: ', color1);
@@ -1040,7 +1133,7 @@ function splitBlurbAtSentences(str)
 
 //------------------------------------------------------------------->
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <View></View>
   } else {
 
 const styles = ScaledSheet.create({
@@ -1109,14 +1202,14 @@ const styles = ScaledSheet.create({
       overflow: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
     },
     creditsBtn: {
-      width: '70@ms',
-      height: '70@ms',
+      width: isTablet() ? '60@ms' : '70@ms',
+      height: isTablet() ? '60@ms' : '70@ms',
       flex: 1,
       justifyContent: 'flex-start',
       transform: [{translateX: wp('8%')}, {translateY: hp('4.5%')}],
       position: 'absolute',
       zIndex: 5,
-      marginTop: isTablet() ? moderateScale(-5) : moderateScale(5),
+      marginTop: isTablet() ? moderateScale(0) : moderateScale(5),
       alignSelf: "flex-start",
       display: (currentKey != 'Teams' && currentKey != 'Combo' && !cameFromTeams) ? 'flex' : 'none'
     },
@@ -1202,9 +1295,10 @@ const styles = ScaledSheet.create({
       creditsTxt: {
         fontFamily: 'CircularStd-Book',
         color: 'black',
-        fontSize: '18@ms',
-        marginTop: verticalScale(55),
-        padding: wp('14%')
+        fontSize: isTablet() ? '15@ms' : '18@ms',
+        padding: wp('14%'),
+        paddingBottom: 0,
+        paddingTop: wp('4%')
       },
       errorPill: {
         backgroundColor: 'white',
@@ -1252,11 +1346,11 @@ const styles = ScaledSheet.create({
       },
       topCoverBarQuiz: {
         width: wp('100%'),
-        height: hp('15%'),
+        height: hp('16%'),
         backgroundColor: 'white',
         position: 'absolute',
         zIndex: 1,
-        marginTop: -moderateScale(8)
+        marginTop: -moderateScale(12)
 
       },
       dropDown: {
@@ -1649,7 +1743,7 @@ const handleScroll = (event) => {
 
  const handleBackArrowPress = () => {
    playSound(0);
-   Haptics.selectionAsync();
+   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
    if(currentKey == 'Combo')
    {
      animateRenderButtonToNormal('first');
@@ -1800,14 +1894,51 @@ InlineImage.propTypes = Image.propTypes;
 
       <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
+                  <View pointerEvents='none' style={[styles.topCoverBarQuiz, { opacity: 1 }]}></View>
 
                   <ScrollView
                   showsVerticalScrollIndicator= {false}
                   showsHorizontalScrollIndicator= {false}
                   style={{overflow: 'visible'}}>
 
-                    <Text style = {styles.creditsTxt}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR</Text> was developed by scientific advisor Dr. J. Galen Buckwalter and redesigned as a mobile experience by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
-                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', marginTop: (isOldPhone() || isTablet()) ? moderateScale(-50) : moderateScale(60)}]}>© a.network</Text></TouchableOpacity>
+                    <Text style={[styles.pullQuote, {padding: wp('14%'), paddingBottom: 0, marginTop: isTablet() ? moderateScale(30) : moderateScale(60)}]}>Settings</Text>
+
+
+                    <View style={{flexDirection:"row",alignItems:'center', paddingHorizontal: wp('14%'), paddingTop: wp('7%')}}>
+                        <View style={{flex:1, marginLeft: isTablet() ? 0 : wp('-2%'), marginRight: isTablet() ? 0 : wp('3%')}}>
+                          <RadioButton.Android
+                            uncheckedColor={"#F0F0F0"}
+                            color={'black'}
+                            value="first"
+                            status={audioOn ? 'checked' : 'unchecked'  }
+                            onPress={() => {setAudioOn(!audioOn);
+                              if(bgAudio != null) {bgAudio.setVolumeAsync(audioOn ? 0 : 0.03);}
+                              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); playSound(0);}}
+                          />
+                        </View>
+                        <View style={{flex:9}}>
+                            <Text style = {[styles.bodyText, {letterSpacing: -0.3, lineHeight: verticalScale(17)}]}>Background Music</Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection:"row",alignItems:'center', paddingHorizontal: wp('14%'), paddingTop: wp('1%')}}>
+                        <View style={{flex:1, marginLeft: isTablet() ? 0 : wp('-2%'), marginRight: isTablet() ? 0 : wp('3%')}}>
+                          <RadioButton.Android
+                            uncheckedColor={"#F0F0F0"}
+                            color={'black'}
+                            value="first"
+                            status={sfxOn ? 'checked' : 'unchecked'  }
+                            onPress={() => {setSfxOn(!sfxOn); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); playSound(0);}}
+                          />
+                        </View>
+                        <View style={{flex:9}}>
+                            <Text style = {[styles.bodyText, {letterSpacing: -0.3, lineHeight: verticalScale(17)}]}>Sound Effects</Text>
+                        </View>
+                    </View>
+
+                    <Text style={[styles.pullQuote, {padding: wp('14%'), paddingTop: 0, paddingBottom: 0, marginTop: moderateScale(25)}]}>About</Text>
+
+                    <Text style = {[styles.creditsTxt]}><Text style={{ fontFamily: 'CircularStd-Black' }}>myCOLOR app</Text> was designed & developed by Skylar Thomas at <Text style={{ fontFamily: 'CircularStd-Black' }}>Ayzenberg Group,</Text> an award winning creative agency based in Pasadena, CA. {'\n'}{'\n'}At Ayzenberg, we continually build bridges not only between our clients and their audiences, but also among disciplines, providing our teams with powerful tools, inspiring work spaces, and a philosophy and methodology based on the virtuous cycle of <Text style={{ fontFamily: 'CircularStd-Black' }}>Listen, Create, and Share. </Text></Text>
+                    <TouchableOpacity onPress={() => {openLink('https://www.ayzenberg.com/')}}><Text style = {[styles.creditsTxt, {fontFamily: 'CircularStd-Black', paddingBottom: moderateScale(100), marginTop: (isOldPhone() || isTablet()) ? moderateScale(5) : moderateScale(20)}]}>© a.network</Text></TouchableOpacity>
                   </ScrollView>
 
                   </Animated.View>
@@ -2081,6 +2212,8 @@ InlineImage.propTypes = Image.propTypes;
                                 </View>
 
                                 <TouchableOpacity onPress = {() => {
+
+                                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                                       if(currentKey == 'myCOLOR' || (!didSetUsername && currentKey == 'Results'))
                                       {
                                         toggleQuiz(true);
