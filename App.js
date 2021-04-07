@@ -1,6 +1,7 @@
 import React from 'react';
 import {useRef} from 'react';
 import { Component, useState, useEffect } from 'react';
+import * as Notifications from 'expo-notifications';
 import * as firebase from 'firebase';
 import Draggable from './react-native-draggable';
 import 'firebase/firestore';
@@ -44,6 +45,14 @@ var color2 = '';
 const isTablet = () => {
   return (Device.modelName.includes('iPad') || Device.modelName.includes('Tab') || Device.modelName.includes('Pad') || Device.modelName.includes('Fire'));
 }
+
+Notifications.setNotificationHandler({
+handleNotification: async () => ({
+  shouldShowAlert: true,
+  shouldPlaySound: false,
+  shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
 
@@ -145,6 +154,8 @@ export default function App() {
   const [spinValue, setSpinValue] = React.useState(new Animated.Value(0));
 
   const LottieRef = React.useRef(null);
+  const ScrollRef = React.useRef(null);
+  const ScrollRef2 = React.useRef(null);
   const [lottieProgress, setLottieProgress] = React.useState(new Animated.Value(0.5));
 
   const [draggableSizeFirst, setDraggableSizeFirst] = React.useState(isTablet() ? new Animated.Value(wp('12%')) : new Animated.Value(wp('15.5%')));
@@ -152,18 +163,23 @@ export default function App() {
 
   const SliderWidth = Dimensions.get('screen').width;
 
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   const colorMenuItems = [
-    { label: '', header: 'orange', color: '#f3ac07', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: '🌟 The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-yellow_2.mp4'},
+    { label: '', header: 'orange', color: '#f3ac07', darkerColor: '#AF7300', shareLink: '', attributes: 'Optimistic, Friendly, Perceptive', extraversion: 0.9, openness: 0.95, agreeableness: 0.9, integrity: 0.85, stability: 0.2, conscientiousness: 0.75, title: '🌟 The Enthusiast', bodyBlurb: 'You are friendly and nurturing, but may need to take care that your good nature doesn’t lead others to unload all their frustrations on you without any reciprocation. People whose personality color is Orange aren’t typically big party people. You prefer smaller gatherings where you can engage with everyone else.', pullQuote: 'You’re whimsical and value zaniness in others.', bodyBlurb2: 'As a hopeless romantic, breaking connections is difficult for you. When you open your heart, it’s all or nothing. This means you love deeper, but also that heartbreak hurts more. You may never stop loving former flames, with hopes of one day rekindling. But you are never opposed to new opportunities for love and connection.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-yellow_2.mp4', poster: require('./assets/poster_yellow-min.png')},
 
-    { label: '', header: 'blue', color: '#0b89cc', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: '📘 The Director', bodyBlurb: 'You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all.', pullQuote: 'Blues tend to be rule-following, dependable, long-enduring, and tenacious.', bodyBlurb2: 'You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-blue.mp4'},
+    { label: '', header: 'blue', color: '#0b89cc', darkerColor: '#00578D', shareLink: '', attributes: 'Dependable, Practical, Directive', extraversion: 0.3, openness: 0.3, agreeableness: 0.5, integrity: 1.0, stability: 0.8, conscientiousness: 0.9, title: '📘 The Director', bodyBlurb: 'You have a plan that you stick to. You never stand people up and are always timely. Most importantly, you’re there for your loved ones when they need you most. You lend an ear, do favors, and don’t disappoint. You don’t cheat and try to be 100% honest in all aspects of life. You value honesty above all.', pullQuote: 'Blues tend to be rule-following, dependable, long-enduring, and tenacious.', bodyBlurb2: 'You might miss out on fun once and a while, due to your discipline. But in your mind, it’s worth it in the long-run. One night of partying isn’t worth not being at your best for work in the morning. You like routines and outlines, things that maintain structure. Organization is key to the way you operate; it’s what makes you staunch, loyal, and trustworthy.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-blue.mp4', poster: require('./assets/poster_blue-min.png')},
 
-    { label: '', header: 'green', color: '#71af2d', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.75, openness: 0.7, agreeableness: 0.95, integrity: 0.4, stability: 0.95, conscientiousness: 0.5, title: '🍀 The Peacemaker', bodyBlurb: 'As a Green, you are known for your chill vibes, and your body is rarely consumed with anxiety. Chores, work, and even exercise is easier when you are well rested and relaxed. Your life is centered around achieving maximum comfort, whether it’s investing in luxuries like massage chairs and water beds or meditating and productively removing stress from your body.', pullQuote: 'You prefer when issues resolve themselves or require minimal input and stress on your part.', bodyBlurb2: 'Accommodation is where you thrive—allowing others to achieve their peace without interrupting yours. Your chillness and cool, calm, collected way of composing yourself is attractive to a lot of people, but also means that you don’t take some things seriously that deserve uninterrupted attention.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-green.mp4'},
+    { label: '', header: 'green', color: '#71af2d', darkerColor: '#47651D', shareLink: '', attributes: 'Peaceful, Serene, Accommodating', extraversion: 0.75, openness: 0.7, agreeableness: 0.95, integrity: 0.4, stability: 0.95, conscientiousness: 0.5, title: '🍀 The Peacemaker', bodyBlurb: 'As a Green, you are known for your chill vibes, and your body is rarely consumed with anxiety. Chores, work, and even exercise is easier when you are well rested and relaxed. Your life is centered around achieving maximum comfort, whether it’s investing in luxuries like massage chairs and water beds or meditating and productively removing stress from your body.', pullQuote: 'You prefer when issues resolve themselves or require minimal input and stress on your part.', bodyBlurb2: 'Accommodation is where you thrive—allowing others to achieve their peace without interrupting yours. Your chillness and cool, calm, collected way of composing yourself is attractive to a lot of people, but also means that you don’t take some things seriously that deserve uninterrupted attention.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-green.mp4', poster: require('./assets/poster_green-min.png')},
 
-    { label: '', header: 'grey', color: '#939598', darkerColor: '#5C5D5F', shareLink: '', attributes: 'Powerful, Mysterious, Provocative', extraversion: 0.1, openness: 0.1, agreeableness: 0.1, integrity: 0.9, stability: 0.8, conscientiousness: 0.45, title: '☁️ The Brooder', bodyBlurb: 'As a Grey, you know no fear—and no limits. You like to keep people guessing. People crave mystery and uncertainty—they want to find out more about you. But you won’t let them; you never let anyone get too close, to fully discover who you are. You have an air of aloofness; you play coy and hard to get. Never the one to initiate, you attract all sorts of invitations to various events from those around you.', pullQuote: 'You value solitude, reflection, and privacy.', bodyBlurb2: 'Cavalier and brash, but collected, is how you live your life. You don’t care about the judgement of others and make decisions for yourself and yourself alone. This may mean that you have trouble with intimacy, but it doesn’t mean you don’t have romantic interests. Perhaps they just don’t last very long, or maybe your loved one is the only person you aren’t a mystery to.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-grey.mp4'},
+    { label: '', header: 'grey', color: '#939598', darkerColor: '#5C5D5F', shareLink: '', attributes: 'Powerful, Mysterious, Provocative', extraversion: 0.1, openness: 0.1, agreeableness: 0.1, integrity: 0.9, stability: 0.8, conscientiousness: 0.45, title: '☁️ The Brooder', bodyBlurb: 'As a Grey, you know no fear—and no limits. You like to keep people guessing. People crave mystery and uncertainty—they want to find out more about you. But you won’t let them; you never let anyone get too close, to fully discover who you are. You have an air of aloofness; you play coy and hard to get. Never the one to initiate, you attract all sorts of invitations to various events from those around you.', pullQuote: 'You value solitude, reflection, and privacy.', bodyBlurb2: 'Cavalier and brash, but collected, is how you live your life. You don’t care about the judgement of others and make decisions for yourself and yourself alone. This may mean that you have trouble with intimacy, but it doesn’t mean you don’t have romantic interests. Perhaps they just don’t last very long, or maybe your loved one is the only person you aren’t a mystery to.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-grey.mp4', poster: require('./assets/poster_grey-min.png')},
 
-    { label: '', header: 'crimson', color: '#d21a58', darkerColor: '#901F39', shareLink: '', attributes: 'Adventurous, Bold, Direct', extraversion: 0.95, openness: 0.75, agreeableness: 0.1, integrity: 0.9, stability: 0.5, conscientiousness: 0.3, title: '🎯 The Achiever', bodyBlurb: 'Bold, assertive, domineering, craving excitement—it’s how you live your life. You aren’t afraid to tell people exactly what you think, and you certainly don’t hold back in any aspect of your life. Passion and brashness can get you into trouble, but that’s par for the course.', pullQuote: 'You are achievement-focused and work hard towards achieving what you desire.', bodyBlurb2: 'Extraverted is an understatement; you love getting to know people and discussing cool new opportunities with them. Popularity is key; your place in society and how people regard you is extremely important to your identity. Everything needs to be efficient, clean, and, most importantly, sleek. You’re the life of the party and the face that brightens up the room.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-red.mp4'},
+    { label: '', header: 'crimson', color: '#d21a58', darkerColor: '#901F39', shareLink: '', attributes: 'Adventurous, Bold, Direct', extraversion: 0.95, openness: 0.75, agreeableness: 0.1, integrity: 0.9, stability: 0.5, conscientiousness: 0.3, title: '🎯 The Achiever', bodyBlurb: 'Bold, assertive, domineering, craving excitement—it’s how you live your life. You aren’t afraid to tell people exactly what you think, and you certainly don’t hold back in any aspect of your life. Passion and brashness can get you into trouble, but that’s par for the course.', pullQuote: 'You are achievement-focused and work hard towards achieving what you desire.', bodyBlurb2: 'Extraverted is an understatement; you love getting to know people and discussing cool new opportunities with them. Popularity is key; your place in society and how people regard you is extremely important to your identity. Everything needs to be efficient, clean, and, most importantly, sleek. You’re the life of the party and the face that brightens up the room.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-red.mp4', poster: require('./assets/poster_red-min.png')},
 
-    { label: '', header: 'purple', color: '#b055e3', darkerColor: '#874AAD', shareLink: '', attributes: 'Creative, Expressive, Emotive', extraversion: 0.8, openness: 0.7, agreeableness: 0.9, integrity: 0.5, stability: 0.1, conscientiousness: 0.85, title: '🦄 The Explorer', bodyBlurb: 'As a Purple, you are a creative thinker: thoughtful, reflective, maybe even a little quirky. Convention does not influence you. You are a problem solver, but take the road less traveled. You value art and other creative ventures.Life is whimsical; you leave your options open. Philosophy is important to you, as is existential thinking and maybe even a bit of nihilism.', pullQuote: 'You’re very expressive verbally, physically, and in the work that you do.', bodyBlurb2: 'You take great pride in the culturally diverse life you live, and the knowledge and respect that you have for all things in the realm of eclectic art. You have a wellspring of creative energy that you channel into productive artistic activity, including travel.Some people may criticize your fringy lifestyle, but you are unapologetic.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-purple.mp4'},
+    { label: '', header: 'purple', color: '#b055e3', darkerColor: '#874AAD', shareLink: '', attributes: 'Creative, Expressive, Emotive', extraversion: 0.8, openness: 0.7, agreeableness: 0.9, integrity: 0.5, stability: 0.1, conscientiousness: 0.85, title: '🦄 The Explorer', bodyBlurb: 'As a Purple, you are a creative thinker: thoughtful, reflective, maybe even a little quirky. Convention does not influence you. You are a problem solver, but take the road less traveled. You value art and other creative ventures.Life is whimsical; you leave your options open. Philosophy is important to you, as is existential thinking and maybe even a bit of nihilism.', pullQuote: 'You’re very expressive verbally, physically, and in the work that you do.', bodyBlurb2: 'You take great pride in the culturally diverse life you live, and the knowledge and respect that you have for all things in the realm of eclectic art. You have a wellspring of creative energy that you channel into productive artistic activity, including travel.Some people may criticize your fringy lifestyle, but you are unapologetic.', image: 'https://mycolor.s3.us-east-2.amazonaws.com/-purple.mp4', poster: require('./assets/poster_purple-min.png')},
 
   ];
 
@@ -204,10 +220,38 @@ export default function App() {
 
     'Teams':{body: 'We each have a personality type, wired into us in a way that can’t be denied. It’s who we are. But when we build teams, we have the opportunity to create a dynamic based on the right mix of different types. \n\nThat’s what makes myCOLOR for Teams so powerful. By understanding how people with different personality colors work best together, you can gain insights into crafting the right team for any situation, from work to sports to social events.\n\nFrom the optimism of Oranges to the creativity of Purples to the dependability of Blues, aligning our strengths (and balancing our weaknesses) can result in teams that perform to their maximum potential.\n\n', topBold: '', buttonLink: 'https://thecolorofmypersonality.com/', buttonTitle: 'Learn more'},
 
-    'Connect': {body: '', topBold: '', buttonLink: 'instagram://user?username=mycolorpersonality', buttonTitle: ''}
+    'Connect': {body: '', topBold: '', buttonLink: 'instagram://user?username=thecolorofmypersonality', buttonTitle: ''}
   }; //title : body text
 
   //Functions
+  // <TouchableOpacity onPress = {async () => {
+  //     await schedulePushNotification();
+  //   }} style={[styles.button, styles.shadow3, {width: wp('79%'), alignSelf: 'center'}]} >
+  //   <Text style = {[styles.pullQuote, {textAlign: 'center'}]}> Test Notifications</Text>
+  // </TouchableOpacity>
+  // useEffect(() => {
+  //
+  //     console.log('Notifications!');
+  //     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  //
+  //     // This listener is fired whenever a notification is received while the app is foregrounded
+  //     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+  //       setNotification(notification);
+  //     });
+  //
+  //     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+  //     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+  //       console.log(response);
+  //     });
+  //
+  //     return () => {
+  //       Notifications.removeNotificationSubscription(notificationListener.current);
+  //       Notifications.removeNotificationSubscription(responseListener.current);
+  //     };
+  //   }, []);
+
+  // Text.defaultProps = Text.defaultProps || {};
+  // Text.defaultProps.allowFontScaling = false;
 
   // ****Init
   useEffect(() => {
@@ -270,17 +314,63 @@ if(!firebase.apps.length)
 
 function storeUserInfo(username, industry, role, color) {
 
-  let push = firebase.database().ref('users').push();
-  push.set({
-    name: username,
-    industry: industry,
-    role: role,
-    color: color,
-    date: new Date().toUTCString()
+    if(firebase.database() != null)
+    {
+      let push = firebase.database().ref('users').push();
+      push.set({
+        name: username,
+        industry: industry,
+        role: role,
+        color: color,
+        date: new Date().toUTCString()
+      });
+
+      console.log("Pushed to Firebase!");
+    }
+
+}
+
+//Push notifications
+async function schedulePushNotification() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "You've got mail! 📬",
+      body: 'Here is the notification body',
+      data: { data: 'goes here' },
+    },
+    trigger: { seconds: 0 },
   });
+}
 
-  console.log("Pushed to Firebase!");
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
 
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
 }
 
 const KeyIsAColor = (key) => {
@@ -294,12 +384,6 @@ function splitBlurbAtSentences(str)
 {
   var arr = str.split('.');
   var splitDex = Math.floor(arr.length/2);
-
-  //First half: arr.slice(0, splitDex-1).join('.')+'.'
-
-  //Second half: arr.slice(splitDex+1, arr.length).join('.')
-
-  // Pull quote in middle: arr[splitDex]
 
   return {firstHalf: arr.slice(0, splitDex-1).join('.')+'.', pullQuote: arr[splitDex].substring(1)+'.', secondHalf: arr.slice(splitDex+1, arr.length).join('.').substring(1)};
 }
@@ -383,6 +467,10 @@ function splitBlurbAtSentences(str)
     playSound(0);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     messageInAnimation(0, false);
+    ScrollRef2.current?.scrollTo({
+          y: 0,
+          animated: true,
+      });
 
     setTopCoverOpacity(0);
     if(value != 'Connect')
@@ -403,7 +491,7 @@ function splitBlurbAtSentences(str)
 
     } else if (value == 'Connect')
     {
-      openLink('instagram://user?username=mycolorpersonality');
+      openLink('instagram://user?username=thecolorofmypersonality');
     } else {
       toggleQuiz(false);
     }
@@ -530,10 +618,16 @@ function splitBlurbAtSentences(str)
     }
 
     const handleItemPress = (item, index) => {
-      //playSound(4);
+
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       setIsMenuOpen(false);
       toggleQuiz(false);
+
+      console.log('pressed');
+      ScrollRef2.current?.scrollTo({
+            y: 0,
+            animated: true,
+        });
 
       global.lastColor = "transparent";
 
@@ -824,12 +918,16 @@ function splitBlurbAtSentences(str)
           setCurrentQuestionIndex(index - 1);
         }
       }, 100);
+
+      ScrollRef.current?.scrollTo({
+            y: 0,
+            animated: true,
+        });
     }
 
     //RESULT OF QUIZ
     const handleOptionPress = (id, index) => {
-      playSound(0);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
       setSelectedAnswer(id);
       const answer = convertIndexToAnswer(currentQuestionIndex + 1, index + 1);
       const userAnswersCombined = mergeObjects(userAnswers, {
@@ -857,16 +955,24 @@ function splitBlurbAtSentences(str)
       }
 
       AsyncStorage.setItem('userColor', colorResult);
+      ScrollRef.current?.scrollTo({
+            y: 0,
+            animated: true,
+        });
 
       setTimeout(() => {
         if (quizQuestions.length > currentQuestionIndex + 1) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
+
         } else {
+          setShowResult(true);
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           playSound(1); //win
-          setShowResult(true);
         }
       }, 100);
+
+      playSound(0);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     };
 
     function wiggleAnimation(delay) {
@@ -1169,8 +1275,10 @@ const styles = ScaledSheet.create({
   headerText: {
     fontFamily: 'CircularStd-Black',
     color: 'black',
-    fontSize: '20@ms',
-    textAlign: 'center'
+    fontSize: '18@ms',
+    textAlign: 'center',
+    overflow: 'visible',
+    marginLeft: -10
   },
   bodyText: {
     fontFamily: 'CircularStd-Book',
@@ -1497,7 +1605,6 @@ function getColorComboTextFormatted(colorItem)
 
 function getResultColorFormatted(color)
 {
-
   if(color == 'combo')
   {
 
@@ -1894,7 +2001,7 @@ InlineImage.propTypes = Image.propTypes;
 
       <Animated.View>
                   <Animated.View style={[styles.creditsContainer, { transform: [{translateX: creditsOffsetX }]}]}>
-                  <View pointerEvents='none' style={[styles.topCoverBarQuiz, { opacity: 1 }]}></View>
+                  <View pointerEvents='none' style={[styles.topCoverBarQuiz, { opacity: isCreditsOpen ? 1 : 0 }]}></View>
 
                   <ScrollView
                   showsVerticalScrollIndicator= {false}
@@ -1950,6 +2057,7 @@ InlineImage.propTypes = Image.propTypes;
                       <SafeAreaView style={{flex: 1, overflow: 'visible'}}>
 
                           <ScrollView
+                          ref={ScrollRef}
                           showsVerticalScrollIndicator= {false}
                           showsHorizontalScrollIndicator= {false}
                           scrollEventThrottle={16}
@@ -2095,6 +2203,7 @@ InlineImage.propTypes = Image.propTypes;
                           <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
 
                               <ScrollView
+                              ref={ScrollRef2}
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
                               style={styles.scrollView}
@@ -2155,10 +2264,8 @@ InlineImage.propTypes = Image.propTypes;
                                     style={{ width: moderateScale(120), height: moderateScale(120)}}
                                   />
                                 </MaskedView>
-                                  <Text style = {styles.pullQuote}> 🚀 What's the color of your personality? What's your vibe?{'\n'}</Text>
+                                  <Text style = {[styles.pullQuote, {marginTop: isOldPhone() ? verticalScale(20) : 0}]}> 🚀 What's the color of your personality? What's your vibe?{'\n'}</Text>
                                   <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
-
-
                               </Animated.View>
 
                               </View>
@@ -2210,7 +2317,6 @@ InlineImage.propTypes = Image.propTypes;
                                             </Text>
 
                                 </View>
-
                                 <TouchableOpacity onPress = {() => {
 
                                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
