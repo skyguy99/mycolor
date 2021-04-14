@@ -60,7 +60,7 @@ class FloatingMenu extends React.PureComponent {
 
   componentDidMount() {
     this.initAnimations();
-    this.spring();
+    this.startButtonAnim(); //Start button anim loop
 
     if (this.gradientBackgroundColor._value === 0) {
       this.startBackgroundColorAnimation();
@@ -209,42 +209,22 @@ class FloatingMenu extends React.PureComponent {
     }
   };
 
-  //Animate button size
-  onSpringCompletion = () => {
-    Animated.parallel([
-      Animated.spring(this.buttonSizeAnimated, {
-        useNativeDriver: false,
-        toValue: Design.buttonWidth * 0.9,
-        speed: 10,
-        bounciness: 0.5,
-      }),
-      Animated.spring(this.splitButtonSizeAnimated, {
-        useNativeDriver: false,
-        toValue: Design.buttonWidth * 0.5 * 0.9,
-        speed: 10,
-        bounciness: 0.5,
-      }),
-    ]).start(() => {
-      this.spring();
+  onButtonAnimEnd = () => {
+    Animated.timing(this.buttonSizeAnimated, {
+      toValue: Design.buttonWidth * 0.97,
+      duration: 400
+    }).start(() => {
+      this.startButtonAnim();
     });
   };
 
-  spring = () => {
-    Animated.parallel([
-      Animated.spring(this.buttonSizeAnimated, {
-        useNativeDriver: false,
-        toValue: Design.buttonWidth * 1.05,
-        speed: 10,
-        bounciness: 0.5,
-      }),
-      Animated.spring(this.splitButtonSizeAnimated, {
-        useNativeDriver: false,
-        toValue: Design.buttonWidth * 0.5 * 1.05,
-        speed: 10,
-        bounciness: 0.5,
-      }),
-    ]).start(() => {
-      this.onSpringCompletion();
+  //Animate button size
+  startButtonAnim = () => {
+    Animated.timing(this.buttonSizeAnimated, {
+      toValue: Design.buttonWidth * 1.05,
+      duration: 400
+    }).start(() => {
+      this.onButtonAnimEnd();
     });
   };
 
@@ -431,7 +411,7 @@ class FloatingMenu extends React.PureComponent {
                 display: (primaryColor == "#ffffff" && currentKey != 'Combo') ? "flex" : "none",
                 width: new Animated.Value(Design.buttonWidth * 1.1),
                 height: new Animated.Value(Design.buttonWidth * 1.1),
-                marginTop: 14,
+                marginTop: 40,
               }}
               source={require("../../../assets/rainbowcircle.png")}
             ></Animated.Image>

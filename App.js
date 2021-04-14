@@ -707,13 +707,13 @@ function splitBlurbAtSentences(str)
         Animated.spring(quizOffsetX, {
           toValue: open ? wp('0%') : -wp('100%'),
           bounciness: 2,
-          useNativeDriver: false,
+          useNativeDriver: true,
           speed: 1
         }),
         Animated.spring(scrollOffsetX, {
           toValue: open ? wp('100%') : wp('0%'),
           bounciness: 2,
-          useNativeDriver: false,
+          useNativeDriver: true,
           speed: 1
         })
         ]).start();
@@ -733,13 +733,13 @@ function splitBlurbAtSentences(str)
         Animated.spring(creditsOffsetX, {
           toValue: isCreditsOpen ? wp('100%') : 0,
           bounciness: 2,
-          useNativeDriver: false,
+          useNativeDriver: true,
           speed: 1
         }),
         Animated.spring(containerOffsetX, {
           toValue: isCreditsOpen ? wp('0%') : -wp('100%'),
           bounciness: 2,
-          useNativeDriver: false,
+          useNativeDriver: true,
           speed: 1
         }),
         Animated.timing(lottieProgress, {
@@ -798,7 +798,7 @@ function splitBlurbAtSentences(str)
       Animated.spring(splashScale, {
         toValue: 1,
         bounciness: 4,
-        useNativeDriver: false,
+        useNativeDriver: true,
         speed: 2
       })
     ]).start()
@@ -838,31 +838,31 @@ function splitBlurbAtSentences(str)
             Animated.spring(splashScale, {
               toValue: 0,
               bounciness: 4,
-              useNativeDriver: false,
+              useNativeDriver: true,
               speed: 2
             }),
             Animated.spring(splashOpacity, {
               toValue: 0,
               bounciness: 2,
-              useNativeDriver: false,
+              useNativeDriver: true,
               speed: 3
             }),
             Animated.spring(main3dOffsetY, {
               toValue: hp('-2%'),
               bounciness: 5,
-              useNativeDriver: false,
+              useNativeDriver: true,
               speed: 1.2
             }),
               Animated.spring(main3dScale, {
                 toValue: 1,
                 bounciness: 5,
-                useNativeDriver: false,
+                useNativeDriver: true,
                 speed: 1.2
               }),
               Animated.spring(containerOffsetY, {
                 toValue: hp('-3%'),
                 bounciness: 5,
-                useNativeDriver: false,
+                useNativeDriver: true,
                 speed: 1.2
               })
         ]),
@@ -983,30 +983,30 @@ function splitBlurbAtSentences(str)
               toValue: wp('2%'),
               duration: 70,
               easing: Easing.linear,
-              useNativeDriver: false,
+              useNativeDriver: true,
             }),
             Animated.timing(errorXPos, {
               toValue: wp('-2%'),
               duration: 90,
               easing: Easing.linear,
-              useNativeDriver: false,
+              useNativeDriver: true,
             }),
             Animated.timing(errorXPos, {
                 toValue: wp('2%'),
                 duration: 70,
                 easing: Easing.linear,
-                useNativeDriver: false,
+                useNativeDriver: true,
               }),
               Animated.timing(errorXPos, {
                 toValue: wp('-2%'),
                 duration: 90,
                 easing: Easing.linear,
-                useNativeDriver: false,
+                useNativeDriver: true,
               }),
             Animated.spring(errorXPos, {
               toValue: 0,
               bounciness: 2,
-              useNativeDriver: false,
+              useNativeDriver: true,
               speed: 1
             }),
         ]).start();
@@ -1251,7 +1251,8 @@ const styles = ScaledSheet.create({
     borderRadius: '10@ms',
     backgroundColor: 'white',
     padding: moderateScale(20),
-    marginBottom: isTablet() ? '40@ms' : '0@ms' //always need to have @ if one does
+    marginBottom: isTablet() ? '40@ms' : '0@ms', //always need to have @ if one does
+    width: wp('75%')
   },
   container: {
     flex: 1,
@@ -1268,6 +1269,7 @@ const styles = ScaledSheet.create({
   scrollContainer: {
     flex: 1,
     marginTop: currentKey == 'Teams' ? 0 : hp('14%'),
+    overflow: 'visible',
   },
   topBar: {
     marginTop: hp('7%'),
@@ -1305,8 +1307,8 @@ const styles = ScaledSheet.create({
         zIndex: 11,
       },
   scrollView: {
-      paddingLeft: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
-      paddingRight: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('15%'),
+      //paddingLeft: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('14%'),
+      //paddingRight: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 0 : wp('14%'),
       overflow: (currentKey == 'Results' || (currentKey == 'Quiz') || currentKey == 'Combo' || KeyIsAColor(currentKey)) ? 'visible' : 'hidden'
     },
     creditsBtn: {
@@ -1330,7 +1332,8 @@ const styles = ScaledSheet.create({
       marginTop: isTablet() ? -moderateScale(2) : moderateScale(5),
       alignSelf: "flex-start",
       display: currentKey == 'Combo' || cameFromTeams ? 'flex' : 'none',
-      overflow: 'visible'
+      overflow: 'visible',
+      transform: [{ scale: 0 }]
     },
     quizParagraph: {
       fontFamily: 'CircularStd-Book',
@@ -1415,7 +1418,7 @@ const styles = ScaledSheet.create({
         justifyContent: 'center',
         padding: moderateScale(14),
         paddingHorizontal: moderateScale(20),
-        marginTop: isTablet() ? hp('2.5%') : 0
+        marginTop: isTablet() ? hp('2.5%') : hp('2%')
 
       },
       messagePill: {
@@ -1870,8 +1873,10 @@ InlineImage.propTypes = Image.propTypes;
   return (
     <View style={[styles.container]}>
 
-    <Animated.Image pointerEvents={"none"} style={[styles.splash, { opacity: splashOpacity }]} source={require('./assets/splashnew.png')} />
-    <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
+    <Animated.View style = {styles.splash} pointerEvents={"none"}>
+      <Animated.Image pointerEvents={"none"} style={[styles.splash, { opacity: splashOpacity }]} source={require('./assets/splashnew.png')} />
+      <Animated.Image pointerEvents={"none"} style={[styles.splashTxt, { opacity: splashOpacity, transform: [{scaleY: splashScale }, {scaleX: splashScale }]} ]} source={require('./assets/splash.png')} />
+    </Animated.View>
 
       <StatusBar barStyle="dark-content" />
       <View pointerEvents='none' style={[styles.topCoverBar, { opacity: topCoverOpacity }]}></View>
@@ -1889,25 +1894,25 @@ InlineImage.propTypes = Image.propTypes;
       </TouchableOpacity>
 
       {(!isCreditsOpen && currentKey != 'Teams') && <FloatingMenu
-        items={colorMenuItems}
-        isOpen={isMenuOpen}
-        position={"top-right"}
-        borderColor={'white'}
-        primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'Results' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
-        buttonWidth={wp('10%')}
-        borderWidth={0}
-        onMenuToggle={handleMenuToggle}
-        onItemPress={handleItemPress}
-        dimmerStyle={{ opacity: 0 }}
-        isTablet={isTablet()}
-        messageInAnimation={messageInAnimation}
-        isQuizResultShown={currentKey === 'Quiz' && showResult}
-        isResultShowing={currentKey === 'Results'}
-        comboCircleImage={currentColorCombo != null ? currentColorCombo.circleImage : require('./assets/rainbowcircle.png')}
-        currentKey={currentKey}
-      />}
+              items={colorMenuItems}
+              isOpen={isMenuOpen}
+              position={"top-right"}
+              borderColor={'white'}
+              primaryColor={KeyIsAColor(currentKey.toLowerCase()) ? currentColor : ((currentKey == 'Results' && userColor != '') ? getResultColorItem(userColor)[0].color : ((currentKey == 'Quiz' && showResult) ? getResultColorItem(resultColor)[0].color : '#ffffff'))}
+              buttonWidth={wp('10%')}
+              borderWidth={0}
+              onMenuToggle={handleMenuToggle}
+              onItemPress={handleItemPress}
+              dimmerStyle={{ opacity: 0 }}
+              isTablet={isTablet()}
+              messageInAnimation={messageInAnimation}
+              isQuizResultShown={currentKey === 'Quiz' && showResult}
+              isResultShowing={currentKey === 'Results'}
+              comboCircleImage={currentColorCombo != null ? currentColorCombo.circleImage : require('./assets/rainbowcircle.png')}
+              currentKey={currentKey}
+            />}
 
-    <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex'}]}>
+    <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex', zIndex: 8}]}>
     <Animated.View
       style={
         (styles.topBar,
@@ -2064,12 +2069,12 @@ InlineImage.propTypes = Image.propTypes;
                           onScroll={handleScroll}
                           style={{zIndex: -3, overflow: 'visible', marginTop: moderateScale(130)}}>
 
-                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('-5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
+                          <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
                           <Text style = {styles.pullQuote}>Hello.{'\n'}What’s your name?</Text>
                                   <Kohana
                                     onChangeText={(text) => { setUsername(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40, marginTop: isTablet() ? verticalScale(5) : 0}}
+                                    style={{ zIndex: 10, backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My name'}
                                     iconClass={MaterialsIcon}
                                     iconName={'dns'}
@@ -2089,11 +2094,11 @@ InlineImage.propTypes = Image.propTypes;
                                   <Kohana
                                     onChangeText={(text) => { setIndustry(text)
                                     }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginTop: isTablet() ? verticalScale(5) : 0}}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: 0, zIndex: 10, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My industry'}
                                     iconClass={MaterialsIcon}
                                     iconName={'dns'}
-                                    iconColor={'#ffffff'}
+                                    iconColor={'#000'}
                                     inputPadding={0}
                                     labelStyle={{ color: '#EAEAEA' }}
                                     inputStyle={{ color: 'black'}}
@@ -2125,7 +2130,7 @@ InlineImage.propTypes = Image.propTypes;
                                   <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter a role.</Text>
                                 </Animated.View>
 
-                            <TouchableOpacity style= {{marginTop: verticalScale(-40)}} onPress = {() => handleNextPress()}>
+                            <TouchableOpacity style= {{marginTop: verticalScale(-10)}} onPress = {() => handleNextPress()}>
                                 <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                   <Text style = {[styles.quizParagraph, styles.shadow1, {fontFamily: 'CircularStd-Black', alignSelf: 'flex-start'}]}>Start Quiz</Text>
                                   <Image style = {{width: wp('8%'), height: wp('8%'), marginTop: isTablet() ? verticalScale(-7) : verticalScale(-1), transform: [{ rotate: '180deg'}]}} source={require('./assets/arrowLeft.png')} />
@@ -2153,7 +2158,7 @@ InlineImage.propTypes = Image.propTypes;
                                         }
                                         <TouchableOpacity onPress = {() => {
                                               buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
-                                            }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none', width: wp('80%'), alignSelf: 'center'}]}>
+                                            }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none', alignSelf: 'center'}]}>
                                           <Text style ={[styles.pullQuote, {textAlign: 'center'}]}>Share</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -2200,13 +2205,12 @@ InlineImage.propTypes = Image.propTypes;
                           </ImageBackground>
 
                           <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
-                          <SafeAreaView style={{flex: 1, marginBottom: -hp('5%')}}>
-
+                          <SafeAreaView style={{flex: 1, marginBottom: -hp('5%'), overflow: 'visible'}}>
                               <ScrollView
                               ref={ScrollRef2}
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
-                              style={styles.scrollView}
+                              style={[styles.scrollView]}
                               scrollEventThrottle={16}
                               onScroll={handleScroll}>
 
@@ -2223,7 +2227,7 @@ InlineImage.propTypes = Image.propTypes;
                               {getColorComboTextFormatted(currentColorCombo)}
                               </View>
 
-                              <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none'}}>
+                              <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none', overflow: 'visible'}}>
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
                                 <Video
                                   source={{ uri: 'https://mycolor.s3.us-east-2.amazonaws.com/colorviz3.mp4' }}
@@ -2264,15 +2268,15 @@ InlineImage.propTypes = Image.propTypes;
                                     style={{ width: moderateScale(120), height: moderateScale(120)}}
                                   />
                                 </MaskedView>
-                                  <Text style = {[styles.pullQuote, {marginTop: isOldPhone() ? verticalScale(20) : 0}]}> 🚀 What's the color of your personality? What's your vibe?{'\n'}</Text>
-                                  <Text style = {styles.bodyText}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
+                                  <Text style = {[styles.pullQuote, {marginTop: isOldPhone() ? verticalScale(20) : verticalScale(25), paddingHorizontal: wp('14%')}]}> 🚀 What's the color of your personality? What's your vibe?{'\n'}</Text>
+                                  <Text style = {[styles.bodyText, {paddingHorizontal: wp('14%')}]}>Take our myCOLOR quiz and discover the essence of your personality - who are you and how do you function alongside others? Leverage your personality’s specific color traits and share the quiz with friends to strengthen your relationships through better communication and understanding. {'\n'}</Text>
                               </Animated.View>
 
                               </View>
 
                                 <View style = {{display: (currentKey == 'Teams') ? 'flex' : 'none', marginBottom: hp('5%'), marginTop: hp('4%')}}>
-                                    <Text key = {2} style={[styles.pullQuote, styles.shadow2 ]}>🎲 Pick Your Team</Text>
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-Book', marginBottom: moderateScale(9)}]}>
+                                    <Text key = {2} style={[styles.pullQuote, styles.shadow2, {paddingHorizontal: wp('14%')} ]}>🎲 Pick Your Team</Text>
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-Book', marginBottom: moderateScale(9), paddingHorizontal: wp('14%')}]}>
                                         {"\n"}Drag the circles to select you and your teammate’s color. This tool will provide insight into how you two can join forces.
                                         </Text>
                                         <Video
@@ -2285,7 +2289,7 @@ InlineImage.propTypes = Image.propTypes;
                                           style={{ width: isTablet() ? wp('20%') : wp('30%'), height: isTablet() ? wp('20%') : wp('30%'), alignSelf: 'center'}}
                                         />
 
-                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(20), marginTop: -moderateScale(10)}]}>
+                                    <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(20), marginTop: -moderateScale(10), paddingHorizontal: wp('14%')}]}>
                                         {"\n"} “The optimal team for any communications project is the smallest adequate team for the challenge you face. Smallness empowers identity, ownership, agency, nimbleness, speed and efficiency and much more. The challenge in determining your team size is the subjectivity of ‘adequate to the challenge.’”
                                         </Text>
 
@@ -2299,7 +2303,7 @@ InlineImage.propTypes = Image.propTypes;
                                           style={{ width: isTablet() ? wp('19%') : wp('28%'), height: isTablet() ? wp('19%') : wp('28%'), alignSelf: 'center'}}
                                         />
 
-                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(2), marginTop: moderateScale(15) }]}>
+                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(2), marginTop: moderateScale(15), paddingHorizontal: wp('14%')}]}>
                                             “Building teams inclusive of all personalities that find themselves creating transformative experiences  - that is the power behind myCOLOR.”
                                             </Text>
 
@@ -2313,7 +2317,7 @@ InlineImage.propTypes = Image.propTypes;
                                               style={{ width: isTablet() ? wp('20%') : wp('30%'), height: isTablet() ? wp('20%') : wp('30%'), alignSelf: 'center'}}
                                             />
 
-                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8), marginTop: moderateScale(-5)}]}> {"\n"}“Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together.”
+                                        <Text style={[styles.bodyText, {fontFamily: 'CircularStd-BookItalic', marginBottom: moderateScale(8), marginTop: moderateScale(-5), paddingHorizontal: wp('14%')}]}> {"\n"}“Together we are stronger. Our strengths and weaknesses compliment one another. Impenetrable force together.”
                                             </Text>
 
                                 </View>
@@ -2339,11 +2343,12 @@ InlineImage.propTypes = Image.propTypes;
                                       {
                                         buttonPress('https://thecolorofmypersonality.com/', true, `The color of my personality is ${userColor}`);
                                       }
-                                    }} style={[styles.button, styles.shadow3, {width: wp('79%'), alignSelf: 'center'}]} >
+                                    }} style={[styles.button, styles.shadow3, {alignSelf: 'center'}]} >
                                   <Text style = {[styles.pullQuote, {textAlign: 'center'}]}>{(colorMenuItems.filter((item) => item.header === currentTextKey).length > 0) || currentKey == 'Combo' ? 'Share' : bodyTexts[currentTextKey]?.buttonTitle} </Text>
                                 </TouchableOpacity>
                                 <Text>{"\n"}{"\n"}{"\n"}</Text>
                               </ScrollView>
+
                             </SafeAreaView>
                           </Animated.View>
 
