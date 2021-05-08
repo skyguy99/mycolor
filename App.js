@@ -13,7 +13,7 @@ import FloatingMenu from './FloatingMenu/components/FloatingMenu';
 import * as Progress from 'expo-progress';
 import LottieView from "lottie-react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { Kohana } from 'react-native-textinput-effects';
+import { Fumi, Kohana } from 'react-native-textinput-effects';
 import { Video, Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
@@ -1268,7 +1268,7 @@ const styles = ScaledSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    marginTop: currentKey == 'Teams' ? 0 : hp('14%'),
+    //marginTop: currentKey == 'Teams' ? 0 : hp('0%'),
     overflow: 'visible',
   },
   topBar: {
@@ -1445,7 +1445,8 @@ const styles = ScaledSheet.create({
       quizContent: {
         justifyContent: 'center',
         overflow: 'visible',
-        marginTop: '30@ms'
+        marginTop: '30@ms',
+        marginBottom: hp('20%')
       },
       topCoverBar: {
         width: wp('100%'),
@@ -1616,41 +1617,20 @@ function getResultColorFormatted(color)
   {
     return ([
 
-      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'Results' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
-          <MaskedView
-              style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
-              maskElement={
-                <View
-                  style={{
-                    // Transparent background because mask is based off alpha channel.
-                    backgroundColor: 'transparent',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                >
-                <LinearGradient
-                    // Background Linear Gradient
-                    colors={['transparent', 'black']}
-                    start={[0.5, 0.25]}
-                    end={[0.5, .4]}
-                    style={{width: wp('100%'), height: hp('57%')}}
-                  />
-                </View>
-              }
-            >
-              {/* Shows behind the mask, you can put anything here, such as an image */}
-              <Video
-                source={{ uri: getResultColorItem(color)[0].image }}
-                rate={1.0}
-                isMuted={true}
-                resizeMode="contain"
-                shouldPlay
-                isLooping
-                style={{ width: wp('100%'), height: hp('57%')}}
-              />
-            </MaskedView>
+      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'Results' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('115%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('42%'), overflow: 'hidden'}} >
       </View>,
-      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
+      <View style={{height: hp('30%'), overflow: 'hidden', marginTop: hp('40%')}}>
+      <Video
+        source={{ uri: getResultColorItem(color)[0].image }}
+        rate={1.0}
+        isMuted={true}
+        resizeMode="contain"
+        shouldPlay
+        isLooping
+        style={{ width: wp('100%'), height: hp('40%'), position: 'absolute', marginTop: hp('-2%')}}
+      />
+      </View>,
+      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('-18%')}}>
 
       <TouchableOpacity style= {{marginTop: hp('25%')}} onPress = {() => handleRetakePress()}>
           <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
@@ -1662,17 +1642,17 @@ function getResultColorFormatted(color)
           <Text key = {1} style={[styles.pullQuote, styles.shadow2, {marginTop: hp('2%')}]}>{getResultColorItem(color)[0].title}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(color)[0].attributes}</Text>
           <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(color)[0].extraversion*100}% </Text>
-          <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {4} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Openness </Text> {'//'} {getResultColorItem(color)[0].openness*100}% </Text>
-          <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(color)[0].openness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(color)[0].openness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {5} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Agreeableness </Text> {'//'} {getResultColorItem(color)[0].agreeableness*100}%</Text>
-          <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(color)[0].agreeableness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(color)[0].agreeableness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} />
           <Text key = {6} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Integrity </Text> {'//'} {getResultColorItem(color)[0].integrity*100}% </Text>
-          <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(color)[0].integrity} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(color)[0].integrity} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {7} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Emotional Stability </Text> {'//'} {getResultColorItem(color)[0].stability*100}% </Text>
-          <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(color)[0].conscientiousness*100}% </Text>
-          <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} />
           <Text key = {9} >{'\n'}{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
           <Text key = {21} style = {styles.pullQuote}> {getResultColorItem(color)[0].pullQuote} {'\n'} </Text>
@@ -1720,51 +1700,37 @@ function getColorTextFormatted(color) //SHOWN FOR Results
   {
     return ([
 
-      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'Results' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('100%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
-
-        <MaskedView
-            style={{ width: wp('100%'), height: hp('50%'), alignSelf: 'center', marginTop: hp('55%')}}
-            maskElement={
-              <View
-                style={{
-                  // Transparent background because mask is based off alpha channel.
-                  backgroundColor: 'transparent',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Image style= {{width: wp('100%'), height: isTablet() ? hp('83%') : hp('60%'), marginTop: isTablet() ? hp('-3%') : hp('3%')}} source={require('./assets/gradientmask.png')} />
-              </View>
-            }
-          >
-            {/* Shows behind the mask, you can put anything here, such as an image */}
-            <Video
-              source={{ uri: getResultColorItem(color)[0].image }}
-              rate={1.0}
-              isMuted={true}
-              resizeMode="contain"
-              shouldPlay
-              isLooping
-              style={{ width: wp('100%'), height: isTablet() ? hp('38%') : hp('57%'), marginTop: isTablet() ? hp('10%') : 0}} //57 for iphone
-            />
-          </MaskedView>
+      <View key = {0} pointerEvents='none' style = {{display: (currentKey == 'Results' || (currentKey == 'Quiz' && showResult) || KeyIsAColor(currentKey)) ? 'flex' : 'none', backgroundColor: (getResultColorItem(color).length > 0) ? getResultColorItem(color)[0].color : 'transparent', position: 'absolute', height: hp('115%'), width: wp('100.4%'), padding: 20, zIndex: 0, marginTop: -hp('75%'), overflow: 'hidden'}} >
 
       </View>,
-      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('4%')}}>
+
+      <View style={{height: hp('40%'), overflow: 'hidden'}}>
+      <Video
+        source={{ uri: getResultColorItem(color)[0].image }}
+        rate={1.0}
+        isMuted={true}
+        resizeMode="contain"
+        shouldPlay
+        isLooping
+        style={{ width: wp('100%'), height: hp('40%'), position: 'absolute', marginTop: hp('4%')}}
+      />
+      </View>,
+
+      <View style = {{paddingLeft: wp('12%'), paddingRight: wp('12%'), marginTop: hp('-20%')}}>
           <Text key = {1} style={[styles.pullQuote, styles.shadow2, {marginTop: hp('25%')}]}>{getResultColorItem(color)[0].title}</Text>
           <Text key = {2} style ={[styles.bodyText, {marginBottom: hp('3%')}]}>{getResultColorItem(color)[0].attributes}</Text>
           <Text key = {3} style = {[styles.bodyText, {marginBottom: hp('1%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Extraversion </Text> {'//'} {getResultColorItem(color)[0].extraversion*100}% </Text>
-          <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {10} isAnimated duration={700} progress={getResultColorItem(color)[0].extraversion} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {4} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Openness </Text> {'//'} {getResultColorItem(color)[0].openness*100}% </Text>
-          <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(color)[0].openness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {11} isAnimated duration={700} progress={getResultColorItem(color)[0].openness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {5} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Agreeableness </Text> {'//'} {getResultColorItem(color)[0].agreeableness*100}%</Text>
-          <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(color)[0].agreeableness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {12} isAnimated duration={700} progress={getResultColorItem(color)[0].agreeableness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {6} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Integrity </Text> {'//'} {getResultColorItem(color)[0].integrity*100}% </Text>
-          <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(color)[0].integrity} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {13} isAnimated duration={700} progress={getResultColorItem(color)[0].integrity} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} />
           <Text key = {7} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Emotional Stability </Text> {'//'} {getResultColorItem(color)[0].stability*100}% </Text>
-          <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {14} isAnimated duration={700} progress={getResultColorItem(color)[0].stability} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {8} style = {[styles.bodyText, {marginBottom: hp('1%'), marginTop: hp('3.5%')}]}><Text style = {{fontFamily: 'CircularStd-Black'}}> Conscientiousness </Text> {'//'} {getResultColorItem(color)[0].conscientiousness*100}% </Text>
-          <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+          <Progress.Bar key = {15} isAnimated duration={700} progress={getResultColorItem(color)[0].conscientiousness} color={getResultColorItem(color)[0].color} trackColor={"#F0F0F0"} height={hp('0.35%')}/>
           <Text key = {9} >{'\n'}{'\n'}</Text>
           <Text key = {20} style = {styles.bodyText}> {getResultColorItem(color)[0].bodyBlurb} {'\n'}{'\n'}</Text>
           <Text key = {21} style = {styles.pullQuote}>🔍 {getResultColorItem(color)[0].pullQuote} {'\n'}</Text>
@@ -1912,7 +1878,7 @@ InlineImage.propTypes = Image.propTypes;
               currentKey={currentKey}
             />}
 
-    <View style={[styles.dropDown, {display: isCreditsOpen ? 'none' : 'flex', zIndex: 8}]}>
+    <View style={[styles.dropDown, {opacity: isCreditsOpen ? 0 : 1, zIndex: 8}]}>
     <Animated.View
       style={
         (styles.topBar,
@@ -2067,64 +2033,55 @@ InlineImage.propTypes = Image.propTypes;
                           showsHorizontalScrollIndicator= {false}
                           scrollEventThrottle={16}
                           onScroll={handleScroll}
-                          style={{zIndex: -3, overflow: 'visible', marginTop: moderateScale(130)}}>
+                          style={{zIndex: -3, overflow: 'visible', marginTop: showResult ? hp('-1%') : moderateScale(130)}}>
 
                           <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), marginTop: hp('5%'), display: !didSetUsername ? 'flex' : 'none'}]}>
-                          <Text style = {styles.pullQuote}>Hello.{'\n'}What’s your name?</Text>
-                                  <Kohana
+                          <Text style = {[styles.pullQuote, {marginTop: hp('7%')}]}>Hello.{'\n'}What’s your name?</Text>
+                                  <Fumi
                                     onChangeText={(text) => { setUsername(text)
                                     }}
-                                    style={{ zIndex: 10, backgroundColor: '#ffffff', marginLeft: -20, fontSize: 40, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     label={'My name'}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -5, zIndex: 10, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     iconClass={MaterialsIcon}
-                                    iconName={'dns'}
-                                    iconColor={'#ffffff'}
-                                    inputPadding={0}
-                                    labelStyle={{ color: '#EAEAEA' }}
-                                    inputStyle={{ color: 'black'}}
-                                    labelContainerStyle={{ padding: 20 }}
-                                    iconContainerStyle={{ padding: 20 }}
-                                    useNativeDriver
+                                    iconName={''}
+                                    iconColor={'#000'}
+                                    iconSize={0}
+                                    iconWidth={0}
+                                    inputPadding={16}
                                   />
                                 <Animated.View style = {[styles.errorPill, styles.errorPill1, styles.shadow2, {marginBottom: hp('7%'), shadowOpacity: 0.1, opacity: error1Opacity, transform: [{translateX: errorXPos}] ,}]}>
                                   <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter your name.</Text>
                                 </Animated.View>
 
                                 <Text style = {styles.pullQuote}>What's your industry?</Text>
-                                  <Kohana
-                                    onChangeText={(text) => { setIndustry(text)
-                                    }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: 0, zIndex: 10, marginTop: isTablet() ? verticalScale(5) : 0}}
-                                    label={'My industry'}
-                                    iconClass={MaterialsIcon}
-                                    iconName={'dns'}
-                                    iconColor={'#000'}
-                                    inputPadding={0}
-                                    labelStyle={{ color: '#EAEAEA' }}
-                                    inputStyle={{ color: 'black'}}
-                                    labelContainerStyle={{ padding: 20 }}
-                                    iconContainerStyle={{ padding: 20 }}
-                                    useNativeDriver
-                                  />
+                                <Fumi
+                                  onChangeText={(text) => { setIndustry(text)
+                                  }}
+                                  label={'My industry'}
+                                  style={{ backgroundColor: '#ffffff', marginLeft: -5, zIndex: 10, marginTop: isTablet() ? verticalScale(5) : 0}}
+                                  iconClass={MaterialsIcon}
+                                  iconName={''}
+                                  iconColor={'#000'}
+                                  iconSize={0}
+                                  iconWidth={0}
+                                  inputPadding={16}
+                                />
                                 <Animated.View style = {[styles.errorPill, styles.errorPill2, styles.shadow2, {shadowOpacity: 0.1, opacity: error2Opacity, transform: [{translateX: errorXPos}], marginBottom: hp('7%')}]}>
                                   <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter an industry.</Text>
                                 </Animated.View>
 
                                 <Text style = {styles.pullQuote}>What do you do?</Text>
-                                  <Kohana
-                                    onChangeText={(text) => { setRole(text)
-                                    }}
-                                    style={{ backgroundColor: '#ffffff', marginLeft: -20, marginTop: isTablet() ? verticalScale(5) : 0 }}
+                                  <Fumi
+                                  onChangeText={(text) => { setRole(text)
+                                  }}
                                     label={'My role'}
+                                    style={{ backgroundColor: '#ffffff', marginLeft: -5, zIndex: 10, marginTop: isTablet() ? verticalScale(5) : 0}}
                                     iconClass={MaterialsIcon}
-                                    iconName={'dns'}
-                                    iconColor={'#ffffff'}
-                                    inputPadding={0}
-                                    labelStyle={{ color: '#EAEAEA' }}
-                                    inputStyle={{ color: 'black'}}
-                                    labelContainerStyle={{ padding: 20 }}
-                                    iconContainerStyle={{ padding: 20 }}
-                                    useNativeDriver
+                                    iconName={''}
+                                    iconColor={'#000'}
+                                    iconSize={0}
+                                    iconWidth={0}
+                                    inputPadding={16}
                                   />
                                 <Animated.View style = {[styles.errorPill, styles.errorPill3, styles.shadow2, {marginBottom: hp('7%'), opacity: error3Opacity, transform: [{translateX: errorXPos}], shadowOpacity: 0.1}]}>
                                   <Text style = {[styles.bodyText, {textAlign: 'center'}]}>You didn't enter a role.</Text>
@@ -2139,10 +2096,10 @@ InlineImage.propTypes = Image.propTypes;
                             <View style = {{height: hp('40%')}}></View>
                           </View>
                           <View style = {[styles.quizContent, {paddingHorizontal: showResult ? 0 : wp('14%'), display: didSetUsername ? 'flex' : 'none' }]}>
-                                    <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: -hp('7%')}]}>
+                                    <Text style={[styles.pullQuote, {display: showResult ? 'none' : 'flex', marginBottom: hp('7%'), marginTop: hp('3%')}]}>
                                       {showResult ? '' : quizQuestions[currentQuestionIndex].question}
                                     </Text>
-                                      <Progress.Bar isAnimated duration={showResult ? 500 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? 'transparent' : "#F0F0F0"} height={hp('0.35%')} style = {[styles.shadow1, {shadowOpacity: 1}]} />
+                                      <Progress.Bar isAnimated duration={showResult ? 500 : 200} progress={showResult ? 0 : (parseInt(currentQuestionIndex + 1) / 21)} color={"#333333"} trackColor={showResult ? 'transparent' : "#F0F0F0"} height={hp('0.35%')} />
                                       <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
                                                 <TouchableOpacity style= {{marginTop: hp('1.5%'), marginLeft: -wp('3%')}} onPress = {() => showResult ? handleRetakePress() : handleBackPress(currentQuestionIndex)}>
                                                     <View style = {{flexDirection:'row', flexWrap:'wrap'}}>
@@ -2161,6 +2118,7 @@ InlineImage.propTypes = Image.propTypes;
                                             }} style={[styles.button, styles.shadow3, {display: showResult ? 'flex' : 'none', alignSelf: 'center'}]}>
                                           <Text style ={[styles.pullQuote, {textAlign: 'center'}]}>Share</Text>
                                         </TouchableOpacity>
+                                        <View style={{height: hp('70%')}}></View>
                                     </View>
 
 
@@ -2200,17 +2158,16 @@ InlineImage.propTypes = Image.propTypes;
                           </Animated.View>
 
                           <ImageBackground imageStyle = {{resizeMode: 'stretch'}} style = {{width: wp('100%'), height: hp('40%'), zIndex: 13, marginLeft: moderateScale(2), marginTop: moderateScale(-5), display: currentKey == 'Teams' ? 'flex' : 'none'}} source={require('./assets/rainbowgradient.png')} >
-                            <Draggable x={wp('40%')-(wp('16.5%')/2)} y={isTablet() ? wp('30%') : wp('45%')} animatesRenderSize={draggableSizeFirst} renderSize={isTablet() ? wp('12%') : wp('16.5%')} touchableOpacityProps={{activeOpacity: 1}} hasBorder={true} renderColor={'#00000000'} minX={wp('-1%')} maxX={isTablet() ? wp('200%') : wp('183%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor1(event, gestureState)} onPressIn={() => {setDidDrag1(true), animateRenderButton("first");}} />
-                            <Draggable x={wp('60%')-(wp('16.5%')/2)} y={isTablet() ? wp('30%') : wp('45%')} animatesRenderSize={draggableSizeSecond} renderSize={isTablet() ? wp('12%') : wp('16.5%')} touchableOpacityProps={{activeOpacity: 1}} hasBorder={true} renderColor={'#00000000'} minX={wp('-1%')} maxX={isTablet() ? wp('200%') : wp('183%')} minY={hp('12%')} maxY={hp('40%')} renderText={''} isCircle onDragRelease={(event, gestureState) => ToggleComboColor2(event, gestureState)} onPressIn={() => {setDidDrag2(true), animateRenderButton("second");}} />
+
                           </ImageBackground>
 
-                          <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }]}]}>
+                          <Animated.View style = {[styles.scrollContainer, { transform: [{translateX: scrollOffsetX }], marginTop: -hp('2%') } ]}>
                           <SafeAreaView style={{flex: 1, marginBottom: -hp('5%'), overflow: 'visible'}}>
                               <ScrollView
                               ref={ScrollRef2}
                               showsVerticalScrollIndicator= {false}
                               showsHorizontalScrollIndicator= {false}
-                              style={[styles.scrollView]}
+                              style={[styles.scrollView, {}]}
                               scrollEventThrottle={16}
                               onScroll={handleScroll}>
 
@@ -2227,7 +2184,7 @@ InlineImage.propTypes = Image.propTypes;
                               {getColorComboTextFormatted(currentColorCombo)}
                               </View>
 
-                              <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none', overflow: 'visible'}}>
+                              <View style = {{display: (currentKey == 'myCOLOR') ? 'flex' : 'none', overflow: 'visible', marginTop: hp('12%')}}>
                               <Animated.View style = {[styles.colorWheel, { transform: [{translateY: main3dOffsetY }, {scaleX: main3dScale}, {scaleY: main3dScale} ]}]}>
                                 <Video
                                   source={{ uri: 'https://mycolor.s3.us-east-2.amazonaws.com/colorviz3.mp4' }}

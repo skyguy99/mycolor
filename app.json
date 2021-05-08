@@ -2,7 +2,7 @@
   "expo": {
     "name": "myCOLOR",
     "slug": "myCOLOR",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "primaryColor" : "#ffffff",
     "icon": "./assets/icon.png",
@@ -18,14 +18,15 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.skyyguy1999.MyColorApp",
-      "buildNumber": "1.14.0",
+      "bundleIdentifier": "com.ayzenberg.MyColorApp",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
       "package": "com.ayzenberg.mycolor",
-      "versionCode": 14,
-      "permissions": []
+      "versionCode": 17,
+      "permissions": [],
+      "useNextNotificationsApi": true,
     }
   }
 }
